@@ -211,6 +211,7 @@
     { "id": "V006", "date": "2026-04-02", "title": "Build a RAG App from Scratch", "level": "Intermediate", "youtubeUrl": "https://youtu.be/6noqObMD0a0", "duration": "6:17", "type": "video" },
     { "id": "V007", "date": "2026-04-02", "title": "Cursor vs Copilot vs Claude Code", "level": "Beginner", "youtubeUrl": "https://youtu.be/9XMKX2YF9eE", "duration": "6:34", "type": "video" },
     { "id": "V008", "date": "2026-04-02", "title": "5 AI Coding Workflows You Need to Know", "level": "Intermediate", "youtubeUrl": "https://youtu.be/REnegkpb5RM", "duration": "5:32", "type": "video" },
+    { "id": "V009", "date": "2026-04-03", "title": "Open-Source AI Models Explained — Why They Matter", "level": "Beginner", "youtubeUrl": "https://youtu.be/H1jV9dODAvE", "duration": "4:09", "type": "video" },
     { "id": "P001", "date": "2026-04-02", "title": "Bot Thoughts: AI Agents Are Everywhere", "level": "Beginner", "youtubeUrl": "https://youtu.be/P4AeX9xkSfM", "duration": "~20 min", "type": "podcast" }
   ],
   "milestones": [
@@ -236,14 +237,14 @@
   "weeklySummary": {
     "week": "W1 (Mar 30 - Apr 5)",
     "blogs": 16,
-    "videos": 8,
+    "videos": 9,
     "podcasts": 1,
     "socialPosts": 32
   },
   "monthlySummary": {
     "month": "April 2026",
     "blogs": 13,
-    "videos": 8,
+    "videos": 9,
     "podcasts": 1
   }
 }
