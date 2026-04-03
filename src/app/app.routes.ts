@@ -1,0 +1,17 @@
+import { Routes } from '@angular/router';
+import { SiteLayoutComponent } from './layout/site-layout/site-layout.component';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      { path: '', loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent) },
+      { path: 'blog', loadComponent: () => import('./features/blog/blog.component').then(m => m.BlogComponent) },
+      { path: 'videos', loadComponent: () => import('./features/videos/videos.component').then(m => m.VideosComponent) },
+      { path: 'metrics', loadComponent: () => import('./features/metrics/metrics.component').then(m => m.MetricsComponent) },
+      { path: 'about', loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent) },
+    ],
+  },
+  { path: '**', redirectTo: '' },
+];

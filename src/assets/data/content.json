@@ -1,0 +1,205 @@
+{
+  "blogs": [
+    {
+      "id": "001",
+      "date": "2026-03-30",
+      "title": "What is an LLM? A Beginner's Guide",
+      "level": "Beginner",
+      "topic": "AI, LLM",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/03/what-is-llm-beginners-guide-to-large.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "004",
+      "date": "2026-03-31",
+      "title": "How Neural Networks Actually Learn — Explained Simply",
+      "level": "Beginner",
+      "topic": "AI, Machine Learning",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/03/how-neural-networks-actually-learn.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "youtubeUrl": "https://youtu.be/BaTNHXy1rP4",
+      "status": "Published"
+    },
+    {
+      "id": "005",
+      "date": "2026-04-01",
+      "title": "What Are AI Agents? The Technology Powering 2026",
+      "level": "Beginner",
+      "topic": "AI, AI Agents",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/03/what-are-ai-agents-technology-powering.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "youtubeUrl": "https://youtu.be/I6Imu6boOn4",
+      "status": "Published"
+    },
+    {
+      "id": "006",
+      "date": "2026-04-01",
+      "title": "What Is MCP? The Protocol That Connects AI to Everything",
+      "level": "Beginner",
+      "topic": "AI, MCP",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/what-is-mcp-protocol-that-connects-ai.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "youtubeUrl": "https://youtu.be/UR-0s7Q80k0",
+      "status": "Published"
+    },
+    {
+      "id": "007",
+      "date": "2026-04-01",
+      "title": "Building Your First AI Agent with Claude and MCP",
+      "level": "Intermediate",
+      "topic": "AI Agents, MCP",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/building-your-first-ai-agent-with.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "008",
+      "date": "2026-04-02",
+      "title": "Multi-Agent Systems: When One AI Isn't Enough",
+      "level": "Intermediate",
+      "topic": "AI Agents, MCP",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/multi-agent-systems-when-one-ai-isnt.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "009",
+      "date": "2026-04-02",
+      "title": "What is RAG? Retrieval-Augmented Generation for Beginners",
+      "level": "Beginner",
+      "topic": "AI, RAG, LLM",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/what-is-rag-retrieval-augmented.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "010",
+      "date": "2026-04-02",
+      "title": "Vector Databases Explained: The Engine Behind RAG",
+      "level": "Intermediate",
+      "topic": "RAG, Databases",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/vector-databases-explained-engine.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "011",
+      "date": "2026-04-02",
+      "title": "GraphRAG vs Traditional RAG: When Relationships Matter",
+      "level": "Advanced",
+      "topic": "RAG, GraphRAG",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/graphrag-vs-traditional-rag-when.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "012",
+      "date": "2026-04-02",
+      "title": "Building a RAG Pipeline with LangChain and Pinecone",
+      "level": "Intermediate",
+      "topic": "RAG, Tutorial",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/building-rag-pipeline-with-langchain.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "013",
+      "date": "2026-04-02",
+      "title": "Self-RAG: When AI Decides Whether to Search",
+      "level": "Advanced",
+      "topic": "RAG, Self-RAG",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/self-rag-when-ai-decides-whether-to.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "014",
+      "date": "2026-04-02",
+      "title": "Multimodal RAG: Searching Images, Audio, and Video",
+      "level": "Professional",
+      "topic": "RAG, Multimodal",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/multimodal-rag-searching-images-audio.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "015",
+      "date": "2026-04-02",
+      "title": "AI Coding Tools in 2026: Cursor, Copilot, Claude Code",
+      "level": "Beginner",
+      "topic": "AI Dev Tools",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/ai-coding-tools-2026-cursor-copilot.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "016",
+      "date": "2026-04-02",
+      "title": "How to Use AI Coding Assistants Without Losing Code Quality",
+      "level": "Intermediate",
+      "topic": "AI Dev Tools",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/how-to-use-ai-coding-assistants-without.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    }
+  ],
+  "videos": [
+    { "id": "V001", "date": "2026-03-31", "title": "Neural Networks Explained", "level": "Beginner", "youtubeUrl": "https://youtu.be/BaTNHXy1rP4", "duration": "5:42", "type": "video" },
+    { "id": "V002", "date": "2026-04-01", "title": "AI Agents Explained", "level": "Beginner", "youtubeUrl": "https://youtu.be/I6Imu6boOn4", "duration": "5:06", "type": "video" },
+    { "id": "V003", "date": "2026-04-01", "title": "What is MCP?", "level": "Beginner", "youtubeUrl": "https://youtu.be/UR-0s7Q80k0", "duration": "5:17", "type": "video" },
+    { "id": "V004", "date": "2026-04-02", "title": "RAG Explained in 6 Minutes", "level": "Beginner", "youtubeUrl": "https://youtu.be/SYfLQljOcsQ", "duration": "5:29", "type": "video" },
+    { "id": "V005", "date": "2026-04-02", "title": "GraphRAG vs RAG — Visual Comparison", "level": "Intermediate", "youtubeUrl": "https://youtu.be/FFkFf0m-Lps", "duration": "5:06", "type": "video" },
+    { "id": "V006", "date": "2026-04-02", "title": "Build a RAG App from Scratch", "level": "Intermediate", "youtubeUrl": "https://youtu.be/6noqObMD0a0", "duration": "6:17", "type": "video" },
+    { "id": "V007", "date": "2026-04-02", "title": "Cursor vs Copilot vs Claude Code", "level": "Beginner", "youtubeUrl": "https://youtu.be/9XMKX2YF9eE", "duration": "6:34", "type": "video" },
+    { "id": "V008", "date": "2026-04-02", "title": "5 AI Coding Workflows You Need to Know", "level": "Intermediate", "youtubeUrl": "https://youtu.be/REnegkpb5RM", "duration": "5:32", "type": "video" },
+    { "id": "P001", "date": "2026-04-02", "title": "Bot Thoughts: AI Agents Are Everywhere", "level": "Beginner", "youtubeUrl": "https://youtu.be/P4AeX9xkSfM", "duration": "~20 min", "type": "podcast" }
+  ],
+  "milestones": [
+    { "name": "First 10 blog posts", "target": 10, "current": 16, "status": "Done" },
+    { "name": "First 5 YouTube videos", "target": 5, "current": 8, "status": "Done" },
+    { "name": "First podcast episode", "target": 1, "current": 1, "status": "Done" },
+    { "name": "100 YouTube subscribers", "target": 100, "current": 0, "status": "Pending" },
+    { "name": "500 YouTube subscribers (YPP)", "target": 500, "current": 0, "status": "Pending" },
+    { "name": "3,000 YouTube watch hours (YPP)", "target": 3000, "current": 0, "status": "Pending" },
+    { "name": "First $1 revenue", "target": 1, "current": 0, "status": "Pending" },
+    { "name": "Break even ($50/mo)", "target": 50, "current": 0, "status": "Pending" },
+    { "name": "100 email subscribers", "target": 100, "current": 0, "status": "Pending" },
+    { "name": "1,000 blog monthly views", "target": 1000, "current": 0, "status": "Pending" }
+  ],
+  "platforms": [
+    { "platform": "Blog", "handle": "AmtocSoft Tech Insights", "url": "https://amtocsoft.blogspot.com", "icon": "article" },
+    { "platform": "YouTube", "handle": "@quietsentinelshadow", "url": "https://www.youtube.com/@quietsentinelshadow", "icon": "play_circle" },
+    { "platform": "LinkedIn", "handle": "Toc Am", "url": "https://www.linkedin.com/in/toc-am-b301373b4/", "icon": "person" },
+    { "platform": "X / Twitter", "handle": "@AmToc96282", "url": "https://x.com/AmToc96282", "icon": "tag" },
+    { "platform": "GitHub", "handle": "amtocbot-droid", "url": "https://github.com/amtocbot-droid", "icon": "code" },
+    { "platform": "Email", "handle": "hello@amtocbot.com", "url": "mailto:hello@amtocbot.com", "icon": "email" }
+  ],
+  "weeklySummary": {
+    "week": "W1 (Mar 30 - Apr 5)",
+    "blogs": 16,
+    "videos": 8,
+    "podcasts": 1,
+    "socialPosts": 32
+  },
+  "monthlySummary": {
+    "month": "April 2026",
+    "blogs": 13,
+    "videos": 8,
+    "podcasts": 1
+  }
+}
