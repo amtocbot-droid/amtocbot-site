@@ -41,7 +41,10 @@ import { MatListModule } from '@angular/material/list';
           <button mat-icon-button class="menu-btn" (click)="sidenav.toggle()">
             <mat-icon>menu</mat-icon>
           </button>
-          <a routerLink="/" class="logo">AmtocBot</a>
+          <a routerLink="/" class="logo">
+            <img src="logo-32.png" alt="AmtocSoft" class="logo-icon" width="28" height="28" />
+            AmtocSoft
+          </a>
           <span class="spacer"></span>
           <nav class="desktop-nav">
             @for (link of navLinks; track link.path) {
@@ -117,11 +120,18 @@ import { MatListModule } from '@angular/material/list';
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 1.4rem;
       font-weight: 700;
       color: #fff;
       text-decoration: none;
       letter-spacing: 0.5px;
+    }
+
+    .logo-icon {
+      border-radius: 4px;
     }
 
     .spacer { flex: 1; }
