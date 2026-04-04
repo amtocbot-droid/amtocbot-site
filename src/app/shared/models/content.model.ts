@@ -18,7 +18,7 @@ export interface Video {
   level: string;
   youtubeUrl: string;
   duration: string;
-  type: 'video' | 'podcast';
+  type: 'video' | 'podcast' | 'short';
 }
 
 export interface Milestone {

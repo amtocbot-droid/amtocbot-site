@@ -11,7 +11,7 @@ import { ContentService } from '../../shared/services/content.service';
   imports: [MatCardModule, MatButtonModule, MatChipsModule, MatIconModule],
   template: `
     <div class="videos-page">
-      <h1 class="page-title">Videos & Podcast</h1>
+      <h1 class="page-title">Videos, Shorts & Podcast</h1>
 
       <h2 class="section-title">YouTube Videos</h2>
       <div class="card-grid">
@@ -39,6 +39,28 @@ import { ContentService } from '../../shared/services/content.service';
           </mat-card>
         }
       </div>
+
+      @if (shortsList().length > 0) {
+        <h2 class="section-title shorts-heading">YouTube Shorts</h2>
+        <div class="card-grid shorts-grid">
+          @for (short of shortsList(); track short.id) {
+            <mat-card class="video-card short-card">
+              <img [src]="getThumbnail(short.youtubeUrl)"
+                   [alt]="short.title"
+                   class="video-thumb short-thumb" />
+              <mat-card-header>
+                <mat-card-title class="short-title">{{ short.title }}</mat-card-title>
+                <mat-card-subtitle>{{ short.duration }}</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions>
+                <a mat-button [href]="short.youtubeUrl" target="_blank" rel="noopener">
+                  <mat-icon>play_circle</mat-icon> Watch
+                </a>
+              </mat-card-actions>
+            </mat-card>
+          }
+        </div>
+      }
 
       @if (podcastList().length > 0) {
         <h2 class="section-title podcast-heading">Podcast</h2>
@@ -111,6 +133,24 @@ import { ContentService } from '../../shared/services/content.service';
       border-radius: 4px 4px 0 0;
     }
 
+    .shorts-heading { margin-top: 3rem; }
+
+    .shorts-grid {
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .short-card {
+      max-width: 220px;
+    }
+
+    .short-thumb {
+      aspect-ratio: 9 / 16 !important;
+    }
+
+    .short-title {
+      font-size: 0.9rem !important;
+    }
+
     .podcast-chip {
       background: #7c3aed !important;
       color: #fff !important;
@@ -121,6 +161,7 @@ export class VideosComponent implements OnInit {
   private content = inject(ContentService);
 
   videoList = computed(() => this.content.videos().filter(v => v.type === 'video'));
+  shortsList = computed(() => this.content.videos().filter(v => v.type === 'short'));
   podcastList = computed(() => this.content.videos().filter(v => v.type === 'podcast'));
 
   ngOnInit(): void {
