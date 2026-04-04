@@ -75,12 +75,28 @@ import { MatListModule } from '@angular/material/list';
               <a href="https://x.com/AmToc96282" target="_blank" rel="noopener" aria-label="X / Twitter">
                 <mat-icon>tag</mat-icon>
               </a>
+              <a href="https://www.tiktok.com/@amtocbot" target="_blank" rel="noopener" aria-label="TikTok">
+                <mat-icon>music_note</mat-icon>
+              </a>
+              <a href="https://www.instagram.com/amtocsoft" target="_blank" rel="noopener" aria-label="Instagram">
+                <mat-icon>photo_camera</mat-icon>
+              </a>
               <a href="https://github.com/amtocbot-droid" target="_blank" rel="noopener" aria-label="GitHub">
                 <mat-icon>code</mat-icon>
               </a>
               <a href="mailto:hello@amtocbot.com" aria-label="Email">
                 <mat-icon>email</mat-icon>
               </a>
+            </div>
+            <div class="footer-newsletter">
+              <span class="footer-newsletter-label">Get AI insights weekly:</span>
+              <form class="newsletter-form" (submit)="onSubscribe($event)">
+                <input type="email" placeholder="your@email.com" class="newsletter-input" required #emailInput />
+                <button type="submit" class="newsletter-btn">Subscribe</button>
+              </form>
+              @if (subscribeStatus) {
+                <span class="newsletter-status">{{ subscribeStatus }}</span>
+              }
             </div>
           </div>
         </footer>
@@ -171,9 +187,63 @@ import { MatListModule } from '@angular/material/list';
 
     .footer-links a:hover { color: #60a5fa; }
 
+    .footer-newsletter {
+      width: 100%;
+      text-align: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #2d3548;
+    }
+
+    .footer-newsletter-label {
+      font-size: 0.85rem;
+      margin-right: 0.75rem;
+    }
+
+    .newsletter-form {
+      display: inline-flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .newsletter-input {
+      padding: 0.5rem 1rem;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      background: #2d3548;
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      width: 220px;
+    }
+
+    .newsletter-input::placeholder { color: #64748b; }
+
+    .newsletter-btn {
+      padding: 0.5rem 1.25rem;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .newsletter-btn:hover { background: #2563eb; }
+
+    .newsletter-status {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #60a5fa;
+    }
+
     @media (max-width: 768px) {
       .menu-btn { display: inline-flex; }
       .desktop-nav { display: none; }
+      .newsletter-form { flex-direction: column; align-items: center; }
+      .newsletter-input { width: 100%; max-width: 280px; }
     }
 
     @media (min-width: 769px) {
@@ -189,6 +259,33 @@ export class SiteLayoutComponent {
     { path: '/metrics', label: 'Metrics', icon: 'bar_chart' },
     { path: '/about', label: 'About', icon: 'info' },
   ];
+
+  subscribeStatus = '';
+
+  async onSubscribe(event: Event): Promise<void> {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const input = form.querySelector('input[type="email"]') as HTMLInputElement;
+    const email = input?.value?.trim();
+    if (!email) return;
+
+    this.subscribeStatus = 'Subscribing...';
+    try {
+      const resp = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (resp.ok) {
+        this.subscribeStatus = 'Subscribed! Check your inbox.';
+        input.value = '';
+      } else {
+        this.subscribeStatus = 'Something went wrong. Try again.';
+      }
+    } catch {
+      this.subscribeStatus = 'Network error. Try again later.';
+    }
+  }
 }
 
 export default SiteLayoutComponent;
