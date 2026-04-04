@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -67,6 +67,11 @@ import { ContentService } from '../../shared/services/content.service';
             hello&#64;amtocbot.com
           </a>
         </mat-card>
+      </section>
+
+      <section class="section">
+        <h2 class="section-heading">Comments & Feedback</h2>
+        <div id="giscus-container"></div>
       </section>
     </div>
   `,
@@ -187,11 +192,34 @@ import { ContentService } from '../../shared/services/content.service';
     }
   `],
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, AfterViewInit {
   content = inject(ContentService);
+  private el = inject(ElementRef);
 
   ngOnInit(): void {
     this.content.load();
+  }
+
+  ngAfterViewInit(): void {
+    const container = this.el.nativeElement.querySelector('#giscus-container');
+    if (container && typeof document !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', 'amtocbot-droid/amtocbot-site');
+      script.setAttribute('data-repo-id', 'R_kgDOR4gQEQ');
+      script.setAttribute('data-category', 'General');
+      script.setAttribute('data-category-id', 'DIC_kwDOR4gQEc4C6CP9');
+      script.setAttribute('data-mapping', 'pathname');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', 'light');
+      script.setAttribute('data-lang', 'en');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+      container.appendChild(script);
+    }
   }
 }
 
