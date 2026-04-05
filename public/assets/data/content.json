@@ -12,6 +12,61 @@
       "status": "Published"
     },
     {
+      "id": "022",
+      "date": "2026-04-04",
+      "title": "Running LLMs Locally: Ollama vs LM Studio vs llama.cpp",
+      "level": "Intermediate",
+      "topic": "AI, Local AI, Tools",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/running-llms-locally-ollama-vs-lm.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "023",
+      "date": "2026-04-04",
+      "title": "What is Fine-Tuning? Customizing AI Models for Your Data",
+      "level": "Beginner",
+      "topic": "AI, Fine-Tuning",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/what-is-fine-tuning-customizing-ai.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "024",
+      "date": "2026-04-04",
+      "title": "LoRA and QLoRA Explained: Fine-Tuning AI on a Budget",
+      "level": "Advanced",
+      "topic": "AI, Fine-Tuning, LoRA",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/lora-and-qlora-explained-fine-tuning-ai.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "025",
+      "date": "2026-04-04",
+      "title": "Fine-Tuning vs RAG: When to Use Which",
+      "level": "Advanced",
+      "topic": "AI, Fine-Tuning, RAG",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/fine-tuning-vs-rag-when-to-use-which.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
+      "id": "026",
+      "date": "2026-04-04",
+      "title": "Building a Domain-Specific AI with Open-Source Models",
+      "level": "Professional",
+      "topic": "AI, Fine-Tuning, Architecture",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/building-domain-specific-ai-with-open.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
       "id": "002",
       "date": "2026-04-03",
       "title": "5 API Security Best Practices Every Developer Must Know",
