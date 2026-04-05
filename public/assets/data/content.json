@@ -6,10 +6,10 @@
       "title": "The Complete AI Deployment Decision Guide: Local, Cloud, or Edge?",
       "level": "Professional",
       "topic": "AI, Strategy, Architecture",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/complete-ai-deployment-decision-guide.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "031",
@@ -17,10 +17,10 @@
       "title": "Edge AI: Running Language Models on Phones and IoT Devices",
       "level": "Intermediate",
       "topic": "AI, Edge AI, Mobile",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/edge-ai-running-language-models-on.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "030",
@@ -28,10 +28,10 @@
       "title": "Serving AI Models in Production: vLLM, TGI, and Triton Compared",
       "level": "Professional",
       "topic": "AI, MLOps, Production",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/serving-ai-models-in-production-vllm.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "029",
@@ -39,10 +39,10 @@
       "title": "Speculative Decoding: How to Make LLMs 2-3x Faster for Free",
       "level": "Advanced",
       "topic": "AI, Optimization, Inference",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/speculative-decoding-how-to-make-llms.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "028",
@@ -50,10 +50,10 @@
       "title": "GGUF vs GPTQ vs AWQ: Choosing the Right Quantization Format",
       "level": "Intermediate",
       "topic": "AI, Quantization",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/gguf-vs-gptq-vs-awq-choosing-right.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "027",
@@ -61,10 +61,10 @@
       "title": "What Is Quantization? Making AI Models 4x Smaller Without Losing Quality",
       "level": "Beginner",
       "topic": "AI, Quantization",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/what-is-quantization-making-ai-models.html",
       "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
       "twitterUrl": "https://x.com/AmToc96282",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "021",
