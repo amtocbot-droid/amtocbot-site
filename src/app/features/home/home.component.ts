@@ -1,15 +1,25 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ContentService } from '../../shared/services/content.service';
+
+interface ContentStats {
+  blogs: number;
+  videos: number;
+  shorts: number;
+  podcasts: number;
+  lastSync: string | null;
+}
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, MatCardModule, MatButtonModule, MatChipsModule, MatIconModule],
+  imports: [RouterLink, MatCardModule, MatButtonModule, MatChipsModule, MatIconModule, MatProgressBarModule],
   template: `
     <section class="hero">
       <div class="hero-inner">
@@ -24,13 +34,24 @@ import { ContentService } from '../../shared/services/content.service';
     </section>
 
     <section class="stats-bar">
+      @if (statsLoading()) {
+        <mat-progress-bar mode="indeterminate" class="stats-loader"></mat-progress-bar>
+      }
       <div class="stat">
-        <span class="stat-value">{{ blogCount() }}</span>
+        <span class="stat-value">{{ liveStats().blogs }}</span>
         <span class="stat-label">Blog Posts</span>
       </div>
       <div class="stat">
-        <span class="stat-value">{{ videoCount() }}</span>
+        <span class="stat-value">{{ liveStats().videos }}</span>
         <span class="stat-label">Videos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ liveStats().shorts }}</span>
+        <span class="stat-label">Shorts</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ liveStats().podcasts }}</span>
+        <span class="stat-label">Podcasts</span>
       </div>
       <div class="stat">
         <span class="stat-value">{{ platformCount() }}</span>
@@ -114,10 +135,18 @@ import { ContentService } from '../../shared/services/content.service';
     .stats-bar {
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
       gap: 3rem;
       padding: 2rem 1.5rem;
       background: #fff;
       border-bottom: 1px solid #e2e8f0;
+      position: relative;
+    }
+    .stats-loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
     }
     .stat { text-align: center; }
     .stat-value { display: block; font-size: 2rem; font-weight: 700; color: #1e40af; }
@@ -189,9 +218,11 @@ import { ContentService } from '../../shared/services/content.service';
 })
 export class HomeComponent implements OnInit {
   content = inject(ContentService);
+  private http = inject(HttpClient);
 
-  blogCount = computed(() => this.content.blogs().length);
-  videoCount = computed(() => this.content.videos().filter(v => v.type === 'video').length);
+  liveStats = signal<ContentStats>({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, lastSync: null });
+  statsLoading = signal(true);
+
   platformCount = computed(() => this.content.platforms().length);
 
   latestBlogs = computed(() => [...this.content.blogs()].reverse().slice(0, 3));
@@ -201,6 +232,27 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.content.load();
+    this.fetchContentStats();
+  }
+
+  private fetchContentStats(): void {
+    this.http.get<ContentStats>('/api/content-stats').subscribe({
+      next: (data) => {
+        this.liveStats.set(data);
+        this.statsLoading.set(false);
+      },
+      error: () => {
+        // Fallback to local content.json counts if API unavailable
+        this.liveStats.set({
+          blogs: this.content.blogs().length,
+          videos: this.content.videos().filter(v => v.type === 'video').length,
+          shorts: this.content.videos().filter(v => v.type === 'short').length,
+          podcasts: this.content.videos().filter(v => v.type === 'podcast').length,
+          lastSync: null,
+        });
+        this.statsLoading.set(false);
+      },
+    });
   }
 
   getThumbnail(url: string): string {

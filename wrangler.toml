@@ -1,0 +1,7 @@
+name = "amtocbot-site"
+compatibility_date = "2024-09-23"
+pages_build_output_dir = "dist/amtocbot-site/browser"
+
+[[kv_namespaces]]
+binding = "METRICS_KV"
+id = "423269c6f6404126aefd46480cc99a06"

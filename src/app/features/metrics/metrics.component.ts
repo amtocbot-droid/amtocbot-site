@@ -1,10 +1,23 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { ContentService } from '../../shared/services/content.service';
+
+interface PlatformMetric {
+  platform: string;
+  followers: number;
+  totalViews: number;
+  lastUpdated: string;
+}
+
+interface MetricsApiResponse {
+  metrics: { metrics: PlatformMetric[]; lastRefreshed: string } | null;
+  syncStatus: { lastSync: string; blogs: number; videos: number; shorts: number; podcasts: number } | null;
+}
 
 @Component({
   selector: 'app-metrics',
@@ -17,13 +30,23 @@ import { ContentService } from '../../shared/services/content.service';
       <div class="stats-row">
         <mat-card class="stat-card">
           <mat-icon class="stat-icon">article</mat-icon>
-          <span class="stat-value">{{ totalBlogs() }}</span>
+          <span class="stat-value">{{ liveBlogs() }}</span>
           <span class="stat-label">Blog Posts</span>
         </mat-card>
         <mat-card class="stat-card">
           <mat-icon class="stat-icon">play_circle</mat-icon>
-          <span class="stat-value">{{ totalVideos() }}</span>
+          <span class="stat-value">{{ liveVideos() }}</span>
           <span class="stat-label">Videos</span>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">short_text</mat-icon>
+          <span class="stat-value">{{ liveShorts() }}</span>
+          <span class="stat-label">Shorts</span>
+        </mat-card>
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon">podcasts</mat-icon>
+          <span class="stat-value">{{ livePodcasts() }}</span>
+          <span class="stat-label">Podcasts</span>
         </mat-card>
         <mat-card class="stat-card">
           <mat-icon class="stat-icon">language</mat-icon>
@@ -31,6 +54,40 @@ import { ContentService } from '../../shared/services/content.service';
           <span class="stat-label">Platforms</span>
         </mat-card>
       </div>
+
+      <!-- Platform Metrics from KV -->
+      <h2 class="section-title">Platform Metrics</h2>
+      @if (platformLoading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+      @if (platformMetrics().length > 0) {
+        <table mat-table [dataSource]="platformMetrics()" class="platform-table">
+          <ng-container matColumnDef="platform">
+            <th mat-header-cell *matHeaderCellDef>Platform</th>
+            <td mat-cell *matCellDef="let m">{{ m.platform }}</td>
+          </ng-container>
+          <ng-container matColumnDef="followers">
+            <th mat-header-cell *matHeaderCellDef>Followers</th>
+            <td mat-cell *matCellDef="let m">{{ m.followers }}</td>
+          </ng-container>
+          <ng-container matColumnDef="totalViews">
+            <th mat-header-cell *matHeaderCellDef>Total Views</th>
+            <td mat-cell *matCellDef="let m">{{ m.totalViews }}</td>
+          </ng-container>
+          <ng-container matColumnDef="lastUpdated">
+            <th mat-header-cell *matHeaderCellDef>Updated</th>
+            <td mat-cell *matCellDef="let m">{{ m.lastUpdated }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="platformColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: platformColumns"></tr>
+        </table>
+      } @else if (!platformLoading()) {
+        <p class="no-data">No platform metrics cached yet. Run "Refresh Metrics" from the admin dashboard.</p>
+      }
+
+      @if (metricsLastRefreshed()) {
+        <p class="refresh-time">Metrics last refreshed: {{ metricsLastRefreshed() }}</p>
+      }
 
       <h2 class="section-title">Milestones</h2>
       <table mat-table [dataSource]="content.milestones()" class="milestone-table">
@@ -208,19 +265,67 @@ import { ContentService } from '../../shared/services/content.service';
     .summary-stats strong {
       color: #1e40af;
     }
+
+    .platform-table {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .no-data {
+      color: #94a3b8;
+      text-align: center;
+      padding: 2rem;
+      font-style: italic;
+    }
+
+    .refresh-time {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      text-align: right;
+      margin-top: 0.5rem;
+    }
   `],
 })
 export class MetricsComponent implements OnInit {
   content = inject(ContentService);
+  private http = inject(HttpClient);
 
   displayedColumns = ['name', 'target', 'current', 'progress', 'status'];
+  platformColumns = ['platform', 'followers', 'totalViews', 'lastUpdated'];
 
-  totalBlogs = computed(() => this.content.blogs().length);
-  totalVideos = computed(() => this.content.videos().filter(v => v.type === 'video').length);
+  // Live data from KV-backed API
+  platformMetrics = signal<PlatformMetric[]>([]);
+  platformLoading = signal(true);
+  metricsLastRefreshed = signal<string | null>(null);
+  private syncStatus = signal<MetricsApiResponse['syncStatus']>(null);
+
+  liveBlogs = computed(() => this.syncStatus()?.blogs ?? this.content.blogs().length);
+  liveVideos = computed(() => this.syncStatus()?.videos ?? this.content.videos().filter(v => v.type === 'video').length);
+  liveShorts = computed(() => this.syncStatus()?.shorts ?? 0);
+  livePodcasts = computed(() => this.syncStatus()?.podcasts ?? 0);
   totalPlatforms = computed(() => this.content.platforms().length);
 
   ngOnInit(): void {
     this.content.load();
+    this.fetchLiveMetrics();
+  }
+
+  private fetchLiveMetrics(): void {
+    this.http.get<MetricsApiResponse>('/api/metrics').subscribe({
+      next: (data) => {
+        if (data.metrics?.metrics) {
+          this.platformMetrics.set(data.metrics.metrics);
+          this.metricsLastRefreshed.set(data.metrics.lastRefreshed);
+        }
+        if (data.syncStatus) {
+          this.syncStatus.set(data.syncStatus);
+        }
+        this.platformLoading.set(false);
+      },
+      error: () => {
+        this.platformLoading.set(false);
+      },
+    });
   }
 
   getProgress(current: number, target: number): number {

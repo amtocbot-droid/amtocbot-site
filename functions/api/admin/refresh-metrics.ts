@@ -10,6 +10,7 @@
 
 interface Env {
   YOUTUBE_API_KEY?: string;
+  METRICS_KV?: KVNamespace;
 }
 
 interface PlatformMetric {
@@ -102,6 +103,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     totalViews: 0,
     lastUpdated: 'Manual check required',
   });
+
+  // Persist to KV for the public /api/metrics endpoint
+  if (env.METRICS_KV) {
+    try {
+      await env.METRICS_KV.put('platform-metrics', JSON.stringify({
+        metrics,
+        lastRefreshed: now,
+      }));
+    } catch {
+      // KV write failure is non-fatal — still return the response
+    }
+  }
 
   return new Response(JSON.stringify({ metrics }), {
     status: 200,

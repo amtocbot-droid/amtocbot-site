@@ -266,6 +266,7 @@ export class SiteLayoutComponent {
     { path: '/', label: 'Home', icon: 'home' },
     { path: '/blog', label: 'Blog', icon: 'article' },
     { path: '/videos', label: 'Videos', icon: 'play_circle' },
+    { path: '/podcasts', label: 'Podcasts', icon: 'podcasts' },
     { path: '/metrics', label: 'Metrics', icon: 'bar_chart' },
     { path: '/resources', label: 'Resources', icon: 'link' },
     { path: '/about', label: 'About', icon: 'info' },

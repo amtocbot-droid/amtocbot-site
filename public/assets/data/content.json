@@ -1,6 +1,17 @@
 {
   "blogs": [
     {
+      "id": "021",
+      "date": "2026-04-04",
+      "title": "The Open-Source AI Revolution: DeepSeek, Mistral, and Granite",
+      "level": "Beginner",
+      "topic": "AI, Open-Source",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/the-open-source-ai-revolution-deepseek.html",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Published"
+    },
+    {
       "id": "002",
       "date": "2026-04-03",
       "title": "5 API Security Best Practices Every Developer Must Know",
@@ -237,6 +248,7 @@
     { "id": "V010", "date": "2026-04-03", "title": "Run AI on Your Laptop: Ollama Tutorial", "level": "Intermediate", "youtubeUrl": "https://youtu.be/_d0p9hndWEo", "duration": "5:25", "type": "video" },
     { "id": "V011", "date": "2026-04-03", "title": "Build a Local AI Chatbot with Python & Ollama", "level": "Intermediate", "youtubeUrl": "https://youtu.be/j51IpWQ7df0", "duration": "4:00", "type": "video" },
     { "id": "P001", "date": "2026-04-02", "title": "Bot Thoughts: AI Agents Are Everywhere", "level": "Beginner", "youtubeUrl": "https://youtu.be/P4AeX9xkSfM", "duration": "~20 min", "type": "podcast" },
+    { "id": "P002", "date": "2026-04-04", "title": "Vibe Coding — The Security and Quality Reality Check", "level": "Intermediate", "youtubeUrl": "https://youtu.be/mtn7qDpRzyk", "spotifyUrl": "https://creators.spotify.com/pod/show/2X82OW5nzyaXT0AQ7HZhHh/episode/5YN55eaVyyhWqAxOiU5Q7m", "duration": "28:12", "type": "podcast" },
     { "id": "S001", "date": "2026-04-03", "title": "AI Chatbot in 40 Lines of Python", "level": "Intermediate", "youtubeUrl": "https://youtu.be/aSgyJApWsLM", "duration": "0:36", "type": "short" },
     { "id": "S002", "date": "2026-04-03", "title": "Your API Has These 5 Vulnerabilities", "level": "Intermediate", "youtubeUrl": "https://youtu.be/OEnvOZneEks", "duration": "0:46", "type": "short" },
     { "id": "S003", "date": "2026-04-03", "title": "Run AI on Your Laptop With One Command", "level": "Beginner", "youtubeUrl": "https://youtu.be/fuZtqOx5Kcw", "duration": "0:29", "type": "short" },

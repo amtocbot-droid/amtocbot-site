@@ -17,8 +17,20 @@ export interface Video {
   title: string;
   level: string;
   youtubeUrl: string;
+  spotifyUrl?: string;
   duration: string;
   type: 'video' | 'podcast' | 'short';
+}
+
+export interface TranscriptSegment {
+  label: string;
+  entries: TranscriptEntry[];
+}
+
+export interface TranscriptEntry {
+  speaker: string;
+  text: string;
+  timestamp: string;
 }
 
 export interface Milestone {

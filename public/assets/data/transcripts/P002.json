@@ -1,0 +1,379 @@
+{
+  "id": "P002",
+  "title": "Vibe Coding — The Security and Quality Reality Check",
+  "date": "2026-04-04",
+  "duration": "28:12",
+  "hosts": ["Alex", "Sam"],
+  "segments": [
+    {
+      "label": "Intro",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "1.5 million API keys. Exposed. In a single breach. The app that leaked them was built in one weekend using nothing but AI prompts. No code review. No security audit. Just vibes. Welcome to the reality of vibe coding in 2026.",
+          "timestamp": "00:00"
+        },
+        {
+          "speaker": "Alex",
+          "text": "You're listening to Tech Decoded by AmtocSoft. The podcast where we break down the biggest trends in AI, software engineering, and developer tools. No hype. No fluff. Just the signal. I'm Alex.",
+          "timestamp": "00:18"
+        },
+        {
+          "speaker": "Sam",
+          "text": "And I'm Sam. Today's episode is one we've been wanting to do for a while. Vibe coding. The security and quality reality check. Is AI-generated code saving the industry or setting it on fire? We've got data, we've got horror stories, and we've got practical advice. Let's get into it.",
+          "timestamp": "00:32"
+        }
+      ]
+    },
+    {
+      "label": "Spotlight News",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "But first, our Spotlight News segment. Three headlines every developer needs to know this week.",
+          "timestamp": "00:52"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Headline one. Cursor 3 launched this week with a completely redesigned interface built around AI agents. You can now spin up multiple agents working in parallel on different parts of your codebase. One writes the frontend, another writes the API, another writes the tests. It's no longer about AI as an assistant. It's about AI as a team.",
+          "timestamp": "00:58"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Headline two. Mistral released Voxtral TTS, an open-source text-to-speech model that's beating ElevenLabs in blind listening tests. 62.8 percent of listeners preferred it over commercial alternatives. It runs locally, it's Apache 2.0 licensed, and it can clone a voice from a 3-second sample. This is huge for content creators and podcast producers.",
+          "timestamp": "01:24"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Headline three. Global AI venture funding hit 300 billion dollars in Q1 2026, with 80 percent going to AI companies. OpenAI raised 122 billion, Anthropic raised 30 billion. The money is concentrated at the top, and the race for artificial general intelligence is accelerating. Now, onto our main topic.",
+          "timestamp": "01:54"
+        }
+      ]
+    },
+    {
+      "label": "Main Discussion",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "OK Sam, let's set the stage. What exactly is vibe coding, and where did the term come from?",
+          "timestamp": "02:22"
+        },
+        {
+          "speaker": "Sam",
+          "text": "So vibe coding is a term that Andrej Karpathy, one of the founders of OpenAI, coined back in 2025. The idea is beautifully simple. Instead of writing code line by line, you describe what you want to an AI tool like Cursor, Claude Code, or GitHub Copilot. The AI writes the code. You don't read every line. You don't debug manually. You just keep prompting until the application works. You accept the code based on vibes. If it seems right, ship it. And here's the mind-blowing part. 41 percent of all code pushed to production in 2026 is AI-generated. 92 percent of US developers use AI coding tools daily. This went from experiment to standard practice in under a year.",
+          "timestamp": "02:28"
+        },
+        {
+          "speaker": "Alex",
+          "text": "41 percent. Let me just let that sit for a second. Almost half of all production code was not written by a human. And 74 percent of developers say they've seen real productivity gains. So on the surface, this sounds like pure progress. What's the problem?",
+          "timestamp": "03:18"
+        },
+        {
+          "speaker": "Sam",
+          "text": "The problem is what happens when you don't understand the code you're shipping. A major study found that AI co-authored code contains 1.7 times more major issues than human-written code. 45 percent of AI-generated code samples contain vulnerabilities from the OWASP Top 10. We're talking SQL injection, cross-site scripting, broken authentication, insecure direct object references. The stuff that actually gets companies breached. And this isn't theoretical. In early 2026, a vibe-coded application suffered a breach that exposed 1.5 million API keys. The developer had let the AI generate the entire backend. Authentication, database access, secret management, everything. The AI stored API keys in plain text in a publicly accessible database table. No encryption. No access control. Just raw credentials sitting in a table called user secrets.",
+          "timestamp": "03:38"
+        },
+        {
+          "speaker": "Alex",
+          "text": "OK but let me push back a little. Humans write insecure code too. We've had SQL injection since 1998 and people are still making that mistake. Is the AI really worse, or are we just holding it to a higher standard because it's new?",
+          "timestamp": "04:38"
+        },
+        {
+          "speaker": "Sam",
+          "text": "That's a really fair point and the answer is actually more nuanced than AI bad, humans good. The real issue isn't that AI writes worse code per se. It's that vibe coding encourages a specific and very dangerous anti-pattern. When you write code yourself, you naturally build a mental model of the system. You understand the data flow, the trust boundaries, where secrets are stored, how authentication works. When you vibe code, you skip that understanding entirely. You get working software without knowing how it works. And here's the stat that really tells the story. 63 percent of developers who practice vibe coding report spending more time debugging the AI's output than it would have taken to write the code themselves. So the productivity gains that everyone celebrates are often an illusion. You save time writing but spend more time fixing.",
+          "timestamp": "04:56"
+        },
+        {
+          "speaker": "Alex",
+          "text": "That's the vibe coding paradox. Faster to write, slower to debug. And if you're not reviewing the code, the bugs make it to production. So is the solution to stop using AI entirely? That seems like throwing the baby out with the bathwater.",
+          "timestamp": "05:48"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Absolutely not. The solution is not to stop using AI. The solution is to evolve how we use it. And this is where the industry is heading right now. People are starting to call it agentic engineering. Instead of blindly accepting AI output, you treat AI tools as team members. You delegate specific well-defined tasks. You review the output for critical paths. You own the architecture and security model yourself. Think of it like managing a team of junior developers. You would never let a junior push code to production without review. You wouldn't let them design the security architecture. But you'd absolutely let them write the unit tests, set up the project scaffolding, implement well-defined API endpoints with clear specifications. That's exactly how the best engineering teams use AI in 2026.",
+          "timestamp": "06:02"
+        },
+        {
+          "speaker": "Alex",
+          "text": "And tools are starting to support this workflow natively, right? You mentioned Cursor 3 in the spotlight. How does that fit into agentic engineering?",
+          "timestamp": "06:52"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Cursor 3 is a perfect example. Their entire redesign is built around this concept. They have what they call an Agents Window where you can manage multiple AI agents working in parallel. You define the boundaries. Agent one writes the React components. Agent two writes the Express API routes. Agent three writes the test suite. But a human architect defines which agent does what, reviews the security-critical paths, and approves the final integration. Claude Code does something similar with background tasks. You can spin up multiple coding agents that work autonomously while you focus on high-level architecture. The shift from vibe coding to agentic engineering is really about going from I let the AI do everything to I orchestrate AI agents strategically.",
+          "timestamp": "07:02"
+        }
+      ]
+    },
+    {
+      "label": "Tech Trivia",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Great breakdown, Sam. Let's take a quick break for our Tech Trivia segment. I've got three fun facts about AI and coding history. Ready?",
+          "timestamp": "07:52"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Trivia number one. The first computer bug was literally a bug. In 1947, Grace Hopper found an actual moth stuck in a relay of the Harvard Mark II computer. She taped it into her logbook and wrote, first actual case of bug being found. That logbook is now in the Smithsonian.",
+          "timestamp": "08:00"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Trivia number two. The average cost of a software security breach in 2026 is 4.88 million dollars. That's up from 4.45 million just two years ago. And breaches involving AI-generated code are 23 percent more expensive because they're harder to diagnose. The AI doesn't leave the same debugging breadcrumbs that human developers do.",
+          "timestamp": "08:22"
+        },
+        {
+          "speaker": "Alex",
+          "text": "And trivia number three. The term vibe coding was actually meant as a joke. Andrej Karpathy posted about it casually on social media, calling it his weekend coding style. He never intended it to become a serious development methodology. By February 2026, he said the term had become passe and that the real conversation should be about agentic workflows. But by then, vibe coding had already become a startup pitch deck buzzword.",
+          "timestamp": "08:48"
+        }
+      ]
+    },
+    {
+      "label": "Quiz",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Love it. OK, back to our main topic. Sam, for our listeners who are using AI coding tools every day, and let's be honest that's nearly all of them, what's the practical framework? How do you get the productivity benefits without the security nightmares?",
+          "timestamp": "09:22"
+        },
+        {
+          "speaker": "Sam",
+          "text": "I have three rules that I think every developer should follow. Rule number one. Never vibe code security. Authentication, authorization, encryption, API key management, session handling. Write that yourself or review every single line the AI generates. Rule number two. Always review AI-generated code that touches data boundaries. Anything that reads from a database, calls an external API, handles user input, or manages file uploads. Rule number three. Use AI heavily for the boring stuff. Tests, documentation, boilerplate, refactoring, CSS layouts, configuration files, migration scripts. That's where the real productivity gains are, and the risk is lowest.",
+          "timestamp": "09:38"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Perfect framework. Now let's test our listeners with a quick Quiz segment. I'm going to give three scenarios and Sam, you tell us whether you should vibe code it or review every line.",
+          "timestamp": "10:38"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Scenario one. You need to create a new React component that displays a list of blog posts with pagination. Vibe code or review?",
+          "timestamp": "10:52"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Vibe code it. This is display logic with well-established patterns. The AI will generate perfectly fine React components for this. You might tweak the styling, but there's no security risk. This is exactly where AI saves you time.",
+          "timestamp": "11:00"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Scenario two. Your app needs a password reset flow. Users enter their email, receive a token, and set a new password.",
+          "timestamp": "11:16"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Review every line. Password reset is one of the most commonly exploited flows in web applications. You need to verify the token is single-use, time-limited, cryptographically random, and that the email sending doesn't leak user existence information. The AI might generate something that looks correct but uses a predictable token or doesn't expire it properly.",
+          "timestamp": "11:24"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Last scenario. You need to write 200 unit tests for an existing API with well-defined inputs and outputs.",
+          "timestamp": "11:52"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Absolutely vibe code it. This is the single best use case for AI coding tools. Test generation with clear inputs and expected outputs. The AI is phenomenal at this. You might need to adjust a few edge cases, but generating the bulk of your test suite with AI can save days of work with essentially zero security risk.",
+          "timestamp": "12:00"
+        }
+      ]
+    },
+    {
+      "label": "Deep Dive",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Let us take a deep dive into what actually happens when vibe coding goes wrong. We mentioned the 1.5 million API key breach, but that is just the tip of the iceberg. There are patterns emerging that every developer needs to understand.",
+          "timestamp": "12:24"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Pattern number one. The copy paste vulnerability chain. When you ask an AI to build an authentication system, it often generates code that looks correct on the surface. Login form, password hashing, session tokens. But it frequently makes subtle mistakes that are invisible without security expertise. For example, it might use MD5 for password hashing instead of bcrypt. It might generate session tokens with Math.random instead of a cryptographically secure random number generator. Each of these individually might not cause a breach. But combined, they create a vulnerability chain that an experienced attacker can exploit in hours.",
+          "timestamp": "12:42"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Pattern number two. The dependency nightmare. AI coding tools love to import packages. The problem is that AI tools often suggest outdated or unmaintained packages with known vulnerabilities. A study found that AI-generated projects have on average 40 percent more dependencies than equivalent human-written projects, and 28 percent of those dependencies have at least one known security vulnerability. More dependencies means more attack surface, more supply chain risk, and more maintenance burden.",
+          "timestamp": "13:28"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Those patterns are scary. Are there other real-world examples besides the API key breach?",
+          "timestamp": "14:08"
+        },
+        {
+          "speaker": "Sam",
+          "text": "There are hundreds of smaller incidents that never make the news. A healthcare startup in Austin had to shut down for three weeks after their AI-generated patient portal was found to have an insecure direct object reference vulnerability. Patients could access other patients records by simply changing the ID number in the URL. Another case. A fintech company in London deployed an AI-generated payment processing module that rounded transactions incorrectly. Over six months, the rounding errors accumulated to over 200 thousand dollars in discrepancies. Both of these are beginner mistakes that any experienced developer would catch in code review. But when you are vibe coding, there is no code review.",
+          "timestamp": "14:18"
+        }
+      ]
+    },
+    {
+      "label": "Industry & Regulation",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Let us talk about how the industry is responding. We are seeing regulation starting to catch up. Sam, what are governments and companies doing about this?",
+          "timestamp": "15:12"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Great question. The UK just published a five-level autonomy spectrum specifically for agentic AI systems. It ranges from level zero, which is no autonomy where the human does everything, to level five, full autonomy where the AI operates independently. California has gone further. They now mandate specific safeguards for any company that uses AI-generated code in systems that handle personal data or financial transactions. The fine for non-compliance is up to 10 thousand dollars per incident.",
+          "timestamp": "15:24"
+        },
+        {
+          "speaker": "Alex",
+          "text": "And what about companies internally? Are engineering teams creating their own policies around AI-generated code?",
+          "timestamp": "16:10"
+        },
+        {
+          "speaker": "Sam",
+          "text": "The smart ones are. Stripe published a blog post last month about their AI coding policy. They categorize code into three tiers. Tier one is unrestricted, meaning UI components, tests, documentation. AI can generate freely. Tier two is reviewed, meaning business logic, API endpoints, data transformations. AI can generate but a senior engineer must review. Tier three is restricted, meaning authentication, payment processing, cryptography, access control. AI can assist but a human must write the primary implementation and it requires two reviewers. That tiered approach is becoming the industry standard.",
+          "timestamp": "16:18"
+        }
+      ]
+    },
+    {
+      "label": "Tools Roundup",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Before we wrap up, let us do a quick Tools Roundup. Every episode we highlight tools and resources that are relevant to the topic. Sam, what should developers be using to make their AI coding workflow safer?",
+          "timestamp": "17:04"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Tool number one. Snyk. If you are vibe coding, you absolutely need a vulnerability scanner running in your CI CD pipeline. Snyk scans your dependencies and your code for known vulnerabilities. It integrates directly with GitHub, GitLab, and Bitbucket. The free tier covers most open source projects.",
+          "timestamp": "17:20"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Tool number two. SonarQube or SonarCloud. This is a code quality and security analysis tool. It catches code smells, bugs, and security vulnerabilities that the AI often introduces. You can configure it to flag specific patterns that AI tools commonly get wrong. Run it on every pull request.",
+          "timestamp": "17:50"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Tool number three. GitHub Copilot code review. This might sound ironic, using AI to review AI-generated code, but it actually works surprisingly well. Copilot can now review pull requests and flag potential issues. It catches things like hardcoded secrets, SQL injection vulnerabilities, and race conditions. Think of it as spell check for security.",
+          "timestamp": "18:18"
+        },
+        {
+          "speaker": "Sam",
+          "text": "And tool number four. Semgrep. This is an open-source static analysis tool that lets you write custom rules for your codebase. When AI generates code that violates your rules, Semgrep catches it instantly. It is like having a senior security engineer reviewing every line automatically. The open-source version is free and incredibly powerful.",
+          "timestamp": "18:48"
+        }
+      ]
+    },
+    {
+      "label": "Listener Challenge",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Great tools. Now for our Listener Challenge. Every episode we give you something to try before the next episode.",
+          "timestamp": "19:20"
+        },
+        {
+          "speaker": "Sam",
+          "text": "This week's challenge. Take one piece of AI-generated code from your current project. Just one function or one module. Now review it as if you were doing a security audit. Ask yourself these questions. Does it validate all user inputs? Does it use parameterized queries for database access? Does it handle errors without leaking internal information? Are there any hardcoded secrets or credentials? Does it follow the principle of least privilege? I guarantee you will find at least one issue. Share what you discover with us on LinkedIn or X with the hashtag tech decoded challenge.",
+          "timestamp": "19:28"
+        }
+      ]
+    },
+    {
+      "label": "Q&A",
+      "entries": [
+        {
+          "speaker": "Alex",
+          "text": "Great quiz. Now let's move to our Q and A segment. We pulled some questions from our community and social media.",
+          "timestamp": "20:08"
+        },
+        {
+          "speaker": "Alex",
+          "text": "First question from a listener. Will vibe coding make junior developers obsolete? If AI can write the code, why hire someone who's still learning?",
+          "timestamp": "20:14"
+        },
+        {
+          "speaker": "Sam",
+          "text": "This is the question I hear most often, and I think the answer is the opposite of what people expect. Junior developers are more valuable than ever, but the skill set is different. In 2026, a junior dev needs to know how to review AI-generated code, identify security vulnerabilities, understand system architecture, and evaluate whether the AI's solution actually solves the business problem. The bar hasn't lowered. It's shifted.",
+          "timestamp": "20:24"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Second question. I'm a startup founder building an MVP. Should I use vibe coding to ship faster?",
+          "timestamp": "20:58"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Yes, but with guardrails. For an MVP, speed matters more than perfection. Use AI to build the UI, the basic CRUD operations, the landing pages. Ship it fast and validate the idea. But do not vibe code your authentication, your payment processing, or your data storage. Use well-tested libraries for those. Let the AI handle the glue code and the UI. Handle the critical infrastructure with proven tools.",
+          "timestamp": "21:06"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Third question. What's the best AI coding tool in 2026? Cursor, Claude Code, GitHub Copilot, or something else?",
+          "timestamp": "21:42"
+        },
+        {
+          "speaker": "Sam",
+          "text": "It depends on your workflow. Cursor 3 is the best for greenfield development. Claude Code is the best for working in existing codebases. And GitHub Copilot is still the best inline completion tool. Most serious developers in 2026 use two or three of these tools together. They're not really competing. They complement each other.",
+          "timestamp": "21:50"
+        },
+        {
+          "speaker": "Alex",
+          "text": "This one comes from a computer science professor. She asks, how should we teach programming to students who will spend their careers working with AI coding tools?",
+          "timestamp": "22:20"
+        },
+        {
+          "speaker": "Sam",
+          "text": "Yes, absolutely teach them to write for loops. Teach them data structures, algorithms, memory management, all of it. Because you cannot review AI-generated code if you do not understand code. But also teach them how to use AI tools effectively. Teach them to write good prompts. Teach them to read code critically. The developers who will thrive in 2027 and beyond are not the ones who can type the fastest. They are the ones who can think the clearest about systems, security, and architecture. AI handles the typing. Humans handle the thinking.",
+          "timestamp": "22:30"
+        }
+      ]
+    },
+    {
+      "label": "Closing",
+      "entries": [
+        {
+          "speaker": "Sam",
+          "text": "I want to add something philosophical before we close. When 60 percent of code is AI-generated and developers are primarily reviewers rather than writers, what happens to craftsmanship? Programming has always been part engineering, part art. AI-generated code is functional but it is rarely elegant. The developers who will lead the industry in five years are the ones who learned to code deeply first, and then learned to leverage AI second.",
+          "timestamp": "23:12"
+        },
+        {
+          "speaker": "Alex",
+          "text": "That is beautifully put, Sam. The message is not anti-AI. It is pro-understanding. Use the tools, but understand what they produce. Automate the tedious, but own the critical. And never stop learning how things actually work under the hood.",
+          "timestamp": "23:52"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Let me try to summarize what we've covered today. Vibe coding is real. 41 percent of production code is AI-generated. But the security data is alarming. 1.7 times more bugs, 45 percent OWASP vulnerability rate, and a real-world breach that exposed 1.5 million API keys. The future isn't vibe coding. It's agentic engineering. And Sam's three rules. Never vibe code security. Review data boundaries. Automate the boring stuff.",
+          "timestamp": "24:12"
+        },
+        {
+          "speaker": "Sam",
+          "text": "And remember, the goal isn't to write less code. The goal is to build better software faster. AI is the most powerful tool developers have ever had. Use it wisely, and it'll make you ten times more productive. Use it carelessly, and you'll spend your weekends explaining to your CEO why your customer data is on the dark web.",
+          "timestamp": "24:52"
+        },
+        {
+          "speaker": "Alex",
+          "text": "Predictions for 2027. Vibe coding as a term will be dead. AI-generated code will hit 60 percent of production code. And we will see the first AI-generated code certification, something like SOC 2 for AI-assisted development.",
+          "timestamp": "25:18"
+        },
+        {
+          "speaker": "Alex",
+          "text": "If you are enjoying Tech Decoded, share this episode with a developer friend. You can find us on YouTube at quietsentinelshadow, on LinkedIn at AmtocSoft, and on our blog at amtocsoft.blogspot.com. All the links are in the show notes.",
+          "timestamp": "25:48"
+        },
+        {
+          "speaker": "Alex",
+          "text": "That's a wrap on this episode of Tech Decoded by AmtocSoft. If you found this useful, subscribe on YouTube, follow us on LinkedIn and X, and check out our blog at amtocsoft.blogspot.com. We publish new episodes every week. Drop us a comment with your questions. Until next time, keep building, keep learning, and for the love of all that is holy, keep your API keys out of plain text databases. See you next week.",
+          "timestamp": "26:10"
+        },
+        {
+          "speaker": "Sam",
+          "text": "And if your AI writes a function called store credentials unencrypted, maybe don't ship that one on a Friday afternoon. Peace.",
+          "timestamp": "27:42"
+        }
+      ]
+    }
+  ]
+}

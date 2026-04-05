@@ -9,6 +9,7 @@
 
 interface Env {
   GITHUB_TOKEN?: string;
+  METRICS_KV?: KVNamespace;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -44,13 +45,24 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const shorts = allVideos.filter((v: any) => v.type === 'short');
     const podcasts = allVideos.filter((v: any) => v.type === 'podcast');
 
-    return new Response(JSON.stringify({
+    const syncData = {
       lastSync: new Date().toISOString(),
       blogs: blogs.length,
       videos: videos.length,
       shorts: shorts.length,
       podcasts: podcasts.length,
-    }), { status: 200, headers: corsHeaders });
+    };
+
+    // Persist to KV for the public /api/content-stats endpoint
+    if (env.METRICS_KV) {
+      try {
+        await env.METRICS_KV.put('sync-status', JSON.stringify(syncData));
+      } catch {
+        // KV write failure is non-fatal — still return the response
+      }
+    }
+
+    return new Response(JSON.stringify(syncData), { status: 200, headers: corsHeaders });
 
   } catch (e) {
     return new Response(JSON.stringify({ error: 'Sync failed', details: String(e) }), {
