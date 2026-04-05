@@ -314,9 +314,9 @@
     { "id": "S008", "date": "2026-04-04", "title": "AI Agents Can Now Do THIS Autonomously", "level": "Beginner", "youtubeUrl": "https://youtu.be/WnIVq0YpKoc", "duration": "0:43", "type": "short" },
     { "id": "S009", "date": "2026-04-04", "title": "GraphRAG vs RAG — Why Connections Matter", "level": "Intermediate", "youtubeUrl": "https://youtu.be/PDGgbffRSKI", "duration": "0:40", "type": "short" },
     { "id": "S010", "date": "2026-04-04", "title": "The Best AI Models Are Now Free", "level": "Beginner", "youtubeUrl": "https://youtu.be/BcUPpwvW6DU", "duration": "0:34", "type": "short" },
-    { "id": "S016", "date": "2026-04-05", "title": "A Vibe-Coded App Exposed 1.5 Million API Keys", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/ZLB3_8Rs6p8", "duration": "0:40", "type": "short" },
-    { "id": "S017", "date": "2026-04-05", "title": "Fine-Tune Any AI Model on a Laptop for $0", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/-Djn48QIJKI", "duration": "0:38", "type": "short" },
-    { "id": "S018", "date": "2026-04-05", "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/e_8M9dHTQQ8", "duration": "0:34", "type": "short" }
+    { "id": "S016", "date": "2026-04-05", "title": "A Vibe-Coded App Exposed 1.5 Million API Keys", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/JJuGhVpJde0", "duration": "0:40", "type": "short" },
+    { "id": "S017", "date": "2026-04-05", "title": "Fine-Tune Any AI Model on a Laptop for $0", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/T9KSf_WWZqM", "duration": "0:38", "type": "short" },
+    { "id": "S018", "date": "2026-04-05", "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U", "duration": "0:34", "type": "short" }
   ],
   "milestones": [
     { "name": "First 10 blog posts", "target": 10, "current": 18, "status": "Done" },
@@ -342,15 +342,17 @@
   ],
   "weeklySummary": {
     "week": "W1 (Mar 30 - Apr 5)",
-    "blogs": 18,
+    "blogs": 26,
     "videos": 11,
-    "podcasts": 1,
+    "shorts": 18,
+    "podcasts": 2,
     "socialPosts": 34
   },
   "monthlySummary": {
     "month": "April 2026",
-    "blogs": 15,
+    "blogs": 23,
     "videos": 11,
-    "podcasts": 1
+    "shorts": 18,
+    "podcasts": 2
   }
 }
