@@ -1,6 +1,72 @@
 {
   "blogs": [
     {
+      "id": "032",
+      "date": "2026-04-05",
+      "title": "The Complete AI Deployment Decision Guide: Local, Cloud, or Edge?",
+      "level": "Professional",
+      "topic": "AI, Strategy, Architecture",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
+      "id": "031",
+      "date": "2026-04-05",
+      "title": "Edge AI: Running Language Models on Phones and IoT Devices",
+      "level": "Intermediate",
+      "topic": "AI, Edge AI, Mobile",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
+      "id": "030",
+      "date": "2026-04-05",
+      "title": "Serving AI Models in Production: vLLM, TGI, and Triton Compared",
+      "level": "Professional",
+      "topic": "AI, MLOps, Production",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
+      "id": "029",
+      "date": "2026-04-05",
+      "title": "Speculative Decoding: How to Make LLMs 2-3x Faster for Free",
+      "level": "Advanced",
+      "topic": "AI, Optimization, Inference",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
+      "id": "028",
+      "date": "2026-04-05",
+      "title": "GGUF vs GPTQ vs AWQ: Choosing the Right Quantization Format",
+      "level": "Intermediate",
+      "topic": "AI, Quantization",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
+      "id": "027",
+      "date": "2026-04-05",
+      "title": "What Is Quantization? Making AI Models 4x Smaller Without Losing Quality",
+      "level": "Beginner",
+      "topic": "AI, Quantization",
+      "blogUrl": "",
+      "linkedinUrl": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "twitterUrl": "https://x.com/AmToc96282",
+      "status": "Draft"
+    },
+    {
       "id": "021",
       "date": "2026-04-04",
       "title": "The Open-Source AI Revolution: DeepSeek, Mistral, and Granite",
@@ -316,12 +382,18 @@
     { "id": "S010", "date": "2026-04-04", "title": "The Best AI Models Are Now Free", "level": "Beginner", "youtubeUrl": "https://youtu.be/BcUPpwvW6DU", "duration": "0:34", "type": "short" },
     { "id": "S016", "date": "2026-04-05", "title": "A Vibe-Coded App Exposed 1.5 Million API Keys", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/JJuGhVpJde0", "duration": "0:40", "type": "short" },
     { "id": "S017", "date": "2026-04-05", "title": "Fine-Tune Any AI Model on a Laptop for $0", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/T9KSf_WWZqM", "duration": "0:38", "type": "short" },
-    { "id": "S018", "date": "2026-04-05", "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U", "duration": "0:34", "type": "short" }
+    { "id": "S018", "date": "2026-04-05", "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U", "duration": "0:34", "type": "short" },
+    { "id": "S019", "date": "2026-04-05", "title": "RAG vs Fine-Tuning: You're Picking Wrong", "level": "Intermediate", "youtubeUrl": "", "duration": "0:41", "type": "short" },
+    { "id": "S020", "date": "2026-04-05", "title": "QLoRA: Fine-Tune 70B Models on One GPU", "level": "Advanced", "youtubeUrl": "", "duration": "0:48", "type": "short" },
+    { "id": "S021", "date": "2026-04-05", "title": "Build Your Own Company AI Model This Weekend", "level": "Professional", "youtubeUrl": "", "duration": "0:50", "type": "short" },
+    { "id": "S022", "date": "2026-04-05", "title": "Ollama vs LM Studio vs llama.cpp", "level": "Beginner", "youtubeUrl": "", "duration": "0:42", "type": "short" },
+    { "id": "S023", "date": "2026-04-05", "title": "Multimodal RAG: Search Images, Audio & Video", "level": "Advanced", "youtubeUrl": "", "duration": "0:52", "type": "short" },
+    { "id": "S024", "date": "2026-04-05", "title": "Intent-Driven Development: Describe It, Ship It", "level": "Intermediate", "youtubeUrl": "", "duration": "0:42", "type": "short" }
   ],
   "milestones": [
-    { "name": "First 10 blog posts", "target": 10, "current": 18, "status": "Done" },
-    { "name": "First 5 YouTube videos", "target": 5, "current": 21, "status": "Done" },
-    { "name": "First podcast episode", "target": 1, "current": 1, "status": "Done" },
+    { "name": "First 10 blog posts", "target": 10, "current": 32, "status": "Done" },
+    { "name": "First 5 YouTube videos", "target": 5, "current": 35, "status": "Done" },
+    { "name": "First podcast episode", "target": 1, "current": 2, "status": "Done" },
     { "name": "100 YouTube subscribers", "target": 100, "current": 0, "status": "Pending" },
     { "name": "500 YouTube subscribers (YPP)", "target": 500, "current": 0, "status": "Pending" },
     { "name": "3,000 YouTube watch hours (YPP)", "target": 3000, "current": 0, "status": "Pending" },
@@ -342,17 +414,17 @@
   ],
   "weeklySummary": {
     "week": "W1 (Mar 30 - Apr 5)",
-    "blogs": 26,
+    "blogs": 32,
     "videos": 11,
-    "shorts": 18,
+    "shorts": 24,
     "podcasts": 2,
-    "socialPosts": 34
+    "socialPosts": 46
   },
   "monthlySummary": {
     "month": "April 2026",
-    "blogs": 23,
+    "blogs": 29,
     "videos": 11,
-    "shorts": 18,
+    "shorts": 24,
     "podcasts": 2
   }
 }
