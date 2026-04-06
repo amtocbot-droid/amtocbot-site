@@ -25,28 +25,39 @@ export const onRequestOptions: PagesFunction<Env> = async () => {
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env } = context;
 
+  // If KV is not configured or has no sync data, count directly from content.json
+  const countFromJson = async (): Promise<Response> => {
+    try {
+      const jsonUrl = new URL('/assets/data/content.json', context.request.url);
+      const resp = await fetch(jsonUrl.toString());
+      if (!resp.ok) throw new Error('Failed to fetch content.json');
+      const data = await resp.json() as { blogs?: unknown[]; videos?: Array<{ type?: string }> };
+      const blogs = data.blogs?.length ?? 0;
+      const allVideos = data.videos ?? [];
+      const videos = allVideos.filter(v => v.type === 'video').length;
+      const shorts = allVideos.filter(v => v.type === 'short').length;
+      const podcasts = allVideos.filter(v => v.type === 'podcast').length;
+      return new Response(JSON.stringify({ blogs, videos, shorts, podcasts, lastSync: null }), {
+        status: 200,
+        headers: corsHeaders,
+      });
+    } catch {
+      return new Response(JSON.stringify({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, lastSync: null }), {
+        status: 200,
+        headers: corsHeaders,
+      });
+    }
+  };
+
   if (!env.METRICS_KV) {
-    return new Response(JSON.stringify({
-      error: 'KV not configured',
-      blogs: 0,
-      videos: 0,
-      shorts: 0,
-      podcasts: 0,
-      lastSync: null,
-    }), { status: 200, headers: corsHeaders });
+    return countFromJson();
   }
 
   try {
     const syncRaw = await env.METRICS_KV.get('sync-status');
 
     if (!syncRaw) {
-      return new Response(JSON.stringify({
-        blogs: 0,
-        videos: 0,
-        shorts: 0,
-        podcasts: 0,
-        lastSync: null,
-      }), { status: 200, headers: corsHeaders });
+      return countFromJson();
     }
 
     const syncData = JSON.parse(syncRaw) as {
