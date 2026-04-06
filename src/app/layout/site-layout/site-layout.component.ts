@@ -65,6 +65,7 @@ import { MatListModule } from '@angular/material/list';
         <footer class="footer">
           <div class="footer-inner">
             <span class="footer-brand">Powered by AmtocSoft</span>
+            <a href="https://buymeacoffee.com/amtocsoft" target="_blank" rel="noopener" class="bmc-link">☕ Buy Me a Coffee</a>
             <div class="footer-links">
               <a href="https://amtocsoft.blogspot.com" target="_blank" rel="noopener" aria-label="Blog">
                 <mat-icon>article</mat-icon>
@@ -184,6 +185,16 @@ import { MatListModule } from '@angular/material/list';
       font-size: 0.9rem;
       font-weight: 500;
     }
+
+    .bmc-link {
+      color: #f59e0b;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .bmc-link:hover { color: #fbbf24; }
 
     .footer-links {
       display: flex;
