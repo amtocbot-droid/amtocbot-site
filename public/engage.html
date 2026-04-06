@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AmtocSoft Community Engagement Hub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 1.5rem; }
+    h1 { color: #60a5fa; margin-bottom: 0.5rem; font-size: 1.6rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .refresh-time { color: #f59e0b; font-size: 0.8rem; }
+    .platform-section { margin-bottom: 2rem; }
+    .platform-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #1e293b; }
+    .platform-header h2 { font-size: 1.2rem; }
+    .platform-header .icon { font-size: 1.4rem; }
+    .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0.75rem; }
+    .link-card { background: #1e293b; border-radius: 8px; padding: 1rem; border: 1px solid #334155; transition: border-color 0.2s; }
+    .link-card:hover { border-color: #60a5fa; }
+    .link-card a { color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 0.4rem; }
+    .link-card a:hover { text-decoration: underline; }
+    .link-card .meta { color: #94a3b8; font-size: 0.8rem; margin-bottom: 0.4rem; }
+    .link-card .action { color: #f59e0b; font-size: 0.8rem; font-weight: 600; }
+    .link-card .tags { color: #64748b; font-size: 0.75rem; margin-top: 0.3rem; }
+    .tip { background: #1a2332; border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; margin-bottom: 1.5rem; border-radius: 0 6px 6px 0; font-size: 0.85rem; }
+    .tip strong { color: #f59e0b; }
+    .btn-refresh { background: #3b82f6; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+    .btn-refresh:hover { background: #2563eb; }
+    .done { opacity: 0.4; }
+    .done .action { color: #22c55e !important; }
+    .checkbox { cursor: pointer; margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>AmtocSoft Community Engagement Hub</h1>
+  <p class="subtitle">Curated links to engage with authentically. Review, like, comment where relevant. <span class="refresh-time" id="time"></span></p>
+
+  <div class="tip">
+    <strong>Daily goal:</strong> 15-20 min, 4 sessions. Like 5-10 posts, leave 3-5 genuine comments. Never spam. Add value with every interaction.
+  </div>
+
+  <div class="platform-section">
+    <div class="platform-header">
+      <span class="icon">🤖</span>
+      <h2>Reddit</h2>
+    </div>
+    <div class="link-grid" id="reddit-links"></div>
+  </div>
+
+  <div class="platform-section">
+    <div class="platform-header">
+      <span class="icon">🎵</span>
+      <h2>TikTok</h2>
+    </div>
+    <div class="link-grid" id="tiktok-links"></div>
+  </div>
+
+  <div class="platform-section">
+    <div class="platform-header">
+      <span class="icon">▶️</span>
+      <h2>YouTube</h2>
+    </div>
+    <div class="link-grid" id="youtube-links"></div>
+  </div>
+
+  <div class="platform-section">
+    <div class="platform-header">
+      <span class="icon">🐦</span>
+      <h2>X / Twitter</h2>
+    </div>
+    <div class="link-grid" id="twitter-links"></div>
+  </div>
+
+  <p style="text-align:center; margin-top: 2rem;">
+    <button class="btn-refresh" onclick="generateLinks()">Refresh Recommendations</button>
+  </p>
+
+  <script>
+    const REDDIT_SUBS = [
+      { sub: 'LocalLLaMA', desc: 'Local AI models community', topics: ['ollama', 'llama.cpp', 'quantization', 'GGUF', 'LoRA'] },
+      { sub: 'MachineLearning', desc: 'ML research & engineering', topics: ['transformers', 'fine-tuning', 'RAG', 'inference'] },
+      { sub: 'learnprogramming', desc: 'Programming learners', topics: ['AI tools', 'Python', 'coding assistants'] },
+      { sub: 'artificial', desc: 'AI news & discussion', topics: ['AI agents', 'voice AI', 'LLMs'] },
+      { sub: 'singularity', desc: 'AI advancement discussion', topics: ['AI agents', 'open source AI', 'edge AI'] },
+      { sub: 'ChatGPT', desc: 'ChatGPT users', topics: ['prompting', 'AI tools', 'coding'] },
+      { sub: 'ollama', desc: 'Ollama community', topics: ['local AI', 'models', 'performance'] },
+      { sub: 'selfhosted', desc: 'Self-hosting enthusiasts', topics: ['local AI', 'Docker', 'privacy'] },
+      { sub: 'Python', desc: 'Python developers', topics: ['AI libraries', 'tutorials', 'automation'] },
+      { sub: 'webdev', desc: 'Web development', topics: ['AI coding tools', 'Cursor', 'Copilot'] },
+      { sub: 'StableDiffusion', desc: 'AI image generation', topics: ['multimodal', 'open source'] },
+      { sub: 'Oobabooga', desc: 'Text generation UI', topics: ['local LLMs', 'quantization'] },
+    ];
+
+    const TIKTOK_TOPICS = [
+      { search: 'AI tutorial', action: 'Like + comment on educational AI content' },
+      { search: 'coding tips', action: 'Engage with developer content' },
+      { search: 'ChatGPT tricks', action: 'Like AI productivity content' },
+      { search: 'Python programming', action: 'Comment with helpful tips' },
+      { search: 'tech explained', action: 'Like similar educational creators' },
+      { search: 'AI voice', action: 'Engage with voice AI content' },
+      { search: 'machine learning beginner', action: 'Support fellow educators' },
+      { search: 'run AI locally', action: 'Comment with Ollama recommendations' },
+    ];
+
+    const YOUTUBE_SEARCHES = [
+      { search: 'run LLM locally 2026', action: 'Comment with your Ollama experience' },
+      { search: 'RAG tutorial', action: 'Like + thoughtful comment' },
+      { search: 'AI coding tools comparison', action: 'Engage with similar creators' },
+      { search: 'voice AI tutorial', action: 'Comment with Pipecat/Kokoro tips' },
+      { search: 'fine tuning LoRA', action: 'Like + share perspective' },
+      { search: 'quantization GGUF', action: 'Comment with Q4_K_M recommendation' },
+      { search: 'AI agents tutorial', action: 'Engage on agent frameworks' },
+      { search: 'open source AI models', action: 'Like and discuss favorites' },
+    ];
+
+    const TWITTER_SEARCHES = [
+      { search: '#LocalAI OR #Ollama', action: 'Like + retweet good content' },
+      { search: '#VoiceAI OR #TTS', action: 'Engage with voice AI discussions' },
+      { search: '#LLM fine-tuning', action: 'Reply with practical tips' },
+      { search: '#RAG tutorial', action: 'Like RAG-related posts' },
+      { search: '#AIAgents 2026', action: 'Join agent discussions' },
+      { search: '#MachineLearning beginner', action: 'Support learning content' },
+      { search: 'quantization GGUF GPTQ', action: 'Share format recommendations' },
+      { search: '#BuildInPublic AI', action: 'Connect with other builders' },
+    ];
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function createCard(platform, link, url, meta, action, tags) {
+      return `<div class="link-card" onclick="this.classList.toggle('done')">
+        <input type="checkbox" class="checkbox" onclick="event.stopPropagation(); this.parentElement.classList.toggle('done')">
+        <a href="${url}" target="_blank" rel="noopener">${link}</a>
+        <div class="meta">${meta}</div>
+        <div class="action">${action}</div>
+        ${tags ? `<div class="tags">${tags}</div>` : ''}
+      </div>`;
+    }
+
+    function generateLinks() {
+      const hour = new Date().getHours();
+      const session = hour < 9 ? 'Morning' : hour < 13 ? 'Midday' : hour < 18 ? 'Afternoon' : 'Evening';
+      document.getElementById('time').textContent = `Session: ${session} (${new Date().toLocaleTimeString()})`;
+
+      // Reddit — pick 4-5 random subreddits
+      const reddits = shuffle(REDDIT_SUBS).slice(0, 5);
+      document.getElementById('reddit-links').innerHTML = reddits.map(r => {
+        const topic = r.topics[Math.floor(Math.random() * r.topics.length)];
+        return createCard('reddit',
+          `r/${r.sub} — Hot posts`,
+          `https://www.reddit.com/r/${r.sub}/hot/`,
+          r.desc,
+          `Browse hot posts. Comment on ${topic}-related threads with genuine insight.`,
+          r.topics.map(t => `#${t.replace(/\s+/g, '')}`).join(' ')
+        );
+      }).join('') + createCard('reddit',
+        `r/${reddits[0].sub} — New posts`,
+        `https://www.reddit.com/r/${reddits[0].sub}/new/`,
+        'New posts (easier to get visibility)',
+        'Answer questions in new posts — early comments get more karma',
+        ''
+      );
+
+      // TikTok — pick 3-4
+      const tiktoks = shuffle(TIKTOK_TOPICS).slice(0, 4);
+      document.getElementById('tiktok-links').innerHTML = tiktoks.map(t =>
+        createCard('tiktok',
+          `Search: "${t.search}"`,
+          `https://www.tiktok.com/search?q=${encodeURIComponent(t.search)}`,
+          'TikTok Discover',
+          t.action,
+          ''
+        )
+      ).join('');
+
+      // YouTube — pick 3-4
+      const yts = shuffle(YOUTUBE_SEARCHES).slice(0, 4);
+      document.getElementById('youtube-links').innerHTML = yts.map(y =>
+        createCard('youtube',
+          `Search: "${y.search}"`,
+          `https://www.youtube.com/results?search_query=${encodeURIComponent(y.search)}&sp=CAI%253D`,
+          'YouTube — sorted by upload date',
+          y.action,
+          ''
+        )
+      ).join('');
+
+      // Twitter — pick 3-4
+      const tweets = shuffle(TWITTER_SEARCHES).slice(0, 4);
+      document.getElementById('twitter-links').innerHTML = tweets.map(t =>
+        createCard('twitter',
+          `Search: "${t.search}"`,
+          `https://x.com/search?q=${encodeURIComponent(t.search)}&f=live`,
+          'X — Latest posts',
+          t.action,
+          ''
+        )
+      ).join('');
+    }
+
+    generateLinks();
+  </script>
+</body>
+</html>
