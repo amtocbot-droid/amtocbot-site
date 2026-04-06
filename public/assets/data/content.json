@@ -357,65 +357,493 @@
     }
   ],
   "videos": [
-    { "id": "V001", "date": "2026-03-31", "title": "Neural Networks Explained", "level": "Beginner", "youtubeUrl": "https://youtu.be/BaTNHXy1rP4", "duration": "5:42", "type": "video" },
-    { "id": "V002", "date": "2026-04-01", "title": "AI Agents Explained", "level": "Beginner", "youtubeUrl": "https://youtu.be/I6Imu6boOn4", "duration": "5:06", "type": "video" },
-    { "id": "V003", "date": "2026-04-01", "title": "What is MCP?", "level": "Beginner", "youtubeUrl": "https://youtu.be/UR-0s7Q80k0", "duration": "5:17", "type": "video" },
-    { "id": "V004", "date": "2026-04-02", "title": "RAG Explained in 6 Minutes", "level": "Beginner", "youtubeUrl": "https://youtu.be/SYfLQljOcsQ", "duration": "5:29", "type": "video" },
-    { "id": "V005", "date": "2026-04-02", "title": "GraphRAG vs RAG — Visual Comparison", "level": "Intermediate", "youtubeUrl": "https://youtu.be/FFkFf0m-Lps", "duration": "5:06", "type": "video" },
-    { "id": "V006", "date": "2026-04-02", "title": "Build a RAG App from Scratch", "level": "Intermediate", "youtubeUrl": "https://youtu.be/6noqObMD0a0", "duration": "6:17", "type": "video" },
-    { "id": "V007", "date": "2026-04-02", "title": "Cursor vs Copilot vs Claude Code", "level": "Beginner", "youtubeUrl": "https://youtu.be/9XMKX2YF9eE", "duration": "6:34", "type": "video" },
-    { "id": "V008", "date": "2026-04-02", "title": "5 AI Coding Workflows You Need to Know", "level": "Intermediate", "youtubeUrl": "https://youtu.be/REnegkpb5RM", "duration": "5:32", "type": "video" },
-    { "id": "V009", "date": "2026-04-03", "title": "Open-Source AI Models Explained — Why They Matter", "level": "Beginner", "youtubeUrl": "https://youtu.be/H1jV9dODAvE", "duration": "4:09", "type": "video" },
-    { "id": "V010", "date": "2026-04-03", "title": "Run AI on Your Laptop: Ollama Tutorial", "level": "Intermediate", "youtubeUrl": "https://youtu.be/_d0p9hndWEo", "duration": "5:25", "type": "video" },
-    { "id": "V011", "date": "2026-04-03", "title": "Build a Local AI Chatbot with Python & Ollama", "level": "Intermediate", "youtubeUrl": "https://youtu.be/j51IpWQ7df0", "duration": "4:00", "type": "video" },
-    { "id": "P001", "date": "2026-04-02", "title": "Bot Thoughts: AI Agents Are Everywhere", "level": "Beginner", "youtubeUrl": "https://youtu.be/P4AeX9xkSfM", "duration": "~20 min", "type": "podcast" },
-    { "id": "P002", "date": "2026-04-04", "title": "Vibe Coding — The Security and Quality Reality Check", "level": "Intermediate", "youtubeUrl": "https://youtu.be/mtn7qDpRzyk", "spotifyUrl": "https://creators.spotify.com/pod/show/2X82OW5nzyaXT0AQ7HZhHh/episode/5YN55eaVyyhWqAxOiU5Q7m", "duration": "28:12", "type": "podcast" },
-    { "id": "S001", "date": "2026-04-03", "title": "AI Chatbot in 40 Lines of Python", "level": "Intermediate", "youtubeUrl": "https://youtu.be/aSgyJApWsLM", "duration": "0:36", "type": "short" },
-    { "id": "S002", "date": "2026-04-03", "title": "Your API Has These 5 Vulnerabilities", "level": "Intermediate", "youtubeUrl": "https://youtu.be/OEnvOZneEks", "duration": "0:46", "type": "short" },
-    { "id": "S003", "date": "2026-04-03", "title": "Run AI on Your Laptop With One Command", "level": "Beginner", "youtubeUrl": "https://youtu.be/fuZtqOx5Kcw", "duration": "0:29", "type": "short" },
-    { "id": "S004", "date": "2026-04-03", "title": "Every AI Runs on This 2017 Invention", "level": "Beginner", "youtubeUrl": "https://youtu.be/B8d-0_PX3Gs", "duration": "0:35", "type": "short" },
-    { "id": "S005", "date": "2026-04-04", "title": "3 AI Tools Every Developer Needs", "level": "Beginner", "youtubeUrl": "https://youtu.be/34IgaLPd5vY", "duration": "0:41", "type": "short" },
-    { "id": "S006", "date": "2026-04-04", "title": "This One Trick Makes AI 10x More Useful", "level": "Beginner", "youtubeUrl": "https://youtu.be/Kc6Qag-zIkQ", "duration": "0:42", "type": "short" },
-    { "id": "S007", "date": "2026-04-04", "title": "How ChatGPT Searches the Internet — RAG", "level": "Beginner", "youtubeUrl": "https://youtu.be/GJ9tfpwwF1M", "duration": "0:35", "type": "short" },
-    { "id": "S008", "date": "2026-04-04", "title": "AI Agents Can Now Do THIS Autonomously", "level": "Beginner", "youtubeUrl": "https://youtu.be/WnIVq0YpKoc", "duration": "0:43", "type": "short" },
-    { "id": "S009", "date": "2026-04-04", "title": "GraphRAG vs RAG — Why Connections Matter", "level": "Intermediate", "youtubeUrl": "https://youtu.be/PDGgbffRSKI", "duration": "0:40", "type": "short" },
-    { "id": "S010", "date": "2026-04-04", "title": "The Best AI Models Are Now Free", "level": "Beginner", "youtubeUrl": "https://youtu.be/BcUPpwvW6DU", "duration": "0:34", "type": "short" },
-    { "id": "S016", "date": "2026-04-05", "title": "A Vibe-Coded App Exposed 1.5 Million API Keys", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/JJuGhVpJde0", "duration": "0:40", "type": "short" },
-    { "id": "S017", "date": "2026-04-05", "title": "Fine-Tune Any AI Model on a Laptop for $0", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/T9KSf_WWZqM", "duration": "0:38", "type": "short" },
-    { "id": "S018", "date": "2026-04-05", "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future", "level": "Intermediate", "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U", "duration": "0:34", "type": "short" },
-    { "id": "S019", "date": "2026-04-05", "title": "RAG vs Fine-Tuning: You're Picking Wrong", "level": "Intermediate", "youtubeUrl": "", "duration": "0:41", "type": "short" },
-    { "id": "S020", "date": "2026-04-05", "title": "QLoRA: Fine-Tune 70B Models on One GPU", "level": "Advanced", "youtubeUrl": "", "duration": "0:48", "type": "short" },
-    { "id": "S021", "date": "2026-04-05", "title": "Build Your Own Company AI Model This Weekend", "level": "Professional", "youtubeUrl": "", "duration": "0:50", "type": "short" },
-    { "id": "S022", "date": "2026-04-05", "title": "Ollama vs LM Studio vs llama.cpp", "level": "Beginner", "youtubeUrl": "", "duration": "0:42", "type": "short" },
-    { "id": "S023", "date": "2026-04-05", "title": "Multimodal RAG: Search Images, Audio & Video", "level": "Advanced", "youtubeUrl": "", "duration": "0:52", "type": "short" },
-    { "id": "S024", "date": "2026-04-05", "title": "Intent-Driven Development: Describe It, Ship It", "level": "Intermediate", "youtubeUrl": "", "duration": "0:42", "type": "short" }
+    {
+      "id": "V001",
+      "date": "2026-03-31",
+      "title": "Neural Networks Explained",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/BaTNHXy1rP4",
+      "duration": "5:42",
+      "type": "video"
+    },
+    {
+      "id": "V002",
+      "date": "2026-04-01",
+      "title": "AI Agents Explained",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/I6Imu6boOn4",
+      "duration": "5:06",
+      "type": "video"
+    },
+    {
+      "id": "V003",
+      "date": "2026-04-01",
+      "title": "What is MCP?",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/UR-0s7Q80k0",
+      "duration": "5:17",
+      "type": "video"
+    },
+    {
+      "id": "V004",
+      "date": "2026-04-02",
+      "title": "RAG Explained in 6 Minutes",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/SYfLQljOcsQ",
+      "duration": "5:29",
+      "type": "video"
+    },
+    {
+      "id": "V005",
+      "date": "2026-04-02",
+      "title": "GraphRAG vs RAG — Visual Comparison",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/FFkFf0m-Lps",
+      "duration": "5:06",
+      "type": "video"
+    },
+    {
+      "id": "V006",
+      "date": "2026-04-02",
+      "title": "Build a RAG App from Scratch",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/6noqObMD0a0",
+      "duration": "6:17",
+      "type": "video"
+    },
+    {
+      "id": "V007",
+      "date": "2026-04-02",
+      "title": "Cursor vs Copilot vs Claude Code",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/9XMKX2YF9eE",
+      "duration": "6:34",
+      "type": "video"
+    },
+    {
+      "id": "V008",
+      "date": "2026-04-02",
+      "title": "5 AI Coding Workflows You Need to Know",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/REnegkpb5RM",
+      "duration": "5:32",
+      "type": "video"
+    },
+    {
+      "id": "V009",
+      "date": "2026-04-03",
+      "title": "Open-Source AI Models Explained — Why They Matter",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/H1jV9dODAvE",
+      "duration": "4:09",
+      "type": "video"
+    },
+    {
+      "id": "V010",
+      "date": "2026-04-03",
+      "title": "Run AI on Your Laptop: Ollama Tutorial",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/_d0p9hndWEo",
+      "duration": "5:25",
+      "type": "video"
+    },
+    {
+      "id": "V011",
+      "date": "2026-04-03",
+      "title": "Build a Local AI Chatbot with Python & Ollama",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/j51IpWQ7df0",
+      "duration": "4:00",
+      "type": "video"
+    },
+    {
+      "id": "V012",
+      "date": "2026-04-04",
+      "title": "Fine-Tuning vs RAG — Which Should You Use?",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/llzZee0AVC8",
+      "duration": "5:30",
+      "type": "video"
+    },
+    {
+      "id": "V013",
+      "date": "2026-04-05",
+      "title": "What Is Quantization? Make AI Models 4x Smaller",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/jjtni9l7Fn0",
+      "duration": "6:02",
+      "type": "video"
+    },
+    {
+      "id": "V014",
+      "date": "2026-04-05",
+      "title": "Speculative Decoding: Make AI 2-3x Faster for Free",
+      "level": "Advanced",
+      "youtubeUrl": "https://youtu.be/eBqYErq5LpU",
+      "duration": "6:11",
+      "type": "video"
+    },
+    {
+      "id": "V015",
+      "date": "2026-04-05",
+      "title": "Edge AI: Run Language Models on Phones, Laptops & IoT",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/aBSWWmXmpwE",
+      "duration": "5:49",
+      "type": "video"
+    },
+    {
+      "id": "P001",
+      "date": "2026-04-02",
+      "title": "Bot Thoughts: AI Agents Are Everywhere",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/P4AeX9xkSfM",
+      "duration": "~20 min",
+      "type": "podcast"
+    },
+    {
+      "id": "P002",
+      "date": "2026-04-04",
+      "title": "Vibe Coding — The Security and Quality Reality Check",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/mtn7qDpRzyk",
+      "spotifyUrl": "https://creators.spotify.com/pod/show/2X82OW5nzyaXT0AQ7HZhHh/episode/5YN55eaVyyhWqAxOiU5Q7m",
+      "duration": "28:12",
+      "type": "podcast"
+    },
+    {
+      "id": "S001",
+      "date": "2026-04-03",
+      "title": "AI Chatbot in 40 Lines of Python",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/aSgyJApWsLM",
+      "duration": "0:36",
+      "type": "short"
+    },
+    {
+      "id": "S002",
+      "date": "2026-04-03",
+      "title": "Your API Has These 5 Vulnerabilities",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/OEnvOZneEks",
+      "duration": "0:46",
+      "type": "short"
+    },
+    {
+      "id": "S003",
+      "date": "2026-04-03",
+      "title": "Run AI on Your Laptop With One Command",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/fuZtqOx5Kcw",
+      "duration": "0:29",
+      "type": "short"
+    },
+    {
+      "id": "S004",
+      "date": "2026-04-03",
+      "title": "Every AI Runs on This 2017 Invention",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/B8d-0_PX3Gs",
+      "duration": "0:35",
+      "type": "short"
+    },
+    {
+      "id": "S005",
+      "date": "2026-04-04",
+      "title": "3 AI Tools Every Developer Needs",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/34IgaLPd5vY",
+      "duration": "0:41",
+      "type": "short"
+    },
+    {
+      "id": "S006",
+      "date": "2026-04-04",
+      "title": "This One Trick Makes AI 10x More Useful",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/Kc6Qag-zIkQ",
+      "duration": "0:42",
+      "type": "short"
+    },
+    {
+      "id": "S007",
+      "date": "2026-04-04",
+      "title": "How ChatGPT Searches the Internet — RAG",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/GJ9tfpwwF1M",
+      "duration": "0:35",
+      "type": "short"
+    },
+    {
+      "id": "S008",
+      "date": "2026-04-04",
+      "title": "AI Agents Can Now Do THIS Autonomously",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/WnIVq0YpKoc",
+      "duration": "0:43",
+      "type": "short"
+    },
+    {
+      "id": "S009",
+      "date": "2026-04-04",
+      "title": "GraphRAG vs RAG — Why Connections Matter",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/PDGgbffRSKI",
+      "duration": "0:40",
+      "type": "short"
+    },
+    {
+      "id": "S010",
+      "date": "2026-04-04",
+      "title": "The Best AI Models Are Now Free",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/BcUPpwvW6DU",
+      "duration": "0:34",
+      "type": "short"
+    },
+    {
+      "id": "S011",
+      "date": "2026-04-04",
+      "title": "These 3 AI Models Are Free and Rival GPT-4",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/kzZnXgUJ3MY",
+      "duration": "0:42",
+      "type": "short"
+    },
+    {
+      "id": "S012",
+      "date": "2026-04-04",
+      "title": "Ollama vs LM Studio vs llama.cpp",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/SG-b180MpJw",
+      "duration": "0:45",
+      "type": "short"
+    },
+    {
+      "id": "S013",
+      "date": "2026-04-04",
+      "title": "Fine-Tuning AI Is Easier Than You Think",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtu.be/6UIXakXg36E",
+      "duration": "0:38",
+      "type": "short"
+    },
+    {
+      "id": "S014",
+      "date": "2026-04-04",
+      "title": "LoRA Lets You Fine-Tune AI for $0",
+      "level": "Advanced",
+      "youtubeUrl": "https://youtu.be/X2gN9ycKesg",
+      "duration": "0:40",
+      "type": "short"
+    },
+    {
+      "id": "S015",
+      "date": "2026-04-04",
+      "title": "This Technique Lets You Teach AI Anything",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtu.be/3JQlWlDg2js",
+      "duration": "0:36",
+      "type": "short"
+    },
+    {
+      "id": "S016",
+      "date": "2026-04-05",
+      "title": "A Vibe-Coded App Exposed 1.5 Million API Keys",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtube.com/shorts/JJuGhVpJde0",
+      "duration": "0:40",
+      "type": "short"
+    },
+    {
+      "id": "S017",
+      "date": "2026-04-05",
+      "title": "Fine-Tune Any AI Model on a Laptop for $0",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtube.com/shorts/T9KSf_WWZqM",
+      "duration": "0:38",
+      "type": "short"
+    },
+    {
+      "id": "S018",
+      "date": "2026-04-05",
+      "title": "Vibe Coding Is Dead -- Agentic Engineering Is the Future",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U",
+      "duration": "0:34",
+      "type": "short"
+    },
+    {
+      "id": "S019",
+      "date": "2026-04-05",
+      "title": "RAG vs Fine-Tuning: You're Picking Wrong",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtube.com/shorts/TDyHTPJhvYM",
+      "duration": "0:41",
+      "type": "short"
+    },
+    {
+      "id": "S020",
+      "date": "2026-04-05",
+      "title": "QLoRA: Fine-Tune 70B Models on One GPU",
+      "level": "Advanced",
+      "youtubeUrl": "https://youtube.com/shorts/uJWTUAZrwiw",
+      "duration": "0:48",
+      "type": "short"
+    },
+    {
+      "id": "S021",
+      "date": "2026-04-05",
+      "title": "Build Your Own Company AI Model This Weekend",
+      "level": "Professional",
+      "youtubeUrl": "https://youtube.com/shorts/9Ktxgk2_c18",
+      "duration": "0:50",
+      "type": "short"
+    },
+    {
+      "id": "S022",
+      "date": "2026-04-05",
+      "title": "Ollama vs LM Studio vs llama.cpp",
+      "level": "Beginner",
+      "youtubeUrl": "https://youtube.com/shorts/qmChJ1sLGc0",
+      "duration": "0:42",
+      "type": "short"
+    },
+    {
+      "id": "S023",
+      "date": "2026-04-05",
+      "title": "Multimodal RAG: Search Images, Audio & Video",
+      "level": "Advanced",
+      "youtubeUrl": "https://youtube.com/shorts/xiUVN3Z1uM4",
+      "duration": "0:52",
+      "type": "short"
+    },
+    {
+      "id": "S024",
+      "date": "2026-04-05",
+      "title": "Intent-Driven Development: Describe It, Ship It",
+      "level": "Intermediate",
+      "youtubeUrl": "https://youtube.com/shorts/ZrqmeG5sCyc",
+      "duration": "0:42",
+      "type": "short"
+    }
   ],
   "milestones": [
-    { "name": "First 10 blog posts", "target": 10, "current": 32, "status": "Done" },
-    { "name": "First 5 YouTube videos", "target": 5, "current": 35, "status": "Done" },
-    { "name": "First podcast episode", "target": 1, "current": 2, "status": "Done" },
-    { "name": "100 YouTube subscribers", "target": 100, "current": 0, "status": "Pending" },
-    { "name": "500 YouTube subscribers (YPP)", "target": 500, "current": 0, "status": "Pending" },
-    { "name": "3,000 YouTube watch hours (YPP)", "target": 3000, "current": 0, "status": "Pending" },
-    { "name": "First $1 revenue", "target": 1, "current": 0, "status": "Pending" },
-    { "name": "Break even ($50/mo)", "target": 50, "current": 0, "status": "Pending" },
-    { "name": "100 email subscribers", "target": 100, "current": 0, "status": "Pending" },
-    { "name": "1,000 blog monthly views", "target": 1000, "current": 0, "status": "Pending" }
+    {
+      "name": "First 10 blog posts",
+      "target": 10,
+      "current": 32,
+      "status": "Done"
+    },
+    {
+      "name": "First 5 YouTube videos",
+      "target": 5,
+      "current": 38,
+      "status": "Done"
+    },
+    {
+      "name": "First podcast episode",
+      "target": 1,
+      "current": 2,
+      "status": "Done"
+    },
+    {
+      "name": "100 YouTube subscribers",
+      "target": 100,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "500 YouTube subscribers (YPP)",
+      "target": 500,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "3,000 YouTube watch hours (YPP)",
+      "target": 3000,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "First $1 revenue",
+      "target": 1,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "Break even ($50/mo)",
+      "target": 50,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "100 email subscribers",
+      "target": 100,
+      "current": 0,
+      "status": "Pending"
+    },
+    {
+      "name": "1,000 blog monthly views",
+      "target": 1000,
+      "current": 0,
+      "status": "Pending"
+    }
   ],
   "platforms": [
-    { "platform": "Blog", "handle": "AmtocSoft Tech Insights", "url": "https://amtocsoft.blogspot.com", "icon": "article" },
-    { "platform": "YouTube", "handle": "@quietsentinelshadow", "url": "https://www.youtube.com/@quietsentinelshadow", "icon": "play_circle" },
-    { "platform": "LinkedIn", "handle": "Toc Am", "url": "https://www.linkedin.com/in/toc-am-b301373b4/", "icon": "person" },
-    { "platform": "X / Twitter", "handle": "@AmToc96282", "url": "https://x.com/AmToc96282", "icon": "tag" },
-    { "platform": "TikTok", "handle": "@amtocbot", "url": "https://www.tiktok.com/@amtocbot", "icon": "music_note" },
-    { "platform": "Instagram", "handle": "@amtocsoft", "url": "https://www.instagram.com/amtocsoft", "icon": "photo_camera" },
-    { "platform": "GitHub", "handle": "amtocbot-droid", "url": "https://github.com/amtocbot-droid", "icon": "code" },
-    { "platform": "Email", "handle": "hello@amtocbot.com", "url": "mailto:hello@amtocbot.com", "icon": "email" }
+    {
+      "platform": "Blog",
+      "handle": "AmtocSoft Tech Insights",
+      "url": "https://amtocsoft.blogspot.com",
+      "icon": "article"
+    },
+    {
+      "platform": "YouTube",
+      "handle": "@quietsentinelshadow",
+      "url": "https://www.youtube.com/@quietsentinelshadow",
+      "icon": "play_circle"
+    },
+    {
+      "platform": "LinkedIn",
+      "handle": "Toc Am",
+      "url": "https://www.linkedin.com/in/toc-am-b301373b4/",
+      "icon": "person"
+    },
+    {
+      "platform": "X / Twitter",
+      "handle": "@AmToc96282",
+      "url": "https://x.com/AmToc96282",
+      "icon": "tag"
+    },
+    {
+      "platform": "TikTok",
+      "handle": "@amtocbot",
+      "url": "https://www.tiktok.com/@amtocbot",
+      "icon": "music_note"
+    },
+    {
+      "platform": "Instagram",
+      "handle": "@amtocsoft",
+      "url": "https://www.instagram.com/amtocsoft",
+      "icon": "photo_camera"
+    },
+    {
+      "platform": "GitHub",
+      "handle": "amtocbot-droid",
+      "url": "https://github.com/amtocbot-droid",
+      "icon": "code"
+    },
+    {
+      "platform": "Email",
+      "handle": "hello@amtocbot.com",
+      "url": "mailto:hello@amtocbot.com",
+      "icon": "email"
+    }
   ],
   "weeklySummary": {
     "week": "W1 (Mar 30 - Apr 5)",
     "blogs": 32,
-    "videos": 11,
+    "videos": 14,
     "shorts": 24,
     "podcasts": 2,
     "socialPosts": 46
@@ -423,7 +851,7 @@
   "monthlySummary": {
     "month": "April 2026",
     "blogs": 29,
-    "videos": 11,
+    "videos": 14,
     "shorts": 24,
     "podcasts": 2
   }
