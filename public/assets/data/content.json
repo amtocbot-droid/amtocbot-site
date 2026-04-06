@@ -6,10 +6,10 @@
       "title": "Production Voice AI: Scaling, Monitoring, and Cost Optimization",
       "level": "Professional",
       "topic": "Voice AI, MLOps, Production",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/voice-agent-architectures-cascading.html",
       "linkedinUrl": "",
       "twitterUrl": "",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "037",
@@ -17,10 +17,10 @@
       "title": "Voice Agent Architectures: Cascading Pipelines vs End-to-End Models",
       "level": "Advanced",
       "topic": "Voice AI, Architecture",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/voice-agent-architectures-cascading.html",
       "linkedinUrl": "",
       "twitterUrl": "",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "036",
@@ -28,10 +28,10 @@
       "title": "Build Your First Voice Agent: A Python Tutorial with Pipecat",
       "level": "Intermediate",
       "topic": "Voice AI, Python, Tutorial",
-      "blogUrl": "",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/build-your-first-voice-agent-python.html",
       "linkedinUrl": "",
       "twitterUrl": "",
-      "status": "Draft"
+      "status": "Published"
     },
     {
       "id": "035",
