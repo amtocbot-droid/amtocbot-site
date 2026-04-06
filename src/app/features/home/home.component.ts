@@ -23,9 +23,9 @@ interface ContentStats {
   template: `
     <section class="hero">
       <div class="hero-inner">
-        <h1 class="hero-title">AmtocBot</h1>
-        <p class="hero-subtitle">Configurable AI Clone of a CEO</p>
-        <p class="hero-tagline">Powered by AmtocSoft</p>
+        <h1 class="hero-title">AmtocSoft</h1>
+        <p class="hero-subtitle">AI-Driven Tech Education</p>
+        <p class="hero-tagline">Blogs, Videos, Podcasts &mdash; Beginner to Professional</p>
         <div class="hero-actions">
           <a mat-raised-button color="primary" routerLink="/blog">Browse Blog</a>
           <a mat-stroked-button routerLink="/videos">Watch Videos</a>
@@ -225,9 +225,9 @@ export class HomeComponent implements OnInit {
 
   platformCount = computed(() => this.content.platforms().length);
 
-  latestBlogs = computed(() => [...this.content.blogs()].reverse().slice(0, 3));
+  latestBlogs = computed(() => [...this.content.blogs()].slice(0, 3));
   latestVideos = computed(() =>
-    [...this.content.videos()].filter(v => v.type === 'video').reverse().slice(0, 2)
+    [...this.content.videos()].filter(v => v.type === 'video').slice(0, 2)
   );
 
   ngOnInit(): void {
