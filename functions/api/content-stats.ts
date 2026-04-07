@@ -37,7 +37,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       const videos = allVideos.filter(v => v.type === 'video').length;
       const shorts = allVideos.filter(v => v.type === 'short').length;
       const podcasts = allVideos.filter(v => v.type === 'podcast').length;
-      return new Response(JSON.stringify({ blogs, videos, shorts, podcasts, lastSync: null }), {
+      const tiktok = (data as any).tiktok ?? 0;
+      const platforms = (data as any).platforms ?? 0;
+      return new Response(JSON.stringify({ blogs, videos, shorts, podcasts, tiktok, platforms, lastSync: null }), {
         status: 200,
         headers: corsHeaders,
       });
@@ -73,6 +75,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       videos: syncData.videos,
       shorts: syncData.shorts,
       podcasts: syncData.podcasts,
+      tiktok: (syncData as any).tiktok ?? 0,
+      platforms: (syncData as any).platforms ?? 0,
       lastSync: syncData.lastSync,
     }), { status: 200, headers: corsHeaders });
   } catch {

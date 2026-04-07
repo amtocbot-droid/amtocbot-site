@@ -3,208 +3,1123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AmtocSoft Community Engagement Hub</title>
+  <title>AmtocSoft Engagement Hub</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 1.5rem; }
-    h1 { color: #60a5fa; margin-bottom: 0.5rem; font-size: 1.6rem; }
-    .subtitle { color: #94a3b8; margin-bottom: 1.5rem; font-size: 0.9rem; }
-    .refresh-time { color: #f59e0b; font-size: 0.8rem; }
-    .platform-section { margin-bottom: 2rem; }
-    .platform-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #1e293b; }
-    .platform-header h2 { font-size: 1.2rem; }
-    .platform-header .icon { font-size: 1.4rem; }
-    .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0.75rem; }
-    .link-card { background: #1e293b; border-radius: 8px; padding: 1rem; border: 1px solid #334155; transition: border-color 0.2s; }
-    .link-card:hover { border-color: #60a5fa; }
-    .link-card a { color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 0.4rem; }
-    .link-card a:hover { text-decoration: underline; }
-    .link-card .meta { color: #94a3b8; font-size: 0.8rem; margin-bottom: 0.4rem; }
-    .link-card .action { color: #f59e0b; font-size: 0.8rem; font-weight: 600; }
-    .link-card .tags { color: #64748b; font-size: 0.75rem; margin-top: 0.3rem; }
-    .tip { background: #1a2332; border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; margin-bottom: 1.5rem; border-radius: 0 6px 6px 0; font-size: 0.85rem; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; padding: 0; max-width: 1400px; margin: 0 auto; }
+    h1 { color: #60a5fa; margin-bottom: 0.3rem; font-size: 1.5rem; }
+    .subtitle { color: #94a3b8; margin-bottom: 1.2rem; font-size: 0.85rem; }
+
+    /* --- Login Overlay --- */
+    #login-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 23, 42, 0.92);
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+    #login-overlay.hidden { display: none; }
+    .login-card {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%; max-width: 380px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    .login-card .logo-text { font-size: 1.6rem; font-weight: 800; color: #60a5fa; margin-bottom: 0.2rem; }
+    .login-card .logo-sub { font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.8rem; }
+    .login-card input {
+      width: 100%; padding: 0.65rem 0.85rem; margin-bottom: 0.75rem;
+      background: #0f172a; border: 1px solid #334155; border-radius: 8px;
+      color: #e2e8f0; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+    }
+    .login-card input:focus { border-color: #60a5fa; }
+    .login-card button {
+      width: 100%; padding: 0.7rem; margin-top: 0.5rem;
+      background: #2563eb; color: #fff; border: none; border-radius: 8px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .login-card button:hover { background: #1d4ed8; }
+    .login-card button:disabled { background: #334155; cursor: not-allowed; }
+    .login-status { margin-top: 1rem; font-size: 0.82rem; color: #94a3b8; min-height: 1.2em; }
+    .login-status.error { color: #f87171; }
+    .login-status.success { color: #34d399; }
+
+    /* --- Session Bar --- */
+    #session-bar {
+      display: none; /* shown when authenticated */
+      align-items: center; justify-content: space-between;
+      background: #1a2332; padding: 0.45rem 1.5rem;
+      border-bottom: 1px solid #1e293b; font-size: 0.8rem;
+    }
+    #session-bar.visible { display: flex; }
+    #session-bar .session-left { display: flex; align-items: center; gap: 0.5rem; color: #94a3b8; }
+    #session-bar .session-left strong { color: #e2e8f0; }
+    .role-badge {
+      display: inline-block; padding: 0.1rem 0.45rem; border-radius: 4px;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    }
+    .role-badge.admin { background: #7c3aed; color: #ddd6fe; }
+    .role-badge.member { background: #334155; color: #94a3b8; }
+    #session-bar .session-right { display: flex; align-items: center; gap: 0.5rem; }
+    .session-btn {
+      padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid #334155;
+      background: transparent; color: #94a3b8; font-size: 0.78rem; cursor: pointer;
+      font-weight: 600; transition: all 0.2s;
+    }
+    .session-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+    .session-btn.logout:hover { border-color: #f87171; color: #f87171; }
+    #btn-invite { display: none; }
+
+    /* --- Main Content --- */
+    #main-content { padding: 1.5rem; }
+
+    /* --- Tab Bar with animated underline --- */
+    .tab-bar { display: flex; gap: 0.25rem; margin-bottom: 1.5rem; flex-wrap: wrap; position: relative; }
+    .tab {
+      padding: 0.5rem 1rem; border-radius: 6px 6px 0 0; cursor: pointer;
+      font-weight: 600; font-size: 0.85rem; color: #94a3b8; background: transparent;
+      border: none; position: relative; transition: color 0.25s;
+    }
+    .tab.active { color: #60a5fa; }
+    .tab:hover { color: #e2e8f0; }
+    .tab::after {
+      content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 2px;
+      background: #60a5fa; transition: all 0.3s ease; transform: translateX(-50%);
+    }
+    .tab.active::after { width: 100%; }
+    .tab-bar-line { width: 100%; height: 1px; background: #1e293b; margin-top: -1px; margin-bottom: 0; }
+
+    /* --- Panels with fade transition --- */
+    .panel { display: none; opacity: 0; transition: opacity 0.25s ease; }
+    .panel.active { display: block; opacity: 1; }
+
+    /* --- Cards with glassmorphism --- */
+    .section { margin-bottom: 1.5rem; }
+    .section-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid #1e293b; display: flex; align-items: center; gap: 0.5rem; }
+    .section-title .icon { font-size: 1.2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0.6rem; }
+    .card {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 8px; padding: 0.85rem 1rem;
+      border: 1px solid #334155;
+      transition: border-color 0.2s, transform 0.2s ease;
+      position: relative;
+    }
+    .card:hover { border-color: #60a5fa; transform: scale(1.01); }
+    .card a { color: #60a5fa; text-decoration: none; font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 0.3rem; }
+    .card a:hover { text-decoration: underline; }
+    .card .meta { color: #94a3b8; font-size: 0.78rem; }
+    .card .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.3rem; }
+    .badge-li { background: #1d4ed8; color: #bfdbfe; }
+    .badge-x { background: #1e293b; color: #e2e8f0; border: 1px solid #475569; }
+    .badge-yt { background: #991b1b; color: #fecaca; }
+    .badge-blog { background: #b45309; color: #fed7aa; }
+    .badge-pod { background: #6d28d9; color: #ddd6fe; }
+    .badge-tt { background: #1e293b; color: #e2e8f0; border: 1px solid #475569; }
+    .badge-reddit { background: #c2410c; color: #fed7aa; }
+    .badge-new { background: #059669; color: #d1fae5; }
+    .tip { background: rgba(26, 35, 50, 0.8); border-left: 3px solid #f59e0b; padding: 0.6rem 1rem; margin-bottom: 1.2rem; border-radius: 0 6px 6px 0; font-size: 0.82rem; backdrop-filter: blur(10px); }
     .tip strong { color: #f59e0b; }
-    .btn-refresh { background: #3b82f6; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-    .btn-refresh:hover { background: #2563eb; }
-    .done { opacity: 0.4; }
-    .done .action { color: #22c55e !important; }
-    .checkbox { cursor: pointer; margin-right: 0.5rem; }
+    .quick-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .qlink { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.85rem; background: rgba(30, 41, 59, 0.8); border: 1px solid #334155; border-radius: 20px; color: #94a3b8; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.2s; backdrop-filter: blur(10px); }
+    .qlink:hover { border-color: #60a5fa; color: #60a5fa; }
+    .search-box { width: 100%; padding: 0.5rem 0.85rem; background: #1e293b; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; font-size: 0.85rem; margin-bottom: 1rem; }
+    .search-box:focus { outline: none; border-color: #60a5fa; }
+    .counter { color: #64748b; font-size: 0.75rem; float: right; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.6rem; margin-bottom: 1.5rem; }
+    .stat-card { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); border-radius: 8px; padding: 1rem; text-align: center; border: 1px solid #334155; }
+    .stat-card .number { font-size: 1.8rem; font-weight: 800; color: #60a5fa; }
+    .stat-card .label { font-size: 0.75rem; color: #94a3b8; margin-top: 0.2rem; }
+    .audit-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .audit-table th { text-align: left; padding: 0.5rem 0.75rem; background: #1e293b; color: #60a5fa; border-bottom: 2px solid #334155; }
+    .audit-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #1e293b; }
+    .audit-table tr:hover { background: #1e293b; }
+    .audit-date { color: #64748b; font-size: 0.75rem; }
+
+    /* --- Activity Log (Audit tab extension) --- */
+    .activity-section { margin-top: 2rem; }
+    .filter-row { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .filter-row select {
+      padding: 0.4rem 0.7rem; background: #1e293b; border: 1px solid #334155;
+      border-radius: 6px; color: #e2e8f0; font-size: 0.82rem; outline: none;
+    }
+    .filter-row select:focus { border-color: #60a5fa; }
+    .load-more-btn {
+      display: block; margin: 0.75rem auto 0; padding: 0.5rem 1.5rem;
+      background: transparent; border: 1px solid #334155; border-radius: 6px;
+      color: #94a3b8; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+    }
+    .load-more-btn:hover { border-color: #60a5fa; color: #60a5fa; }
+    .load-more-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .skeleton-row td {
+      position: relative; overflow: hidden;
+    }
+    .skeleton-row td::after {
+      content: ''; display: block; width: 70%; height: 0.7em; border-radius: 4px;
+      background: linear-gradient(90deg, #1e293b 25%, #2a3a50 50%, #1e293b 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* --- Invite Modal --- */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(15, 23, 42, 0.8);
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-backdrop.hidden { display: none; }
+    .modal-card {
+      background: rgba(30, 41, 59, 0.95); border: 1px solid #334155;
+      border-radius: 12px; padding: 2rem; width: 100%; max-width: 360px;
+      backdrop-filter: blur(16px);
+    }
+    .modal-card h3 { color: #60a5fa; margin-bottom: 1rem; font-size: 1.1rem; }
+    .modal-card input, .modal-card select {
+      width: 100%; padding: 0.6rem 0.8rem; margin-bottom: 0.65rem;
+      background: #0f172a; border: 1px solid #334155; border-radius: 8px;
+      color: #e2e8f0; font-size: 0.88rem; outline: none;
+    }
+    .modal-card input:focus, .modal-card select:focus { border-color: #60a5fa; }
+    .modal-card label { display: block; font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.25rem; }
+    .modal-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+    .modal-actions button {
+      flex: 1; padding: 0.6rem; border-radius: 8px; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; border: none; transition: background 0.2s;
+    }
+    .modal-actions .btn-primary { background: #2563eb; color: #fff; }
+    .modal-actions .btn-primary:hover { background: #1d4ed8; }
+    .modal-actions .btn-cancel { background: #334155; color: #94a3b8; }
+    .modal-actions .btn-cancel:hover { background: #475569; }
+
+    /* --- Toast Notifications --- */
+    #toast-container {
+      position: fixed; top: 1rem; right: 1rem; z-index: 20000;
+      display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      padding: 0.65rem 1rem; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600; color: #fff;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 3.7s forwards;
+      max-width: 340px;
+    }
+    .toast.success { background: rgba(5, 150, 105, 0.9); }
+    .toast.error { background: rgba(220, 38, 38, 0.9); }
+    .toast.info { background: rgba(37, 99, 235, 0.9); }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateY(-10px); } }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      #session-bar { flex-wrap: wrap; gap: 0.4rem; }
+      .login-card { margin: 1rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>AmtocSoft Community Engagement Hub</h1>
-  <p class="subtitle">Curated links to engage with authentically. Review, like, comment where relevant. <span class="refresh-time" id="time"></span></p>
+
+<!-- ===== Toast Container ===== -->
+<div id="toast-container"></div>
+
+<!-- ===== Login Overlay ===== -->
+<div id="login-overlay">
+  <div class="login-card">
+    <div class="logo-text">AmtocSoft</div>
+    <div class="logo-sub">Engage Hub</div>
+    <input type="text" id="login-username" placeholder="Username" autocomplete="username">
+    <input type="email" id="login-email" placeholder="Email address" autocomplete="email">
+    <button id="login-btn" onclick="sendMagicLink()">Send Magic Link</button>
+    <div class="login-status" id="login-status"></div>
+  </div>
+</div>
+
+<!-- ===== Invite Modal ===== -->
+<div class="modal-backdrop hidden" id="invite-modal">
+  <div class="modal-card">
+    <h3>Invite User</h3>
+    <label for="invite-username">Username</label>
+    <input type="text" id="invite-username" placeholder="Username">
+    <label for="invite-email">Email</label>
+    <input type="email" id="invite-email" placeholder="Email address">
+    <label for="invite-role">Role</label>
+    <select id="invite-role">
+      <option value="member">Member</option>
+      <option value="admin">Admin</option>
+    </select>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeInviteModal()">Cancel</button>
+      <button class="btn-primary" onclick="sendInvite()">Send Invite</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Session Bar ===== -->
+<div id="session-bar">
+  <div class="session-left">
+    Logged in as <strong id="session-username">--</strong>
+    <span class="role-badge member" id="session-role-badge">member</span>
+  </div>
+  <div class="session-right">
+    <button class="session-btn" id="btn-invite" onclick="openInviteModal()">Invite User</button>
+    <button class="session-btn logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- ===== Main Content ===== -->
+<div id="main-content" style="padding:1.5rem;">
+
+<h1>AmtocSoft Engagement Hub</h1>
+<p class="subtitle">Quick access to your content, audience comments, and communities. Updated 2026-04-07.</p>
+
+<!-- Quick Dashboard Links -->
+<div class="quick-links">
+  <a class="qlink" href="https://studio.youtube.com/channel/UC/videos" target="_blank">YouTube Studio</a>
+  <a class="qlink" href="https://www.linkedin.com/in/toc-am-b301373b4/recent-activity/all/" target="_blank">LinkedIn Activity</a>
+  <a class="qlink" href="https://x.com/AmToc96282" target="_blank">X Profile</a>
+  <a class="qlink" href="https://www.blogger.com/blog/posts/1674696478057813305" target="_blank">Blogger Dashboard</a>
+  <a class="qlink" href="https://www.tiktok.com/creator#/upload" target="_blank">TikTok Studio</a>
+  <a class="qlink" href="https://podcasters.spotify.com/pod/dashboard/episodes" target="_blank">Spotify Podcasts</a>
+  <a class="qlink" href="https://higgsfield.ai" target="_blank">Higgsfield</a>
+  <a class="qlink" href="https://amtocsoft.blogspot.com" target="_blank">Blog</a>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-bar">
+  <div class="tab active" data-tab="your-content">Your Content</div>
+  <div class="tab" data-tab="engage">Engage</div>
+  <div class="tab" data-tab="discover">Discover</div>
+  <div class="tab" data-tab="audit">Audit</div>
+</div>
+<div class="tab-bar-line"></div>
+
+<!-- ==================== TAB 1: YOUR CONTENT ==================== -->
+<div class="panel active" id="your-content">
+  <input type="text" class="search-box" placeholder="Filter your content..." onkeyup="filterCards(this)">
 
   <div class="tip">
-    <strong>Daily goal:</strong> 15-20 min, 4 sessions. Like 5-10 posts, leave 3-5 genuine comments. Never spam. Add value with every interaction.
+    <strong>Priority today:</strong> 3 new podcasts just published (Ep 4-6). Check for early comments on YouTube. Reply to LinkedIn posts from Apr 6 (blogs 035-036). Post blogs 037-038 to LinkedIn (2/day limit).
   </div>
 
-  <div class="platform-section">
-    <div class="platform-header">
-      <span class="icon">🤖</span>
-      <h2>Reddit</h2>
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127911;</span> Bot Thoughts Podcast (6 Episodes) <span class="badge badge-new">3 NEW</span></div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://youtu.be/yj_3qNF82-M" target="_blank">P004: The Voice AI Revolution</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span><span class="badge badge-new">NEW</span> Apr 7 - 10.9 min - TTS, STT, voice agents, production costs</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/U2r0YcNOL8E" target="_blank">P005: Fine-Tuning vs RAG Showdown</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span><span class="badge badge-new">NEW</span> Apr 7 - 10.8 min - LoRA, QLoRA, decision framework</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/_AVlFpegHXo" target="_blank">P006: Making AI Fast & Small</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span><span class="badge badge-new">NEW</span> Apr 7 - 11.8 min - Quantization, speculative decoding, edge AI</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/z-ECDHLJAmk" target="_blank">P003: 84% of Devs Use AI to Code</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span> Apr 6 - 12.0 min - AI coding tools debate</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/mtn7qDpRzyk" target="_blank">P002: Vibe Coding Reality Check</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span> Apr 4 - Security and quality</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/P4AeX9xkSfM" target="_blank">P001: AI Agents Are Everywhere</a>
+        <div class="meta"><span class="badge badge-pod">Podcast</span> Apr 2 - What are agents, MCP, reliability</div>
+      </div>
     </div>
-    <div class="link-grid" id="reddit-links"></div>
   </div>
 
-  <div class="platform-section">
-    <div class="platform-header">
-      <span class="icon">🎵</span>
-      <h2>TikTok</h2>
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127909;</span> YouTube Videos (16 Videos)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://youtu.be/uZU0BwFHcEo" target="_blank">V016: Voice AI Complete Guide</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Apr 6 - 14:12 - Latest full video, check comments</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/9XMKX2YF9eE" target="_blank">V007: Cursor vs Copilot vs Claude Code</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Apr 2 - High interest topic, likely comments</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/llzZee0AVC8" target="_blank">V012: Fine-Tuning vs RAG</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Apr 4 - Decision framework, good discussion starter</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/SYfLQljOcsQ" target="_blank">V004: RAG Explained in 6 Minutes</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Apr 2 - Beginner favorite, evergreen</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/BaTNHXy1rP4" target="_blank">V001: Neural Networks Explained</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Mar 31 - First video, evergreen content</div>
+      </div>
+      <div class="card">
+        <a href="https://youtu.be/I6Imu6boOn4" target="_blank">V002: AI Agents Explained</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Apr 1 - Pairs with P001 podcast</div>
+      </div>
     </div>
-    <div class="link-grid" id="tiktok-links"></div>
   </div>
 
-  <div class="platform-section">
-    <div class="platform-header">
-      <span class="icon">▶️</span>
-      <h2>YouTube</h2>
+  <div class="section">
+    <div class="section-title"><span class="icon">&#9889;</span> LinkedIn Posts (Check Comments)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.linkedin.com/in/toc-am-b301373b4/recent-activity/all/" target="_blank">035: STT Comparison (LinkedIn)</a>
+        <div class="meta"><span class="badge badge-li">LinkedIn</span> Apr 6 - Check engagement, reply to comments</div>
+      </div>
+      <div class="card">
+        <a href="https://www.linkedin.com/in/toc-am-b301373b4/recent-activity/all/" target="_blank">036: Voice Agent Tutorial (LinkedIn)</a>
+        <div class="meta"><span class="badge badge-li">LinkedIn</span> Apr 6 - Check engagement, reply to comments</div>
+      </div>
+      <div class="card">
+        <a href="https://www.linkedin.com/in/toc-am-b301373b4/recent-activity/all/" target="_blank">037 & 038: Still need posting</a>
+        <div class="meta"><span class="badge badge-li">LinkedIn</span> Pending - Post today (2/day limit)</div>
+      </div>
     </div>
-    <div class="link-grid" id="youtube-links"></div>
   </div>
 
-  <div class="platform-section">
-    <div class="platform-header">
-      <span class="icon">🐦</span>
-      <h2>X / Twitter</h2>
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128221;</span> Blog Posts (38 Published)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/production-voice-ai-scaling-monitoring.html" target="_blank">038: Production Voice AI</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Professional - Scaling, monitoring, $1500/day</div>
+      </div>
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/voice-agent-architectures-cascading.html" target="_blank">037: Voice Agent Architectures</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Advanced - Pipeline vs end-to-end vs managed</div>
+      </div>
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/build-your-first-voice-agent-python.html" target="_blank">036: Build Your First Voice Agent</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Intermediate - Pipecat Python tutorial</div>
+      </div>
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/speech-to-text-showdown-whisper.html" target="_blank">035: STT Showdown</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Intermediate - Whisper vs Deepgram vs Google</div>
+      </div>
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/tts-in-2026-elevenlabs-vs-openai-vs.html" target="_blank">034: TTS in 2026</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Intermediate - ElevenLabs vs OpenAI vs Kokoro</div>
+      </div>
+      <div class="card">
+        <a href="https://amtocsoft.blogspot.com/2026/04/what-is-voice-ai-tts-stt-and-voice.html" target="_blank">033: What Is Voice AI?</a>
+        <div class="meta"><span class="badge badge-blog">Blog</span> Beginner - TTS, STT, Voice Agents overview</div>
+      </div>
     </div>
-    <div class="link-grid" id="twitter-links"></div>
   </div>
 
-  <p style="text-align:center; margin-top: 2rem;">
-    <button class="btn-refresh" onclick="generateLinks()">Refresh Recommendations</button>
-  </p>
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127926;</span> YouTube Shorts (30 Published)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://youtube.com/shorts/sD-23XM2T-o" target="_blank">S025: What Is Voice AI?</a>
+        <div class="meta"><span class="badge badge-yt">Short</span> Apr 6 - Voice AI intro</div>
+      </div>
+      <div class="card">
+        <a href="https://youtube.com/shorts/aHfx0BTtlls" target="_blank">S026: TTS Battle</a>
+        <div class="meta"><span class="badge badge-yt">Short</span> Apr 6 - ElevenLabs vs OpenAI vs Kokoro</div>
+      </div>
+      <div class="card">
+        <a href="https://youtube.com/shorts/9gK5NKE2V1Q" target="_blank">S028: Build a Voice Agent</a>
+        <div class="meta"><span class="badge badge-yt">Short</span> Apr 6 - 50 lines of Python, high engagement</div>
+      </div>
+      <div class="card">
+        <a href="https://youtube.com/shorts/QW0CWgrOZ4M" target="_blank">S030: Production Voice AI Cost</a>
+        <div class="meta"><span class="badge badge-yt">Short</span> Apr 6 - $1,500/day problem, provocative hook</div>
+      </div>
+    </div>
+  </div>
 
-  <script>
-    const REDDIT_SUBS = [
-      { sub: 'LocalLLaMA', desc: 'Local AI models community', topics: ['ollama', 'llama.cpp', 'quantization', 'GGUF', 'LoRA'] },
-      { sub: 'MachineLearning', desc: 'ML research & engineering', topics: ['transformers', 'fine-tuning', 'RAG', 'inference'] },
-      { sub: 'learnprogramming', desc: 'Programming learners', topics: ['AI tools', 'Python', 'coding assistants'] },
-      { sub: 'artificial', desc: 'AI news & discussion', topics: ['AI agents', 'voice AI', 'LLMs'] },
-      { sub: 'singularity', desc: 'AI advancement discussion', topics: ['AI agents', 'open source AI', 'edge AI'] },
-      { sub: 'ChatGPT', desc: 'ChatGPT users', topics: ['prompting', 'AI tools', 'coding'] },
-      { sub: 'ollama', desc: 'Ollama community', topics: ['local AI', 'models', 'performance'] },
-      { sub: 'selfhosted', desc: 'Self-hosting enthusiasts', topics: ['local AI', 'Docker', 'privacy'] },
-      { sub: 'Python', desc: 'Python developers', topics: ['AI libraries', 'tutorials', 'automation'] },
-      { sub: 'webdev', desc: 'Web development', topics: ['AI coding tools', 'Cursor', 'Copilot'] },
-      { sub: 'StableDiffusion', desc: 'AI image generation', topics: ['multimodal', 'open source'] },
-      { sub: 'Oobabooga', desc: 'Text generation UI', topics: ['local LLMs', 'quantization'] },
-    ];
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127928;</span> TikTok (19 of 30 Posted)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.tiktok.com/@amtocbot" target="_blank">@amtocbot TikTok Profile</a>
+        <div class="meta"><span class="badge badge-tt">TikTok</span> 19 posted (S001-S019), 11 remaining (S020-S030)</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-    const TIKTOK_TOPICS = [
-      { search: 'AI tutorial', action: 'Like + comment on educational AI content' },
-      { search: 'coding tips', action: 'Engage with developer content' },
-      { search: 'ChatGPT tricks', action: 'Like AI productivity content' },
-      { search: 'Python programming', action: 'Comment with helpful tips' },
-      { search: 'tech explained', action: 'Like similar educational creators' },
-      { search: 'AI voice', action: 'Engage with voice AI content' },
-      { search: 'machine learning beginner', action: 'Support fellow educators' },
-      { search: 'run AI locally', action: 'Comment with Ollama recommendations' },
-    ];
+<!-- ==================== TAB 2: ENGAGE ==================== -->
+<div class="panel" id="engage">
+  <div class="tip">
+    <strong>Daily goal:</strong> 15-20 min across 2-3 sessions. Like 5-10 posts, leave 3-5 genuine comments. Focus on adding value, not self-promoting. Today's focus: voice AI, fine-tuning, and quantization communities.
+  </div>
 
-    const YOUTUBE_SEARCHES = [
-      { search: 'run LLM locally 2026', action: 'Comment with your Ollama experience' },
-      { search: 'RAG tutorial', action: 'Like + thoughtful comment' },
-      { search: 'AI coding tools comparison', action: 'Engage with similar creators' },
-      { search: 'voice AI tutorial', action: 'Comment with Pipecat/Kokoro tips' },
-      { search: 'fine tuning LoRA', action: 'Like + share perspective' },
-      { search: 'quantization GGUF', action: 'Comment with Q4_K_M recommendation' },
-      { search: 'AI agents tutorial', action: 'Engage on agent frameworks' },
-      { search: 'open source AI models', action: 'Like and discuss favorites' },
-    ];
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128293;</span> High-Value Reddit Threads (Search by Topic)</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=voice+AI+OR+TTS+OR+whisper+OR+kokoro&sort=new&t=week" target="_blank">r/LocalLLaMA - Voice AI / TTS / Kokoro</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Share Kokoro TTS experience (82M params, beats ElevenLabs). Mention blog 034.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=quantization+OR+GGUF+OR+GPTQ+OR+AWQ&sort=new&t=week" target="_blank">r/LocalLLaMA - Quantization Formats</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Share GGUF vs GPTQ vs AWQ guidance. P006 podcast covers this.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=fine-tuning+OR+LoRA+OR+QLoRA&sort=new&t=week" target="_blank">r/LocalLLaMA - Fine-Tuning / LoRA</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Help with LoRA questions. P005 podcast has the full breakdown.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=vLLM+OR+TGI+OR+serving+OR+inference&sort=new&t=week" target="_blank">r/LocalLLaMA - Serving / vLLM / TGI</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Production serving tips. Blog 030 has real benchmarks.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/MachineLearning/search/?q=speech+synthesis+OR+TTS+OR+voice+agent&sort=new&t=week" target="_blank">r/MachineLearning - Speech & Voice</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Academic voice AI discussion. Share architecture comparison from blog 037.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/Python/search/?q=pipecat+OR+whisper+OR+TTS+OR+voice+agent&sort=new&t=month" target="_blank">r/Python - Voice Agent / Pipecat</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Python voice AI builders. Blog 036 tutorial is highly shareable.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/selfhosted/search/?q=whisper+OR+TTS+OR+AI+OR+ollama&sort=new&t=week" target="_blank">r/selfhosted - Self-hosted AI</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Running Whisper/Kokoro locally. Privacy angle resonates here.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/ollama/hot/" target="_blank">r/ollama - Hot</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Ollama users. Quantization tips + edge AI content lands well.</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/learnprogramming/new/" target="_blank">r/learnprogramming - New</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Answer beginner AI questions. Easy karma, genuine help.</div>
+      </div>
+    </div>
+  </div>
 
-    const TWITTER_SEARCHES = [
-      { search: '#LocalAI OR #Ollama', action: 'Like + retweet good content' },
-      { search: '#VoiceAI OR #TTS', action: 'Engage with voice AI discussions' },
-      { search: '#LLM fine-tuning', action: 'Reply with practical tips' },
-      { search: '#RAG tutorial', action: 'Like RAG-related posts' },
-      { search: '#AIAgents 2026', action: 'Join agent discussions' },
-      { search: '#MachineLearning beginner', action: 'Support learning content' },
-      { search: 'quantization GGUF GPTQ', action: 'Share format recommendations' },
-      { search: '#BuildInPublic AI', action: 'Connect with other builders' },
-    ];
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128038;</span> X/Twitter Searches</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://x.com/search?q=%23VoiceAI+OR+%23TTS+OR+%22voice+agent%22&f=live" target="_blank">#VoiceAI OR #TTS OR "voice agent"</a>
+        <div class="meta"><span class="badge badge-x">X</span> Voice AI trending - share your Kokoro experience</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=kokoro+TTS+OR+%22kokoro+82M%22&f=live" target="_blank">Kokoro TTS mentions</a>
+        <div class="meta"><span class="badge badge-x">X</span> Kokoro discussion - you run it for podcast production</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=%23LLM+fine-tuning+OR+LoRA+OR+QLoRA&f=live" target="_blank">#LLM fine-tuning / LoRA / QLoRA</a>
+        <div class="meta"><span class="badge badge-x">X</span> Share P005 decision framework insights</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=quantization+GGUF+OR+GPTQ+OR+AWQ&f=live" target="_blank">Quantization format discussions</a>
+        <div class="meta"><span class="badge badge-x">X</span> Share GGUF for CPU, GPTQ for quality, AWQ for serving rule</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=vLLM+OR+%22speculative+decoding%22&f=live" target="_blank">vLLM / speculative decoding</a>
+        <div class="meta"><span class="badge badge-x">X</span> Production serving discussion - real benchmark data</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=%23BuildInPublic+AI+OR+%23BuildInPublic+developer&f=live" target="_blank">#BuildInPublic AI</a>
+        <div class="meta"><span class="badge badge-x">X</span> Fellow builders - network and share progress</div>
+      </div>
+    </div>
+  </div>
 
-    function shuffle(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+  <div class="section">
+    <div class="section-title"><span class="icon">&#9654;</span> YouTube Comment Engagement</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.youtube.com/results?search_query=voice+AI+tutorial+2026&sp=CAI%253D" target="_blank">Voice AI tutorials (latest)</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Comment on similar creators' voice AI content</div>
+      </div>
+      <div class="card">
+        <a href="https://www.youtube.com/results?search_query=fine+tuning+LoRA+tutorial&sp=CAI%253D" target="_blank">LoRA fine-tuning tutorials</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Engage with LoRA/QLoRA content creators</div>
+      </div>
+      <div class="card">
+        <a href="https://www.youtube.com/results?search_query=quantization+GGUF+GPTQ+explained&sp=CAI%253D" target="_blank">Quantization explainers</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Share format comparison insights from P006</div>
+      </div>
+      <div class="card">
+        <a href="https://www.youtube.com/results?search_query=AI+podcast+developer&sp=CAI%253D" target="_blank">AI developer podcasts</a>
+        <div class="meta"><span class="badge badge-yt">YouTube</span> Find and engage with similar podcast creators</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127926;</span> TikTok & Other Platforms</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.tiktok.com/search?q=voice%20AI%20assistant%202026" target="_blank">Voice AI assistant (TikTok)</a>
+        <div class="meta"><span class="badge badge-tt">TikTok</span> Voice AI demos - engage with creators</div>
+      </div>
+      <div class="card">
+        <a href="https://www.tiktok.com/search?q=run%20AI%20locally%20free" target="_blank">Run AI locally (TikTok)</a>
+        <div class="meta"><span class="badge badge-tt">TikTok</span> Quantization + Ollama content</div>
+      </div>
+      <div class="card">
+        <a href="https://www.tiktok.com/search?q=fine%20tune%20AI%20model" target="_blank">Fine-tune AI (TikTok)</a>
+        <div class="meta"><span class="badge badge-tt">TikTok</span> LoRA/fine-tuning demos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 3: DISCOVER ==================== -->
+<div class="panel" id="discover">
+  <div class="tip">
+    <strong>Content research:</strong> These feeds surface trending topics for the next blog series. Look for gaps: multimodal AI, function calling, AI security, and agent frameworks are underserved.
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128200;</span> Trending AI Topics</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/top/?t=week" target="_blank">r/LocalLLaMA - Top This Week</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> What's hot in local AI this week</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/MachineLearning/top/?t=week" target="_blank">r/MachineLearning - Top This Week</a>
+        <div class="meta"><span class="badge badge-reddit">Reddit</span> Top ML research and engineering posts</div>
+      </div>
+      <div class="card">
+        <a href="https://news.ycombinator.com/news" target="_blank">Hacker News - Front Page</a>
+        <div class="meta"><span class="badge badge-reddit">HN</span> Tech trending - look for AI/dev tools stories</div>
+      </div>
+      <div class="card">
+        <a href="https://huggingface.co/models?sort=trending" target="_blank">Hugging Face - Trending Models</a>
+        <div class="meta">New models to cover in future posts</div>
+      </div>
+      <div class="card">
+        <a href="https://arxiv.org/list/cs.CL/recent" target="_blank">arXiv - Computation & Language</a>
+        <div class="meta">Recent NLP/LLM papers</div>
+      </div>
+      <div class="card">
+        <a href="https://arxiv.org/list/cs.SD/recent" target="_blank">arXiv - Sound (Speech/Audio)</a>
+        <div class="meta">Recent speech/audio papers</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127793;</span> Next Blog Series Ideas</div>
+    <div class="grid">
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=multimodal+OR+vision+OR+image+generation&sort=new&t=week" target="_blank">Multimodal AI (Vision + Language)</a>
+        <div class="meta">Series idea: LLaVA, GPT-4V, open multimodal models, image generation</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=function+calling+OR+tool+use+OR+MCP&sort=new&t=month" target="_blank">Function Calling / Tool Use / MCP</a>
+        <div class="meta">Series idea: AI that uses tools - API calls, code exec, MCP protocol</div>
+      </div>
+      <div class="card">
+        <a href="https://x.com/search?q=%22AI+security%22+OR+%22prompt+injection%22+OR+%22AI+safety%22&f=live" target="_blank">AI Security / Prompt Injection</a>
+        <div class="meta">Series idea: securing AI apps, red teaming, guardrails</div>
+      </div>
+      <div class="card">
+        <a href="https://www.reddit.com/r/LocalLLaMA/search/?q=agent+framework+OR+crewai+OR+autogen+OR+langchain&sort=new&t=month" target="_blank">Agent Frameworks (CrewAI, AutoGen, LangChain)</a>
+        <div class="meta">Series idea: multi-agent orchestration deep dive</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TAB 4: AUDIT ==================== -->
+<div class="panel" id="audit">
+  <div class="tip">
+    <strong>Publishing audit:</strong> Complete inventory of all content produced and published. Use this for analytics tracking and planning next content sprints.
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="stat-grid">
+    <div class="stat-card"><div class="number">38</div><div class="label">Blog Posts</div></div>
+    <div class="stat-card"><div class="number">16</div><div class="label">YouTube Videos</div></div>
+    <div class="stat-card"><div class="number">30</div><div class="label">YouTube Shorts</div></div>
+    <div class="stat-card"><div class="number">6</div><div class="label">Podcast Episodes</div></div>
+    <div class="stat-card"><div class="number">19</div><div class="label">TikTok Posts</div></div>
+    <div class="stat-card"><div class="number">8</div><div class="label">Platforms</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127911;</span> Podcast Episodes (Bot Thoughts)</div>
+    <table class="audit-table">
+      <tr><th>#</th><th>Title</th><th>Duration</th><th>YouTube</th><th>Spotify</th><th>Date</th></tr>
+      <tr>
+        <td>P001</td><td>AI Agents Are Everywhere</td><td>9.8 min</td>
+        <td><a href="https://youtu.be/P4AeX9xkSfM" target="_blank">YouTube</a></td>
+        <td><a href="https://open.spotify.com/show/2X82OW5nzyaXT0AQ7HZhHh" target="_blank">Spotify</a></td>
+        <td class="audit-date">Apr 2</td>
+      </tr>
+      <tr>
+        <td>P002</td><td>Vibe Coding Reality Check</td><td>22.3 min</td>
+        <td><a href="https://youtu.be/mtn7qDpRzyk" target="_blank">YouTube</a></td>
+        <td><a href="https://open.spotify.com/show/2X82OW5nzyaXT0AQ7HZhHh" target="_blank">Spotify</a></td>
+        <td class="audit-date">Apr 4</td>
+      </tr>
+      <tr>
+        <td>P003</td><td>84% of Devs Use AI to Code</td><td>12.0 min</td>
+        <td><a href="https://youtu.be/z-ECDHLJAmk" target="_blank">YouTube</a></td>
+        <td>Pending</td>
+        <td class="audit-date">Apr 6</td>
+      </tr>
+      <tr style="background:#0f2918;">
+        <td>P004</td><td>The Voice AI Revolution</td><td>10.9 min</td>
+        <td><a href="https://youtu.be/yj_3qNF82-M" target="_blank">YouTube</a></td>
+        <td>Pending</td>
+        <td class="audit-date">Apr 7</td>
+      </tr>
+      <tr style="background:#0f2918;">
+        <td>P005</td><td>Fine-Tuning vs RAG Showdown</td><td>10.8 min</td>
+        <td><a href="https://youtu.be/U2r0YcNOL8E" target="_blank">YouTube</a></td>
+        <td>Pending</td>
+        <td class="audit-date">Apr 7</td>
+      </tr>
+      <tr style="background:#0f2918;">
+        <td>P006</td><td>Making AI Fast & Small</td><td>11.8 min</td>
+        <td><a href="https://youtu.be/_AVlFpegHXo" target="_blank">YouTube</a></td>
+        <td>Pending</td>
+        <td class="audit-date">Apr 7</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#127909;</span> YouTube Videos (V001-V016)</div>
+    <table class="audit-table">
+      <tr><th>#</th><th>Title</th><th>YouTube</th><th>Date</th></tr>
+      <tr><td>V001</td><td>Neural Networks Explained</td><td><a href="https://youtu.be/BaTNHXy1rP4" target="_blank">Link</a></td><td class="audit-date">Mar 31</td></tr>
+      <tr><td>V002</td><td>AI Agents Explained</td><td><a href="https://youtu.be/I6Imu6boOn4" target="_blank">Link</a></td><td class="audit-date">Apr 1</td></tr>
+      <tr><td>V003</td><td>What Is MCP?</td><td><a href="https://youtu.be/UR-0s7Q80k0" target="_blank">Link</a></td><td class="audit-date">Apr 1</td></tr>
+      <tr><td>V004</td><td>RAG Explained</td><td><a href="https://youtu.be/SYfLQljOcsQ" target="_blank">Link</a></td><td class="audit-date">Apr 2</td></tr>
+      <tr><td>V005</td><td>Vector Databases</td><td><a href="https://youtu.be/YSbZQOK5DGA" target="_blank">Link</a></td><td class="audit-date">Apr 2</td></tr>
+      <tr><td>V006</td><td>GraphRAG vs RAG</td><td><a href="https://youtu.be/QXUQmWxpjMw" target="_blank">Link</a></td><td class="audit-date">Apr 2</td></tr>
+      <tr><td>V007</td><td>Cursor vs Copilot vs Claude Code</td><td><a href="https://youtu.be/9XMKX2YF9eE" target="_blank">Link</a></td><td class="audit-date">Apr 2</td></tr>
+      <tr><td>V008</td><td>Open Source AI Revolution</td><td><a href="https://youtu.be/M1j8TZtjnPE" target="_blank">Link</a></td><td class="audit-date">Apr 3</td></tr>
+      <tr><td>V009</td><td>Run LLMs Locally</td><td><a href="https://youtu.be/3t7WlFh9fRE" target="_blank">Link</a></td><td class="audit-date">Apr 3</td></tr>
+      <tr><td>V010</td><td>What Is Fine-Tuning?</td><td><a href="https://youtu.be/cj4K3Cebq_g" target="_blank">Link</a></td><td class="audit-date">Apr 3</td></tr>
+      <tr><td>V011</td><td>LoRA & QLoRA Explained</td><td><a href="https://youtu.be/F3v4zUl6b6w" target="_blank">Link</a></td><td class="audit-date">Apr 4</td></tr>
+      <tr><td>V012</td><td>Fine-Tuning vs RAG</td><td><a href="https://youtu.be/llzZee0AVC8" target="_blank">Link</a></td><td class="audit-date">Apr 4</td></tr>
+      <tr><td>V013</td><td>What Is Quantization?</td><td><a href="https://youtu.be/OHgJ1UxYTj8" target="_blank">Link</a></td><td class="audit-date">Apr 6</td></tr>
+      <tr><td>V014</td><td>Speculative Decoding</td><td><a href="https://youtu.be/hMdEXBr4NNs" target="_blank">Link</a></td><td class="audit-date">Apr 6</td></tr>
+      <tr><td>V015</td><td>Edge AI on Devices</td><td><a href="https://youtu.be/YS0Wz_jI-RA" target="_blank">Link</a></td><td class="audit-date">Apr 6</td></tr>
+      <tr><td>V016</td><td>Voice AI Complete Guide</td><td><a href="https://youtu.be/uZU0BwFHcEo" target="_blank">Link</a></td><td class="audit-date">Apr 6</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128221;</span> Blog Series Coverage</div>
+    <table class="audit-table">
+      <tr><th>Series</th><th>Blogs</th><th>Videos</th><th>Shorts</th><th>Podcast</th></tr>
+      <tr><td>AI Fundamentals</td><td>001-008</td><td>V001-V003</td><td>S001-S010</td><td>P001</td></tr>
+      <tr><td>RAG & Knowledge</td><td>009-014</td><td>V004-V006</td><td>S007, S009</td><td>-</td></tr>
+      <tr><td>AI Coding Tools</td><td>015-020</td><td>V007</td><td>S016-S019</td><td>P002, P003</td></tr>
+      <tr><td>Open Source & Local AI</td><td>021-022</td><td>V008-V009</td><td>S010-S015</td><td>-</td></tr>
+      <tr><td>Fine-Tuning & Domain AI</td><td>023-026</td><td>V010-V012</td><td>S017, S020-S021</td><td>P005</td></tr>
+      <tr><td>Model Optimization</td><td>027-032</td><td>V013-V015</td><td>S022-S024</td><td>P006</td></tr>
+      <tr><td>Voice AI</td><td>033-038</td><td>V016</td><td>S025-S030</td><td>P004</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128197;</span> Publishing Timeline</div>
+    <table class="audit-table">
+      <tr><th>Date</th><th>Content Published</th><th>Platforms</th></tr>
+      <tr><td>Mar 30-31</td><td>Blogs 001-008, V001</td><td>Blogger, YouTube</td></tr>
+      <tr><td>Apr 1</td><td>Blogs 009-014, V002-V003</td><td>Blogger, YouTube</td></tr>
+      <tr><td>Apr 2</td><td>Blogs 015-020, V004-V007, P001, S001-S015</td><td>Blogger, YouTube, Spotify, TikTok</td></tr>
+      <tr><td>Apr 3</td><td>Blogs 021-026, V008-V010</td><td>Blogger, YouTube</td></tr>
+      <tr><td>Apr 4</td><td>Blogs 027-032, V011-V012, P002, S016-S019</td><td>Blogger, YouTube, Spotify, TikTok, LinkedIn</td></tr>
+      <tr><td>Apr 5</td><td>LinkedIn cross-posts (033-034)</td><td>LinkedIn</td></tr>
+      <tr><td>Apr 6</td><td>Blogs 033-038, V013-V016, P003, S020-S030, LinkedIn (035-036), X (035-038)</td><td>Blogger, YouTube, LinkedIn, X</td></tr>
+      <tr style="background:#0f2918;"><td>Apr 7</td><td>P004, P005, P006 (podcasts with slide videos)</td><td>YouTube</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#9888;</span> Pending Actions</div>
+    <table class="audit-table">
+      <tr><th>Item</th><th>Status</th><th>Notes</th></tr>
+      <tr><td>LinkedIn posts for blogs 037-038</td><td>Pending</td><td>2/day limit, post today</td></tr>
+      <tr><td>TikTok uploads S020-S030</td><td>11 remaining</td><td>5/day schedule, resume today</td></tr>
+      <tr><td>Spotify upload P003-P006</td><td>Pending</td><td>Upload via Spotify for Creators</td></tr>
+      <tr><td>Delete old blank P003 on YouTube</td><td>Pending</td><td><a href="https://youtu.be/iZK6yJpCexI" target="_blank">iZK6yJpCexI</a> (blank screen version)</td></tr>
+      <tr><td>Content tracker update</td><td>Needs refresh</td><td>Add P004-P006, V013-V016, S020-S030</td></tr>
+    </table>
+  </div>
+
+  <!-- ===== Enhanced Audit: Activity Log ===== -->
+  <div class="activity-section section">
+    <div class="section-title"><span class="icon">&#128202;</span> Activity Log</div>
+    <div class="filter-row">
+      <select id="activity-filter-user">
+        <option value="">All Users</option>
+      </select>
+      <select id="activity-filter-action">
+        <option value="">All Actions</option>
+      </select>
+    </div>
+    <table class="audit-table" id="activity-log-table">
+      <thead>
+        <tr><th>Time</th><th>User</th><th>Action</th><th>Detail</th></tr>
+      </thead>
+      <tbody id="activity-log-body">
+        <!-- Skeleton placeholders -->
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <button class="load-more-btn" id="activity-load-more" onclick="loadMoreActivity()">Load More</button>
+  </div>
+</div>
+
+</div><!-- end #main-content -->
+
+<script>
+  // ===== Global State =====
+  window.engageUser = null;
+  var activityPage = 0;
+  var activityLoading = false;
+
+  // ===== Toast System =====
+  function showToast(message, type) {
+    type = type || 'info';
+    var container = document.getElementById('toast-container');
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4100);
+  }
+
+  // ===== Auth: Magic Link =====
+  function sendMagicLink() {
+    var username = document.getElementById('login-username').value.trim();
+    var email = document.getElementById('login-email').value.trim();
+    var statusEl = document.getElementById('login-status');
+    var btn = document.getElementById('login-btn');
+
+    if (!username || !email) {
+      statusEl.className = 'login-status error';
+      statusEl.textContent = 'Please enter both username and email.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    statusEl.className = 'login-status';
+    statusEl.textContent = '';
+
+    fetch('/api/auth/login', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username, email: email })
+    })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (res.ok) {
+        statusEl.className = 'login-status success';
+        statusEl.textContent = 'Check your email for the magic link.';
+        showToast('Magic link sent', 'success');
+      } else {
+        statusEl.className = 'login-status error';
+        statusEl.textContent = res.data.error || 'Failed to send magic link.';
+        showToast(res.data.error || 'Send failed', 'error');
       }
-      return a;
+    })
+    .catch(function() {
+      statusEl.className = 'login-status error';
+      statusEl.textContent = 'Network error. Try again.';
+      showToast('Network error', 'error');
+    })
+    .finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'Send Magic Link';
+    });
+  }
+
+  // ===== Auth: Verify token from URL =====
+  function verifyTokenFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('token');
+    var sessionId = params.get('session');
+
+    if (token && sessionId) {
+      // Clear URL params immediately
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      fetch('/api/auth/verify', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, session_id: sessionId })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function() {
+        checkSession();
+      })
+      .catch(function() {
+        showToast('Verification failed', 'error');
+        showLoginOverlay();
+      });
+    } else {
+      checkSession();
+    }
+  }
+
+  // ===== Auth: Check session =====
+  function checkSession() {
+    fetch('/api/auth/session', { credentials: 'same-origin' })
+    .then(function(r) {
+      if (!r.ok) throw new Error('not authenticated');
+      return r.json();
+    })
+    .then(function(data) {
+      window.engageUser = data;
+      hideLoginOverlay();
+      showSessionBar(data);
+      showToast('Logged in as ' + data.username, 'success');
+      loadActivityLog();
+    })
+    .catch(function() {
+      window.engageUser = null;
+      showLoginOverlay();
+    });
+  }
+
+  function showLoginOverlay() {
+    document.getElementById('login-overlay').classList.remove('hidden');
+  }
+  function hideLoginOverlay() {
+    document.getElementById('login-overlay').classList.add('hidden');
+  }
+
+  function showSessionBar(user) {
+    var bar = document.getElementById('session-bar');
+    bar.classList.add('visible');
+    document.getElementById('session-username').textContent = user.username || 'User';
+    var badge = document.getElementById('session-role-badge');
+    var role = user.role || 'member';
+    badge.textContent = role;
+    badge.className = 'role-badge ' + role;
+    if (role === 'admin') {
+      document.getElementById('btn-invite').style.display = 'inline-block';
+    }
+  }
+
+  function logout() {
+    fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' })
+    .then(function() {
+      window.engageUser = null;
+      document.getElementById('session-bar').classList.remove('visible');
+      document.getElementById('btn-invite').style.display = 'none';
+      showLoginOverlay();
+      showToast('Logged out', 'info');
+    })
+    .catch(function() {
+      showToast('Logout failed', 'error');
+    });
+  }
+
+  // ===== Invite Modal =====
+  function openInviteModal() {
+    document.getElementById('invite-modal').classList.remove('hidden');
+  }
+  function closeInviteModal() {
+    document.getElementById('invite-modal').classList.add('hidden');
+    document.getElementById('invite-username').value = '';
+    document.getElementById('invite-email').value = '';
+    document.getElementById('invite-role').value = 'member';
+  }
+  function sendInvite() {
+    var username = document.getElementById('invite-username').value.trim();
+    var email = document.getElementById('invite-email').value.trim();
+    var role = document.getElementById('invite-role').value;
+
+    if (!username || !email) {
+      showToast('Fill in all fields', 'error');
+      return;
     }
 
-    function createCard(platform, link, url, meta, action, tags) {
-      return `<div class="link-card" onclick="this.classList.toggle('done')">
-        <input type="checkbox" class="checkbox" onclick="event.stopPropagation(); this.parentElement.classList.toggle('done')">
-        <a href="${url}" target="_blank" rel="noopener">${link}</a>
-        <div class="meta">${meta}</div>
-        <div class="action">${action}</div>
-        ${tags ? `<div class="tags">${tags}</div>` : ''}
-      </div>`;
-    }
+    fetch('/api/auth/invite', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username, email: email, role: role })
+    })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+    .then(function(res) {
+      if (res.ok) {
+        showToast('Invite sent to ' + email, 'success');
+        closeInviteModal();
+      } else {
+        showToast(res.data.error || 'Invite failed', 'error');
+      }
+    })
+    .catch(function() {
+      showToast('Network error', 'error');
+    });
+  }
 
-    function generateLinks() {
-      const hour = new Date().getHours();
-      const session = hour < 9 ? 'Morning' : hour < 13 ? 'Midday' : hour < 18 ? 'Afternoon' : 'Evening';
-      document.getElementById('time').textContent = `Session: ${session} (${new Date().toLocaleTimeString()})`;
+  // ===== Tab Switching with Audit Logging =====
+  document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      var panel = document.getElementById(tab.dataset.tab);
+      panel.classList.add('active');
+      // Force reflow for opacity transition
+      void panel.offsetWidth;
 
-      // Reddit — pick 4-5 random subreddits
-      const reddits = shuffle(REDDIT_SUBS).slice(0, 5);
-      document.getElementById('reddit-links').innerHTML = reddits.map(r => {
-        const topic = r.topics[Math.floor(Math.random() * r.topics.length)];
-        return createCard('reddit',
-          `r/${r.sub} — Hot posts`,
-          `https://www.reddit.com/r/${r.sub}/hot/`,
-          r.desc,
-          `Browse hot posts. Comment on ${topic}-related threads with genuine insight.`,
-          r.topics.map(t => `#${t.replace(/\s+/g, '')}`).join(' ')
-        );
-      }).join('') + createCard('reddit',
-        `r/${reddits[0].sub} — New posts`,
-        `https://www.reddit.com/r/${reddits[0].sub}/new/`,
-        'New posts (easier to get visibility)',
-        'Answer questions in new posts — early comments get more karma',
-        ''
-      );
+      // Audit: log tab view (fire-and-forget)
+      logAudit('tab_view', { tab: tab.dataset.tab });
+    });
+  });
 
-      // TikTok — pick 3-4
-      const tiktoks = shuffle(TIKTOK_TOPICS).slice(0, 4);
-      document.getElementById('tiktok-links').innerHTML = tiktoks.map(t =>
-        createCard('tiktok',
-          `Search: "${t.search}"`,
-          `https://www.tiktok.com/search?q=${encodeURIComponent(t.search)}`,
-          'TikTok Discover',
-          t.action,
-          ''
-        )
-      ).join('');
+  // ===== Audit Logging =====
+  function logAudit(action, detail) {
+    try {
+      var body = JSON.stringify({ action: action, detail: detail });
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/audit/log', new Blob([body], { type: 'application/json' }));
+      } else {
+        fetch('/api/audit/log', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: body,
+          keepalive: true
+        });
+      }
+    } catch (e) { /* non-blocking */ }
+  }
 
-      // YouTube — pick 3-4
-      const yts = shuffle(YOUTUBE_SEARCHES).slice(0, 4);
-      document.getElementById('youtube-links').innerHTML = yts.map(y =>
-        createCard('youtube',
-          `Search: "${y.search}"`,
-          `https://www.youtube.com/results?search_query=${encodeURIComponent(y.search)}&sp=CAI%253D`,
-          'YouTube — sorted by upload date',
-          y.action,
-          ''
-        )
-      ).join('');
+  // ===== Link Click Audit (delegated) =====
+  document.querySelectorAll('.panel').forEach(function(panel) {
+    panel.addEventListener('click', function(e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      var url = link.href || '';
+      var label = (link.textContent || '').trim().substring(0, 120);
+      logAudit('link_click', { url: url, label: label });
+    });
+  });
 
-      // Twitter — pick 3-4
-      const tweets = shuffle(TWITTER_SEARCHES).slice(0, 4);
-      document.getElementById('twitter-links').innerHTML = tweets.map(t =>
-        createCard('twitter',
-          `Search: "${t.search}"`,
-          `https://x.com/search?q=${encodeURIComponent(t.search)}&f=live`,
-          'X — Latest posts',
-          t.action,
-          ''
-        )
-      ).join('');
-    }
+  // ===== Activity Log (Enhanced Audit Tab) =====
+  function loadActivityLog(reset) {
+    if (reset) activityPage = 0;
+    if (activityLoading) return;
+    activityLoading = true;
 
-    generateLinks();
-  </script>
+    var userFilter = document.getElementById('activity-filter-user').value;
+    var actionFilter = document.getElementById('activity-filter-action').value;
+    var params = '?page=' + activityPage;
+    if (userFilter) params += '&user=' + encodeURIComponent(userFilter);
+    if (actionFilter) params += '&action=' + encodeURIComponent(actionFilter);
+
+    var btn = document.getElementById('activity-load-more');
+    btn.disabled = true;
+    btn.textContent = 'Loading...';
+
+    fetch('/api/audit/list' + params, { credentials: 'same-origin' })
+    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function(data) {
+      var tbody = document.getElementById('activity-log-body');
+
+      // On first load or reset, clear skeleton/old rows
+      if (activityPage === 0) tbody.innerHTML = '';
+
+      // Populate filter dropdowns (once, from first response)
+      if (data.users && activityPage === 0) {
+        var userSel = document.getElementById('activity-filter-user');
+        // Keep first option
+        userSel.innerHTML = '<option value="">All Users</option>';
+        data.users.forEach(function(u) {
+          var opt = document.createElement('option');
+          opt.value = u; opt.textContent = u;
+          if (u === userFilter) opt.selected = true;
+          userSel.appendChild(opt);
+        });
+      }
+      if (data.actions && activityPage === 0) {
+        var actSel = document.getElementById('activity-filter-action');
+        actSel.innerHTML = '<option value="">All Actions</option>';
+        data.actions.forEach(function(a) {
+          var opt = document.createElement('option');
+          opt.value = a; opt.textContent = a;
+          if (a === actionFilter) opt.selected = true;
+          actSel.appendChild(opt);
+        });
+      }
+
+      var entries = data.entries || [];
+      if (entries.length === 0 && activityPage === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="color:#64748b;text-align:center;padding:1.5rem;">No activity recorded yet.</td></tr>';
+      }
+
+      entries.forEach(function(entry) {
+        var tr = document.createElement('tr');
+        var time = entry.time ? new Date(entry.time).toLocaleString() : '--';
+        var detail = typeof entry.detail === 'object' ? JSON.stringify(entry.detail) : (entry.detail || '');
+        tr.innerHTML = '<td class="audit-date">' + escapeHtml(time) + '</td>'
+          + '<td>' + escapeHtml(entry.user || '--') + '</td>'
+          + '<td>' + escapeHtml(entry.action || '--') + '</td>'
+          + '<td style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escapeHtml(detail) + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      btn.textContent = 'Load More';
+      btn.disabled = !data.has_more;
+      if (data.has_more) activityPage++;
+    })
+    .catch(function() {
+      var tbody = document.getElementById('activity-log-body');
+      if (activityPage === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="color:#64748b;text-align:center;padding:1.5rem;">Could not load activity log.</td></tr>';
+      }
+      btn.textContent = 'Load More';
+      btn.disabled = false;
+    })
+    .finally(function() {
+      activityLoading = false;
+    });
+  }
+
+  function loadMoreActivity() {
+    loadActivityLog(false);
+  }
+
+  // Re-fetch on filter change
+  document.getElementById('activity-filter-user').addEventListener('change', function() { loadActivityLog(true); });
+  document.getElementById('activity-filter-action').addEventListener('change', function() { loadActivityLog(true); });
+
+  // ===== Filter cards in Your Content tab =====
+  function filterCards(input) {
+    var q = input.value.toLowerCase();
+    var cards = input.closest('.panel').querySelectorAll('.card');
+    cards.forEach(function(card) {
+      var text = card.textContent.toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+
+  // ===== Utility =====
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  // ===== Init =====
+  verifyTokenFromURL();
+</script>
 </body>
 </html>

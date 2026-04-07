@@ -51,6 +51,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       videos: videos.length,
       shorts: shorts.length,
       podcasts: podcasts.length,
+      tiktok: (content as any).tiktok ?? 0,
+      platforms: (content as any).platforms ?? 0,
     };
 
     // Persist to KV for the public /api/content-stats endpoint

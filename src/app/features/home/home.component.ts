@@ -13,6 +13,8 @@ interface ContentStats {
   videos: number;
   shorts: number;
   podcasts: number;
+  tiktok: number;
+  platforms: number;
   lastSync: string | null;
 }
 
@@ -54,7 +56,11 @@ interface ContentStats {
         <span class="stat-label">Podcasts</span>
       </div>
       <div class="stat">
-        <span class="stat-value">{{ platformCount() }}</span>
+        <span class="stat-value">{{ liveStats().tiktok }}</span>
+        <span class="stat-label">TikTok</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">{{ liveStats().platforms || platformCount() }}</span>
         <span class="stat-label">Platforms</span>
       </div>
     </section>
@@ -220,7 +226,7 @@ export class HomeComponent implements OnInit {
   content = inject(ContentService);
   private http = inject(HttpClient);
 
-  liveStats = signal<ContentStats>({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, lastSync: null });
+  liveStats = signal<ContentStats>({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 0, lastSync: null });
   statsLoading = signal(true);
 
   platformCount = computed(() => this.content.platforms().length);
@@ -248,6 +254,8 @@ export class HomeComponent implements OnInit {
           videos: this.content.videos().filter(v => v.type === 'video').length,
           shorts: this.content.videos().filter(v => v.type === 'short').length,
           podcasts: this.content.videos().filter(v => v.type === 'podcast').length,
+          tiktok: 19,
+          platforms: 8,
           lastSync: null,
         });
         this.statsLoading.set(false);

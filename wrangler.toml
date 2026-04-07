@@ -5,3 +5,8 @@ pages_build_output_dir = "dist/amtocbot-site/browser"
 [[kv_namespaces]]
 binding = "METRICS_KV"
 id = "423269c6f6404126aefd46480cc99a06"
+
+[[d1_databases]]
+binding = "ENGAGE_DB"
+database_name = "engage-db"
+database_id = "e3ba9916-844b-47f1-9c43-8ed761dbf753"

@@ -234,7 +234,7 @@
     {
       "id": "004",
       "date": "2026-03-31",
-      "title": "How Neural Networks Actually Learn — Explained Simply",
+      "title": "How Neural Networks Actually Learn \u2014 Explained Simply",
       "level": "Beginner",
       "topic": "AI, Machine Learning",
       "blogUrl": "https://amtocsoft.blogspot.com/2026/03/how-neural-networks-actually-learn.html",
@@ -462,7 +462,7 @@
     {
       "id": "V005",
       "date": "2026-04-02",
-      "title": "GraphRAG vs RAG — Visual Comparison",
+      "title": "GraphRAG vs RAG \u2014 Visual Comparison",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/FFkFf0m-Lps",
       "duration": "5:06",
@@ -498,7 +498,7 @@
     {
       "id": "V009",
       "date": "2026-04-03",
-      "title": "Open-Source AI Models Explained — Why They Matter",
+      "title": "Open-Source AI Models Explained \u2014 Why They Matter",
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/H1jV9dODAvE",
       "duration": "4:09",
@@ -525,7 +525,7 @@
     {
       "id": "V012",
       "date": "2026-04-04",
-      "title": "Fine-Tuning vs RAG — Which Should You Use?",
+      "title": "Fine-Tuning vs RAG \u2014 Which Should You Use?",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/llzZee0AVC8",
       "duration": "5:30",
@@ -579,7 +579,7 @@
     {
       "id": "P002",
       "date": "2026-04-04",
-      "title": "Vibe Coding — The Security and Quality Reality Check",
+      "title": "Vibe Coding \u2014 The Security and Quality Reality Check",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/mtn7qDpRzyk",
       "spotifyUrl": "https://creators.spotify.com/pod/show/2X82OW5nzyaXT0AQ7HZhHh/episode/5YN55eaVyyhWqAxOiU5Q7m",
@@ -643,7 +643,7 @@
     {
       "id": "S007",
       "date": "2026-04-04",
-      "title": "How ChatGPT Searches the Internet — RAG",
+      "title": "How ChatGPT Searches the Internet \u2014 RAG",
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/GJ9tfpwwF1M",
       "duration": "0:35",
@@ -661,7 +661,7 @@
     {
       "id": "S009",
       "date": "2026-04-04",
-      "title": "GraphRAG vs RAG — Why Connections Matter",
+      "title": "GraphRAG vs RAG \u2014 Why Connections Matter",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/PDGgbffRSKI",
       "duration": "0:40",
@@ -855,6 +855,63 @@
       "youtubeUrl": "https://youtube.com/shorts/QW0CWgrOZ4M",
       "duration": "0:48",
       "type": "short"
+    },
+    {
+      "id": "P003",
+      "title": "84% of Devs Use AI to Code - Is That Good or Bad?",
+      "description": "Alex and Sam debate whether AI coding assistants help or hurt developers.",
+      "type": "podcast",
+      "date": "2026-04-06",
+      "youtubeId": "z-ECDHLJAmk",
+      "duration": "12:00",
+      "level": "All Levels",
+      "topics": [
+        "AI Dev Tools",
+        "Podcast"
+      ]
+    },
+    {
+      "id": "P004",
+      "title": "Your Phone Call Isn't Human Anymore - The Voice AI Revolution",
+      "description": "The voice AI revolution: TTS, STT, voice agents, architecture, and production costs.",
+      "type": "podcast",
+      "date": "2026-04-07",
+      "youtubeId": "yj_3qNF82-M",
+      "duration": "10:54",
+      "level": "All Levels",
+      "topics": [
+        "Voice AI",
+        "Podcast"
+      ]
+    },
+    {
+      "id": "P005",
+      "title": "The AI Customization Showdown - Fine-Tuning vs RAG",
+      "description": "When should you retrain a model vs just giving it better context?",
+      "type": "podcast",
+      "date": "2026-04-07",
+      "youtubeId": "U2r0YcNOL8E",
+      "duration": "10:48",
+      "level": "Intermediate",
+      "topics": [
+        "Fine-Tuning",
+        "RAG",
+        "Podcast"
+      ]
+    },
+    {
+      "id": "P006",
+      "title": "Making AI Fast and Small - Quantization, Serving & Edge Deployment",
+      "description": "Making AI models smaller, faster, and cheaper to run.",
+      "type": "podcast",
+      "date": "2026-04-07",
+      "youtubeId": "_AVlFpegHXo",
+      "duration": "11:48",
+      "level": "Intermediate-Advanced",
+      "topics": [
+        "Model Optimization",
+        "Podcast"
+      ]
     }
   ],
   "milestones": [
@@ -919,56 +976,7 @@
       "status": "Pending"
     }
   ],
-  "platforms": [
-    {
-      "platform": "Blog",
-      "handle": "AmtocSoft Tech Insights",
-      "url": "https://amtocsoft.blogspot.com",
-      "icon": "article"
-    },
-    {
-      "platform": "YouTube",
-      "handle": "@quietsentinelshadow",
-      "url": "https://www.youtube.com/@quietsentinelshadow",
-      "icon": "play_circle"
-    },
-    {
-      "platform": "LinkedIn",
-      "handle": "Toc Am",
-      "url": "https://www.linkedin.com/in/toc-am-b301373b4/",
-      "icon": "person"
-    },
-    {
-      "platform": "X / Twitter",
-      "handle": "@AmToc96282",
-      "url": "https://x.com/AmToc96282",
-      "icon": "tag"
-    },
-    {
-      "platform": "TikTok",
-      "handle": "@amtocbot",
-      "url": "https://www.tiktok.com/@amtocbot",
-      "icon": "music_note"
-    },
-    {
-      "platform": "Instagram",
-      "handle": "@amtocsoft",
-      "url": "https://www.instagram.com/amtocsoft",
-      "icon": "photo_camera"
-    },
-    {
-      "platform": "GitHub",
-      "handle": "amtocbot-droid",
-      "url": "https://github.com/amtocbot-droid",
-      "icon": "code"
-    },
-    {
-      "platform": "Email",
-      "handle": "hello@amtocbot.com",
-      "url": "mailto:hello@amtocbot.com",
-      "icon": "email"
-    }
-  ],
+  "platforms": 8,
   "weeklySummary": {
     "week": "W1 (Mar 30 - Apr 5)",
     "blogs": 32,
@@ -983,5 +991,6 @@
     "videos": 14,
     "shorts": 24,
     "podcasts": 2
-  }
+  },
+  "tiktok": 19
 }
