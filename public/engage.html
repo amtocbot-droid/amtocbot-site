@@ -959,6 +959,11 @@
       return r.json();
     })
     .then(function(data) {
+      if (!data.authenticated) {
+        window.engageUser = null;
+        showLoginOverlay();
+        return;
+      }
       window.engageUser = data;
       hideLoginOverlay();
       showSessionBar(data);
