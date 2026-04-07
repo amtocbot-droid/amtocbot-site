@@ -9,6 +9,7 @@
 
 interface Env {
   METRICS_KV?: KVNamespace;
+  ENGAGE_DB?: D1Database;
 }
 
 const corsHeaders: Record<string, string> = {
@@ -70,7 +71,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       podcasts: number;
     };
 
-    return new Response(JSON.stringify({
+    const result: Record<string, unknown> = {
       blogs: syncData.blogs,
       videos: syncData.videos,
       shorts: syncData.shorts,
@@ -78,7 +79,21 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       tiktok: (syncData as any).tiktok ?? 0,
       platforms: (syncData as any).platforms ?? 0,
       lastSync: syncData.lastSync,
-    }), { status: 200, headers: corsHeaders });
+    };
+
+    // Apply D1 config overrides if available
+    if (env.ENGAGE_DB) {
+      try {
+        const { results } = await env.ENGAGE_DB.prepare(
+          "SELECT key, value FROM site_config WHERE key IN ('blogs','videos','shorts','podcasts','tiktok','platforms')"
+        ).all();
+        for (const row of (results || []) as any[]) {
+          result[row.key] = parseInt(row.value, 10) || result[row.key];
+        }
+      } catch { /* D1 read failure is non-fatal */ }
+    }
+
+    return new Response(JSON.stringify(result), { status: 200, headers: corsHeaders });
   } catch {
     return new Response(JSON.stringify({
       error: 'Failed to read from KV',

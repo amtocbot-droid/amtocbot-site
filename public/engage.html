@@ -139,6 +139,16 @@
     .audit-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #1e293b; }
     .audit-table tr:hover { background: #1e293b; }
     .audit-date { color: #64748b; font-size: 0.75rem; }
+    /* Admin CMS styles */
+    .stat-edit-card { background: rgba(30,41,59,0.8); border: 1px solid #334155; border-radius: 8px; padding: 0.75rem; text-align: center; }
+    .stat-edit-card label { display: block; font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; }
+    .stat-input { width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 6px; color: #60a5fa; font-size: 1.4rem; font-weight: 800; text-align: center; padding: 0.4rem; }
+    .stat-input:focus { outline: none; border-color: #60a5fa; box-shadow: 0 0 0 2px rgba(96,165,250,0.2); }
+    .btn-primary { background: #3b82f6; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: transparent; color: #94a3b8; border: 1px solid #475569; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { border-color: #60a5fa; color: #60a5fa; }
 
     /* --- Activity Log (Audit tab extension) --- */
     .activity-section { margin-top: 2rem; }
@@ -298,6 +308,7 @@
   <div class="tab" data-tab="engage">Engage</div>
   <div class="tab" data-tab="discover">Discover</div>
   <div class="tab" data-tab="audit">Audit</div>
+  <div class="tab admin-only" data-tab="admin" style="display:none;">Admin</div>
 </div>
 <div class="tab-bar-line"></div>
 
@@ -779,6 +790,72 @@
   </div>
 </div>
 
+<!-- ===== ADMIN PANEL ===== -->
+<div class="panel" id="admin">
+  <div class="tip"><strong>Admin CMS:</strong> Edit live stats, trigger syncs, and manage content. Changes take effect immediately on the homepage.</div>
+
+  <div class="section">
+    <div class="section-title">Live Stats Editor</div>
+    <p style="color:#94a3b8;font-size:0.8rem;margin-bottom:0.8rem;">Edit numbers below and click Save. Changes update the homepage instantly.</p>
+    <div id="stats-editor" class="stat-grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));">
+      <div class="stat-edit-card">
+        <label>Blogs</label>
+        <input type="number" id="stat-blogs" class="stat-input" value="0" />
+      </div>
+      <div class="stat-edit-card">
+        <label>Videos</label>
+        <input type="number" id="stat-videos" class="stat-input" value="0" />
+      </div>
+      <div class="stat-edit-card">
+        <label>Shorts</label>
+        <input type="number" id="stat-shorts" class="stat-input" value="0" />
+      </div>
+      <div class="stat-edit-card">
+        <label>Podcasts</label>
+        <input type="number" id="stat-podcasts" class="stat-input" value="0" />
+      </div>
+      <div class="stat-edit-card">
+        <label>TikTok</label>
+        <input type="number" id="stat-tiktok" class="stat-input" value="0" />
+      </div>
+      <div class="stat-edit-card">
+        <label>Platforms</label>
+        <input type="number" id="stat-platforms" class="stat-input" value="0" />
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.8rem;">
+      <button class="btn-primary" onclick="saveStats()">Save Stats</button>
+      <button class="btn-secondary" onclick="loadAdminStats()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sync & Deploy</div>
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:0.4rem;">GitHub Sync</div>
+        <p class="meta">Pull latest content.json from GitHub and refresh KV cache. Applies any stat overrides you've set above.</p>
+        <button class="btn-primary" style="margin-top:0.6rem;" onclick="triggerSync()">Sync Now</button>
+        <div id="sync-status" class="meta" style="margin-top:0.4rem;"></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:0.4rem;">Last Sync</div>
+        <p class="meta" id="last-sync-time">Never</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:0.4rem;">Config Overrides</div>
+        <p class="meta">Active D1 overrides that supersede GitHub data:</p>
+        <div id="config-overrides" class="meta" style="margin-top:0.4rem;">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Team Management</div>
+    <div id="team-list" style="margin-bottom:0.8rem;">Loading...</div>
+  </div>
+</div>
+
 </div><!-- end #main-content -->
 
 <script>
@@ -911,6 +988,7 @@
     badge.className = 'role-badge ' + role;
     if (role === 'admin') {
       document.getElementById('btn-invite').style.display = 'inline-block';
+      document.querySelectorAll('.admin-only').forEach(function(el) { el.style.display = ''; });
     }
   }
 
@@ -920,6 +998,7 @@
       window.engageUser = null;
       document.getElementById('session-bar').classList.remove('visible');
       document.getElementById('btn-invite').style.display = 'none';
+      document.querySelectorAll('.admin-only').forEach(function(el) { el.style.display = 'none'; });
       showLoginOverlay();
       showToast('Logged out', 'info');
     })
@@ -1117,6 +1196,109 @@
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
   }
+
+  // ===== Admin CMS =====
+  async function loadAdminStats() {
+    try {
+      const resp = await fetch('/api/admin/cms', { credentials: 'same-origin' });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const stats = data.stats || {};
+      document.getElementById('stat-blogs').value = stats.blogs || 0;
+      document.getElementById('stat-videos').value = stats.videos || 0;
+      document.getElementById('stat-shorts').value = stats.shorts || 0;
+      document.getElementById('stat-podcasts').value = stats.podcasts || 0;
+      document.getElementById('stat-tiktok').value = stats.tiktok || 0;
+      document.getElementById('stat-platforms').value = stats.platforms || 0;
+      document.getElementById('last-sync-time').textContent = stats.lastSync ? new Date(stats.lastSync).toLocaleString() : 'Never';
+
+      // Show config overrides
+      const configs = data.config || [];
+      const overridesEl = document.getElementById('config-overrides');
+      if (configs.length === 0) {
+        overridesEl.textContent = 'None - using GitHub sync values';
+      } else {
+        overridesEl.innerHTML = configs.map(c =>
+          `<span class="badge badge-new">${c.key}: ${c.value}</span> `
+        ).join('') + `<br/><span style="color:#64748b;font-size:0.7rem;">Last updated by ${configs[0]?.updated_by || '?'}</span>`;
+      }
+
+      // Load team
+      loadTeam(data);
+    } catch (e) {
+      console.error('Admin load error:', e);
+    }
+  }
+
+  async function loadTeam(cmsData) {
+    // Fetch users from audit log distinct users as proxy, or use invite list
+    const el = document.getElementById('team-list');
+    try {
+      const resp = await fetch('/api/audit/list?limit=1', { credentials: 'same-origin' });
+      const data = await resp.json();
+      const users = data.filters?.users || [];
+      el.innerHTML = '<table class="audit-table"><tr><th>Username</th><th>Status</th></tr>' +
+        users.map(u => `<tr><td>${u}</td><td><span class="badge badge-new">Active</span></td></tr>`).join('') +
+        '</table>';
+    } catch { el.textContent = 'Could not load team'; }
+  }
+
+  async function saveStats() {
+    const updates = {
+      blogs: parseInt(document.getElementById('stat-blogs').value, 10),
+      videos: parseInt(document.getElementById('stat-videos').value, 10),
+      shorts: parseInt(document.getElementById('stat-shorts').value, 10),
+      podcasts: parseInt(document.getElementById('stat-podcasts').value, 10),
+      tiktok: parseInt(document.getElementById('stat-tiktok').value, 10),
+      platforms: parseInt(document.getElementById('stat-platforms').value, 10),
+    };
+    try {
+      const resp = await fetch('/api/admin/cms', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates }),
+      });
+      const data = await resp.json();
+      if (data.success) {
+        showToast('Stats saved and live!', 'success');
+      } else {
+        showToast(data.error || 'Save failed', 'error');
+      }
+    } catch (e) {
+      showToast('Network error saving stats', 'error');
+    }
+  }
+
+  async function triggerSync() {
+    const statusEl = document.getElementById('sync-status');
+    statusEl.textContent = 'Syncing...';
+    try {
+      const resp = await fetch('/api/admin/cms?action=sync', {
+        method: 'POST', credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+      const data = await resp.json();
+      if (data.success) {
+        statusEl.textContent = 'Synced at ' + new Date().toLocaleTimeString();
+        showToast('GitHub sync complete!', 'success');
+        loadAdminStats(); // Refresh the fields
+      } else {
+        statusEl.textContent = 'Sync failed: ' + (data.error || 'unknown');
+        showToast('Sync failed', 'error');
+      }
+    } catch (e) {
+      statusEl.textContent = 'Network error';
+      showToast('Network error during sync', 'error');
+    }
+  }
+
+  // Load admin data when admin tab is clicked
+  document.querySelector('.tab-bar').addEventListener('click', function(e) {
+    if (e.target.dataset && e.target.dataset.tab === 'admin') {
+      loadAdminStats();
+    }
+  });
 
   // ===== Init =====
   verifyTokenFromURL();
