@@ -3,13 +3,15 @@
  * Accepts {username, email}, validates against users table,
  * creates session with magic link token, sends email via Brevo.
  */
-import { Env, jsonResponse, optionsHandler, getClientIP, sendBrevoEmail } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getClientIP, sendBrevoEmail, cleanExpiredSessions } from '../_shared/auth';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
   const db = env.ENGAGE_DB;
 
   try {
+    cleanExpiredSessions(db).catch(() => {}); // fire-and-forget cleanup
+
     const body = await request.json() as { username?: string; email?: string };
     const username = body.username?.trim().toLowerCase();
     const email = body.email?.trim().toLowerCase();

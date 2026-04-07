@@ -97,6 +97,11 @@ export async function logAudit(
   ).bind(user.user_id, user.username, action, detail, ip).run();
 }
 
+/** Delete expired sessions. Called opportunistically on login. */
+export async function cleanExpiredSessions(db: D1Database): Promise<void> {
+  await db.prepare('DELETE FROM sessions WHERE expires_at < datetime(\'now\')').run();
+}
+
 /** Fetch content.json from GitHub with cache-busting. */
 export async function fetchContentFromGitHub(githubToken?: string): Promise<ContentJson> {
   const url = `https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json?t=${Date.now()}`;
