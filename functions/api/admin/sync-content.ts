@@ -4,12 +4,25 @@
  *
  * POST /api/admin/sync-content
  *
- * Protected by Cloudflare Access at the edge.
+ * Auth: Cloudflare Access at the edge OR Bearer token (for GitHub Actions).
  */
-import { Env, jsonResponse, optionsHandler, fetchContentFromGitHub, countContent } from '../_shared/auth';
+import { Env as BaseEnv, jsonResponse, optionsHandler, fetchContentFromGitHub, countContent } from '../_shared/auth';
+
+interface Env extends BaseEnv {
+  SYNC_SECRET?: string;
+}
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const { env } = context;
+  const { request, env } = context;
+
+  // Allow Bearer token auth for GitHub Actions webhook
+  if (env.SYNC_SECRET) {
+    const auth = request.headers.get('Authorization');
+    const hasCfAccess = request.headers.get('CF-Access-JWT-Assertion');
+    if (!hasCfAccess && auth !== `Bearer ${env.SYNC_SECRET}`) {
+      return jsonResponse({ error: 'Unauthorized' }, 401);
+    }
+  }
 
   try {
     const content = await fetchContentFromGitHub(env.GITHUB_TOKEN);
