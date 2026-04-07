@@ -37,8 +37,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       const videos = allVideos.filter(v => v.type === 'video').length;
       const shorts = allVideos.filter(v => v.type === 'short').length;
       const podcasts = allVideos.filter(v => v.type === 'podcast').length;
-      const tiktok = (data as any).tiktok ?? 0;
-      const platforms = (data as any).platforms ?? 0;
+      const tiktok = (data as any).tiktokCount ?? 0;
+      const platforms = (data as any).platformCount ?? 8;
       return new Response(JSON.stringify({ blogs, videos, shorts, podcasts, tiktok, platforms, lastSync: null }), {
         status: 200,
         headers: corsHeaders,
