@@ -21,8 +21,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     // Fetch latest content.json from GitHub (public repo, no token needed)
-    const githubUrl = 'https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json';
-    const headers: Record<string, string> = { 'Accept': 'application/json' };
+    const githubUrl = `https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json?t=${Date.now()}`;
+    const headers: Record<string, string> = { 'Accept': 'application/json', 'Cache-Control': 'no-cache' };
     if (env.GITHUB_TOKEN) {
       headers['Authorization'] = `token ${env.GITHUB_TOKEN}`;
     }
