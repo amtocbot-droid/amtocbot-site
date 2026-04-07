@@ -2,20 +2,24 @@
  * POST /api/auth/logout
  * Deletes session, clears cookie, logs audit.
  */
-import { Env, corsHeaders, jsonResponse, getSessionUser, getCookie, clearSessionCookie, getClientIP, logAudit } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getSessionUser, getCookie, clearSessionCookie, logAudit } from '../_shared/auth';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
   const db = env.ENGAGE_DB;
 
   try {
-    const user = await getSessionUser(request, db);
     const sessionId = getCookie(request, 'engage_session');
-
-    if (user && sessionId) {
-      await db.prepare('DELETE FROM sessions WHERE id = ?').bind(sessionId).run();
-      const ip = getClientIP(request);
-      await logAudit(db, user.user_id, user.username, 'logout', null, ip);
+    if (sessionId) {
+      const user = await getSessionUser(request, db);
+      if (user) {
+        await Promise.all([
+          db.prepare('DELETE FROM sessions WHERE id = ?').bind(sessionId).run(),
+          logAudit(db, user, 'logout', null, request),
+        ]);
+      } else {
+        await db.prepare('DELETE FROM sessions WHERE id = ?').bind(sessionId).run();
+      }
     }
 
     return jsonResponse(
@@ -29,6 +33,4 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;

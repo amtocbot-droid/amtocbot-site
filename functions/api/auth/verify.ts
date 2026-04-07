@@ -2,7 +2,7 @@
  * POST /api/auth/verify
  * Accepts {token, session_id}, validates token, activates session, sets cookie.
  */
-import { Env, corsHeaders, jsonResponse, setSessionCookie, getClientIP, logAudit } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, setSessionCookie, logAudit } from '../_shared/auth';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -16,7 +16,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return jsonResponse({ error: 'Token and session_id required' }, 400);
     }
 
-    // Look up session
     const session = await db.prepare(`
       SELECT s.id, s.user_id, s.token, s.token_exp, s.verified, u.username, u.role
       FROM sessions s
@@ -31,19 +30,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return jsonResponse({ error: 'Invalid or expired magic link' }, 401);
     }
 
-    // Check token expiry
     if (new Date(session.token_exp) < new Date()) {
       return jsonResponse({ error: 'Magic link has expired. Please request a new one.' }, 401);
     }
 
-    // Activate session
     await db.prepare(
       "UPDATE sessions SET verified = 1, token = NULL, token_exp = NULL WHERE id = ?"
     ).bind(session_id).run();
 
-    // Log audit
-    const ip = getClientIP(request);
-    await logAudit(db, session.user_id, session.username, 'login', null, ip);
+    // logAudit expects SessionUser but we only have session data here — construct inline
+    const sessionUser = { user_id: session.user_id, username: session.username, role: session.role };
+    await logAudit(db, sessionUser, 'login', null, request);
 
     return jsonResponse(
       { success: true, username: session.username, role: session.role },
@@ -56,6 +53,4 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;

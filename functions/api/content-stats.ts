@@ -6,49 +6,23 @@
  *
  * No auth required — serves public data for the homepage stats bar.
  */
+import { Env, corsHeaders, jsonResponse, optionsHandler, countContent, ContentJson } from './_shared/auth';
 
-interface Env {
-  METRICS_KV?: KVNamespace;
-  ENGAGE_DB?: D1Database;
-}
-
-const corsHeaders: Record<string, string> = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Content-Type': 'application/json',
-};
-
-export const onRequestOptions: PagesFunction<Env> = async () => {
-  return new Response(null, { status: 204, headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env } = context;
 
-  // If KV is not configured or has no sync data, count directly from content.json
   const countFromJson = async (): Promise<Response> => {
     try {
       const jsonUrl = new URL('/assets/data/content.json', context.request.url);
       const resp = await fetch(jsonUrl.toString());
       if (!resp.ok) throw new Error('Failed to fetch content.json');
-      const data = await resp.json() as { blogs?: unknown[]; videos?: Array<{ type?: string }> };
-      const blogs = data.blogs?.length ?? 0;
-      const allVideos = data.videos ?? [];
-      const videos = allVideos.filter(v => v.type === 'video').length;
-      const shorts = allVideos.filter(v => v.type === 'short').length;
-      const podcasts = allVideos.filter(v => v.type === 'podcast').length;
-      const tiktok = (data as any).tiktokCount ?? 0;
-      const platforms = (data as any).platformCount ?? 8;
-      return new Response(JSON.stringify({ blogs, videos, shorts, podcasts, tiktok, platforms, lastSync: null }), {
-        status: 200,
-        headers: corsHeaders,
-      });
+      const data = await resp.json() as ContentJson;
+      const stats = countContent(data);
+      return jsonResponse({ ...stats, lastSync: null });
     } catch {
-      return new Response(JSON.stringify({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, lastSync: null }), {
-        status: 200,
-        headers: corsHeaders,
-      });
+      return jsonResponse({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 0, lastSync: null });
     }
   };
 
@@ -58,50 +32,17 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
   try {
     const syncRaw = await env.METRICS_KV.get('sync-status');
+    if (!syncRaw) return countFromJson();
 
-    if (!syncRaw) {
-      return countFromJson();
-    }
-
-    const syncData = JSON.parse(syncRaw) as {
-      lastSync: string;
-      blogs: number;
-      videos: number;
-      shorts: number;
-      podcasts: number;
-    };
-
-    const result: Record<string, unknown> = {
-      blogs: syncData.blogs,
-      videos: syncData.videos,
-      shorts: syncData.shorts,
-      podcasts: syncData.podcasts,
-      tiktok: (syncData as any).tiktok ?? 0,
-      platforms: (syncData as any).platforms ?? 0,
-      lastSync: syncData.lastSync,
-    };
-
-    // Apply D1 config overrides if available
-    if (env.ENGAGE_DB) {
-      try {
-        const { results } = await env.ENGAGE_DB.prepare(
-          "SELECT key, value FROM site_config WHERE key IN ('blogs','videos','shorts','podcasts','tiktok','platforms')"
-        ).all();
-        for (const row of (results || []) as any[]) {
-          result[row.key] = parseInt(row.value, 10) || result[row.key];
-        }
-      } catch { /* D1 read failure is non-fatal */ }
-    }
-
-    return new Response(JSON.stringify(result), { status: 200, headers: corsHeaders });
+    // KV already contains merged stats (D1 overrides applied at sync/update time)
+    return new Response(syncRaw, {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    });
   } catch {
-    return new Response(JSON.stringify({
+    return jsonResponse({
       error: 'Failed to read from KV',
-      blogs: 0,
-      videos: 0,
-      shorts: 0,
-      podcasts: 0,
-      lastSync: null,
-    }), { status: 500, headers: corsHeaders });
+      blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 0, lastSync: null,
+    }, 500);
   }
 };

@@ -2,7 +2,7 @@
  * GET /api/auth/session
  * Reads session cookie, returns user info or 401.
  */
-import { Env, corsHeaders, jsonResponse, getSessionUser } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getSessionUser } from '../_shared/auth';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -19,6 +19,4 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   }
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;

@@ -1,6 +1,6 @@
 /**
- * Shared auth helper for Cloudflare Pages Functions.
- * Reads the engage_session cookie and validates against D1.
+ * Shared helpers for Cloudflare Pages Functions.
+ * Auth, CORS, email, content sync, and audit utilities.
  */
 
 export interface SessionUser {
@@ -13,14 +13,37 @@ export interface Env {
   BREVO_API_KEY: string;
   ENGAGE_DB: D1Database;
   METRICS_KV?: KVNamespace;
+  GITHUB_TOKEN?: string;
 }
 
-export const corsHeaders = {
+export interface ContentJson {
+  blogs?: unknown[];
+  videos?: Array<{ type?: string }>;
+  tiktokCount?: number;
+  platformCount?: number;
+  platforms?: unknown[];
+}
+
+export interface SyncData {
+  lastSync: string;
+  blogs: number;
+  videos: number;
+  shorts: number;
+  podcasts: number;
+  tiktok: number;
+  platforms: number;
+}
+
+const STAT_KEYS = ['blogs', 'videos', 'shorts', 'podcasts', 'tiktok', 'platforms'] as const;
+
+export const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Credentials': 'true',
 };
+
+export const optionsHandler: PagesFunction = async () =>
+  new Response(null, { headers: corsHeaders });
 
 export function getCookie(request: Request, name: string): string | null {
   const cookieHeader = request.headers.get('Cookie') || '';
@@ -63,13 +86,79 @@ export function getClientIP(request: Request): string {
 
 export async function logAudit(
   db: D1Database,
-  userId: number,
-  username: string,
+  user: SessionUser,
   action: string,
   detail: string | null,
-  ipAddress: string,
+  request: Request,
 ): Promise<void> {
+  const ip = getClientIP(request);
   await db.prepare(
     'INSERT INTO audit_logs (user_id, username, action, detail, ip_address) VALUES (?, ?, ?, ?, ?)'
-  ).bind(userId, username, action, detail, ipAddress).run();
+  ).bind(user.user_id, user.username, action, detail, ip).run();
+}
+
+/** Fetch content.json from GitHub with cache-busting. */
+export async function fetchContentFromGitHub(githubToken?: string): Promise<ContentJson> {
+  const url = `https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json?t=${Date.now()}`;
+  const headers: Record<string, string> = { 'Accept': 'application/json', 'Cache-Control': 'no-cache' };
+  if (githubToken) headers['Authorization'] = `token ${githubToken}`;
+
+  const resp = await fetch(url, { headers });
+  if (!resp.ok) throw new Error(`GitHub fetch failed: ${resp.status}`);
+  return resp.json() as Promise<ContentJson>;
+}
+
+/** Count content items from parsed content.json in a single pass. */
+export function countContent(content: ContentJson): Omit<SyncData, 'lastSync'> {
+  const allVideos = content.videos || [];
+  let videos = 0, shorts = 0, podcasts = 0;
+  for (const v of allVideos) {
+    if (v.type === 'video') videos++;
+    else if (v.type === 'short') shorts++;
+    else if (v.type === 'podcast') podcasts++;
+  }
+  return {
+    blogs: (content.blogs || []).length,
+    videos,
+    shorts,
+    podcasts,
+    tiktok: content.tiktokCount ?? 0,
+    platforms: content.platformCount ?? 8,
+  };
+}
+
+/** Apply D1 site_config overrides to a stats object. Mutates in place. */
+export async function applyConfigOverrides(db: D1Database, stats: Record<string, unknown>): Promise<void> {
+  const { results } = await db.prepare(
+    `SELECT key, value FROM site_config WHERE key IN ('blogs','videos','shorts','podcasts','tiktok','platforms')`
+  ).all();
+  for (const row of (results || []) as Array<{ key: string; value: string }>) {
+    const parsed = parseInt(row.value, 10);
+    if (!isNaN(parsed)) stats[row.key] = parsed;
+  }
+}
+
+/** Send a transactional email via Brevo. */
+export async function sendBrevoEmail(
+  apiKey: string,
+  to: { email: string; name: string },
+  subject: string,
+  bodyHtml: string,
+): Promise<Response> {
+  return fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sender: { name: 'AmtocSoft Engage', email: 'amtocbot@gmail.com' },
+      to: [to],
+      subject,
+      htmlContent: `
+        <div style="font-family: -apple-system, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
+          ${bodyHtml}
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+          <p style="color: #94a3b8; font-size: 12px;">AmtocSoft - AI &amp; Software Engineering</p>
+        </div>
+      `,
+    }),
+  });
 }

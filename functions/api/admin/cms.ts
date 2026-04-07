@@ -7,7 +7,10 @@
  *
  * All endpoints require admin session via engage_session cookie.
  */
-import { Env, corsHeaders, jsonResponse, getSessionUser, getClientIP, logAudit } from '../_shared/auth';
+import {
+  Env, jsonResponse, getSessionUser, logAudit, optionsHandler,
+  fetchContentFromGitHub, countContent, applyConfigOverrides,
+} from '../_shared/auth';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -18,14 +21,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return jsonResponse({ error: 'Admin access required' }, 403);
   }
 
-  // Read current stats from KV
   let kvStats: Record<string, unknown> = {};
   if (env.METRICS_KV) {
     const raw = await env.METRICS_KV.get('sync-status');
     if (raw) kvStats = JSON.parse(raw);
   }
 
-  // Read config overrides from D1
   const { results: configs } = await db.prepare('SELECT key, value, updated_by, updated_at FROM site_config').all();
 
   return jsonResponse({
@@ -46,64 +47,38 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const url = new URL(request.url);
   const action = url.searchParams.get('action');
-  const ip = getClientIP(request);
 
-  // Action: sync - trigger GitHub sync
   if (action === 'sync') {
-    const githubUrl = `https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json?t=${Date.now()}`;
-    const resp = await fetch(githubUrl, { headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' } });
-    if (!resp.ok) {
-      return jsonResponse({ error: 'GitHub sync failed' }, 502);
-    }
-    const content = await resp.json() as any;
-    const allVideos = content.videos || [];
+    const content = await fetchContentFromGitHub(env.GITHUB_TOKEN);
+    const stats = countContent(content);
+    const syncData: Record<string, unknown> = { lastSync: new Date().toISOString(), ...stats };
 
-    const syncData = {
-      lastSync: new Date().toISOString(),
-      blogs: (content.blogs || []).length,
-      videos: allVideos.filter((v: any) => v.type === 'video').length,
-      shorts: allVideos.filter((v: any) => v.type === 'short').length,
-      podcasts: allVideos.filter((v: any) => v.type === 'podcast').length,
-      tiktok: content.tiktokCount ?? 0,
-      platforms: content.platformCount ?? 8,
-    };
-
-    // Apply any D1 config overrides
-    const { results: overrides } = await db.prepare(
-      "SELECT key, value FROM site_config WHERE key IN ('blogs','videos','shorts','podcasts','tiktok','platforms')"
-    ).all();
-    for (const row of (overrides || []) as any[]) {
-      (syncData as any)[row.key] = parseInt(row.value, 10) || (syncData as any)[row.key];
-    }
+    await applyConfigOverrides(db, syncData);
 
     if (env.METRICS_KV) {
       await env.METRICS_KV.put('sync-status', JSON.stringify(syncData));
     }
 
-    await logAudit(db, user.user_id, user.username, 'cms_sync', JSON.stringify(syncData), ip);
+    await logAudit(db, user, 'cms_sync', JSON.stringify(syncData), request);
     return jsonResponse({ success: true, stats: syncData });
   }
 
-  // Action: update stats/config
   const body = await request.json() as { updates?: Record<string, string | number> };
   if (!body.updates || typeof body.updates !== 'object') {
     return jsonResponse({ error: 'Updates object required' }, 400);
   }
 
   const updates = body.updates;
-  const updatedKeys: string[] = [];
-
-  for (const [key, value] of Object.entries(updates)) {
-    const strValue = String(value);
-    await db.prepare(
+  const stmts = Object.entries(updates).map(([key, value]) =>
+    db.prepare(
       `INSERT INTO site_config (key, value, updated_by, updated_at)
        VALUES (?, ?, ?, datetime('now'))
        ON CONFLICT(key) DO UPDATE SET value = ?, updated_by = ?, updated_at = datetime('now')`
-    ).bind(key, strValue, user.username, strValue, user.username).run();
-    updatedKeys.push(key);
-  }
+    ).bind(key, String(value), user.username, String(value), user.username)
+  );
+  if (stmts.length > 0) await db.batch(stmts);
 
-  // Also update KV cache immediately
+  // Update KV cache with merged values
   if (env.METRICS_KV) {
     const raw = await env.METRICS_KV.get('sync-status');
     const current = raw ? JSON.parse(raw) : {};
@@ -114,11 +89,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     await env.METRICS_KV.put('sync-status', JSON.stringify(current));
   }
 
-  await logAudit(db, user.user_id, user.username, 'cms_update', JSON.stringify({ keys: updatedKeys, values: updates }), ip);
+  await logAudit(db, user, 'cms_update', JSON.stringify({ keys: Object.keys(updates), values: updates }), request);
 
-  return jsonResponse({ success: true, updated: updatedKeys });
+  return jsonResponse({ success: true, updated: Object.keys(updates) });
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;

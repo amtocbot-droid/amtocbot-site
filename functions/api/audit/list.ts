@@ -3,7 +3,7 @@
  * Returns paginated audit logs. Requires authenticated session.
  * Query params: ?page=1&limit=50&user=&action=
  */
-import { Env, corsHeaders, jsonResponse, getSessionUser } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getSessionUser } from '../_shared/auth';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -44,31 +44,29 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
 
-    // Get total count
-    const countStmt = db.prepare(countQuery);
-    const boundCount = params.length > 0 ? countStmt.bind(...params) : countStmt;
-    const countRow = await boundCount.first<{ total: number }>();
+    const countStmt = params.length > 0 ? db.prepare(countQuery).bind(...params) : db.prepare(countQuery);
+    const dataStmt = db.prepare(query).bind(...params, limit.toString(), offset.toString());
+    const usersStmt = db.prepare('SELECT DISTINCT username FROM audit_logs ORDER BY username');
+    const actionsStmt = db.prepare('SELECT DISTINCT action FROM audit_logs ORDER BY action');
+
+    const [countRow, dataResult, usersResult, actionsResult] = await Promise.all([
+      countStmt.first<{ total: number }>(),
+      dataStmt.all(),
+      usersStmt.all(),
+      actionsStmt.all(),
+    ]);
+
     const total = countRow?.total || 0;
 
-    // Get page of results
-    const dataStmt = db.prepare(query);
-    const allParams = [...params, limit.toString(), offset.toString()];
-    const boundData = dataStmt.bind(...allParams);
-    const { results } = await boundData.all();
-
-    // Get distinct users and actions for filter dropdowns
-    const users = await db.prepare('SELECT DISTINCT username FROM audit_logs ORDER BY username').all();
-    const actions = await db.prepare('SELECT DISTINCT action FROM audit_logs ORDER BY action').all();
-
     return jsonResponse({
-      logs: results,
+      logs: dataResult.results,
       total,
       page,
       limit,
       pages: Math.ceil(total / limit),
       filters: {
-        users: users.results?.map((r: any) => r.username) || [],
-        actions: actions.results?.map((r: any) => r.action) || [],
+        users: usersResult.results?.map((r: any) => r.username) || [],
+        actions: actionsResult.results?.map((r: any) => r.action) || [],
       },
     });
   } catch (e) {
@@ -77,6 +75,4 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   }
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;

@@ -3,7 +3,7 @@
  * Writes an audit log entry. Requires authenticated session.
  * Body: {action: 'tab_view'|'link_click'|'search', detail: {...}}
  */
-import { Env, corsHeaders, jsonResponse, getSessionUser, getClientIP, logAudit } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getSessionUser, logAudit } from '../_shared/auth';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -23,9 +23,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const detail = body.detail ? JSON.stringify(body.detail) : null;
-    const ip = getClientIP(request);
-
-    await logAudit(db, user.user_id, user.username, action, detail, ip);
+    await logAudit(db, user, action, detail, request);
 
     return jsonResponse({ success: true });
   } catch (e) {
@@ -34,6 +32,4 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 };
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, { headers: corsHeaders });
-};
+export const onRequestOptions = optionsHandler;
