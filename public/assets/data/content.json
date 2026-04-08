@@ -1,6 +1,72 @@
 {
   "blogs": [
     {
+      "id": "044",
+      "date": "2026-05-07",
+      "title": "29 Million Secrets Leaked: The Hardcoded Credentials Crisis",
+      "level": "Beginner",
+      "topic": "Secrets Management",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/29-million-secrets-leaked-hardcoded.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
+      "id": "043",
+      "date": "2026-05-07",
+      "title": "Machine Identity Management: Securing AI Agents at Scale",
+      "level": "Professional",
+      "topic": "Identity Security",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/machine-identity-management-securing-ai.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
+      "id": "042",
+      "date": "2026-05-07",
+      "title": "Identity Is the New Perimeter: Zero Trust for Developers",
+      "level": "Intermediate",
+      "topic": "Identity Security",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/identity-is-new-perimeter-zero-trust.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
+      "id": "041",
+      "date": "2026-05-07",
+      "title": "Rate Limiting AI Agents: When Bots Make Millions of API Calls",
+      "level": "Advanced",
+      "topic": "API Security",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/rate-limiting-ai-agents-when-bots-make.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
+      "id": "040",
+      "date": "2026-05-06",
+      "title": "OAuth 2.1 and API Authentication Best Practices for 2026",
+      "level": "Intermediate",
+      "topic": "API Security",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/oauth-21-and-api-authentication-best.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
+      "id": "039",
+      "date": "2026-05-05",
+      "title": "API Security in the Age of AI Agents and MCP: A Developer's Complete Guide",
+      "level": "Intermediate",
+      "topic": "AI Security, API",
+      "blogUrl": "https://amtocsoft.blogspot.com/2026/04/api-security-in-age-of-ai-agents-and.html",
+      "linkedinUrl": "",
+      "twitterUrl": "",
+      "status": "Published"
+    },
+    {
       "id": "038",
       "date": "2026-04-06",
       "title": "Production Voice AI: Scaling, Monitoring, and Cost Optimization",
@@ -455,7 +521,7 @@
         "SecureCoding"
       ],
       "date": "2026-04-08",
-      "views": 2,
+      "views": 3,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -475,6 +541,27 @@
       ],
       "date": "2026-04-07",
       "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
+    },
+    {
+      "id": "V017",
+      "title": "Post-Quantum Crypto: What Developers Must Do Now",
+      "youtubeUrl": "https://youtu.be/Rx9K-Eu4w3Q",
+      "youtubeId": "Rx9K-Eu4w3Q",
+      "type": "video",
+      "level": "Intermediate",
+      "tags": [
+        "post-quantum",
+        "cryptography",
+        "security",
+        "NIST",
+        "PQC"
+      ],
+      "date": "2026-04-06",
+      "duration": "10:00",
+      "views": 2,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -584,7 +671,7 @@
       "youtubeUrl": "https://youtu.be/6idG7V87n98",
       "duration": "6:34",
       "type": "video",
-      "views": 3,
+      "views": 4,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -623,7 +710,7 @@
       "youtubeUrl": "https://youtu.be/IT9vZ8_9z6Q",
       "duration": "5:25",
       "type": "video",
-      "views": 3,
+      "views": 4,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -636,7 +723,7 @@
       "youtubeUrl": "https://youtu.be/JcEyMXkxB5w",
       "duration": "4:00",
       "type": "video",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -688,7 +775,7 @@
       "youtubeUrl": "https://youtu.be/aBSWWmXmpwE",
       "duration": "5:49",
       "type": "video",
-      "views": 1,
+      "views": 2,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -741,7 +828,7 @@
       "youtubeUrl": "https://youtu.be/aSgyJApWsLM",
       "duration": "0:36",
       "type": "short",
-      "views": 126,
+      "views": 127,
       "likes": 1,
       "comments": 0,
       "lastScraped": "2026-04-08"
@@ -962,7 +1049,7 @@
       "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U",
       "duration": "0:34",
       "type": "short",
-      "views": 52,
+      "views": 53,
       "likes": 0,
       "comments": 0,
       "lastScraped": "2026-04-08"
