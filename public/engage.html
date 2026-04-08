@@ -308,6 +308,7 @@
   <div class="tab" data-tab="engage">Engage</div>
   <div class="tab" data-tab="discover">Discover</div>
   <div class="tab" data-tab="audit">Audit</div>
+  <div class="tab" data-tab="skills">Skills</div>
   <div class="tab admin-only" data-tab="admin" style="display:none;">Admin</div>
 </div>
 <div class="tab-bar-line"></div>
@@ -787,6 +788,162 @@
       </tbody>
     </table>
     <button class="load-more-btn" id="activity-load-more" onclick="loadMoreActivity()">Load More</button>
+  </div>
+</div>
+
+<!-- ==================== TAB 5: SKILLS ==================== -->
+<div class="panel" id="skills">
+  <div class="tip">
+    <strong>Skills Cheat Sheet:</strong> Quick reference for all custom Claude Code skills. Use <code>/skill-name</code> to invoke any skill.
+  </div>
+
+  <!-- Content Creation Skills -->
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128220;</span> Content Creation</div>
+    <div class="grid">
+      <div class="card">
+        <a href="#">/linkedin-article</a>
+        <div class="meta">Write, publish, and manage long-form LinkedIn articles (1000-2000 words). Collaborative drafting, browser publishing, comment monitoring.</div>
+        <div style="color:#60a5fa;font-size:0.7rem;margin-top:0.3rem;">Args: <code>monitor</code> | <code>suggest</code> | <code>LA-NNN</code></div>
+      </div>
+      <div class="card">
+        <a href="#">/video</a>
+        <div class="meta">Full YouTube video production pipeline. Kokoro TTS narration, Higgsfield AI visuals, ffmpeg assembly. 15-min target.</div>
+        <div style="color:#60a5fa;font-size:0.7rem;margin-top:0.3rem;">Args: <code>V019</code> (force specific video number)</div>
+      </div>
+      <div class="card">
+        <a href="#">/podcast</a>
+        <div class="meta">Produce podcast episodes with AI-generated discussion, slide visuals, and multi-platform upload (YouTube + Spotify).</div>
+      </div>
+      <div class="card">
+        <a href="#">/publish</a>
+        <div class="meta">Publish blog posts to Blogger via API. Handles OAuth, formatting, image upload, and cross-posting.</div>
+        <div style="color:#60a5fa;font-size:0.7rem;margin-top:0.3rem;">Args: <code>039</code> (blog post number)</div>
+      </div>
+      <div class="card">
+        <a href="#">/shorts</a>
+        <div class="meta">Create YouTube Shorts or TikTok vertical video (9:16) from existing long-form content.</div>
+      </div>
+      <div class="card">
+        <a href="#">/thumbnail</a>
+        <div class="meta">Generate YouTube thumbnails and social media preview images using Higgsfield or Pillow.</div>
+      </div>
+      <div class="card">
+        <a href="#">/repurpose</a>
+        <div class="meta">Transform one piece of content into multiple formats across all platforms.</div>
+      </div>
+      <div class="card">
+        <a href="#">/tiktok</a>
+        <div class="meta">Plan and produce TikTok-native content with trending hooks, duets strategy, and cross-posting.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strategy & Analytics -->
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128200;</span> Strategy &amp; Analytics</div>
+    <div class="grid">
+      <div class="card">
+        <a href="#">/research</a>
+        <div class="meta">Research trending topics, competitor content, and audience interests to inform the content calendar.</div>
+      </div>
+      <div class="card">
+        <a href="#">/seo</a>
+        <div class="meta">Optimize blog posts and video metadata for search engine visibility and discoverability.</div>
+      </div>
+      <div class="card">
+        <a href="#">/metrics</a>
+        <div class="meta">Update engagement metrics across all platforms. Pull stats, update content-tracker.md.</div>
+      </div>
+      <div class="card">
+        <a href="#">/pipeline</a>
+        <div class="meta">Run the full content pipeline: research, generate, publish, cross-post, track metrics.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Development Workflow -->
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128736;</span> Development Workflow</div>
+    <div class="grid">
+      <div class="card">
+        <a href="#">/brainstorming</a>
+        <div class="meta">Explore ideas before implementation. Ask clarifying questions, propose approaches, present design for approval.</div>
+      </div>
+      <div class="card">
+        <a href="#">/writing-plans</a>
+        <div class="meta">Create detailed implementation plans with bite-sized tasks, exact file paths, and TDD steps.</div>
+      </div>
+      <div class="card">
+        <a href="#">/executing-plans</a>
+        <div class="meta">Execute implementation plans task-by-task with review checkpoints between steps.</div>
+      </div>
+      <div class="card">
+        <a href="#">/test-driven-development</a>
+        <div class="meta">Write failing tests first, then implement. Red-green-refactor cycle.</div>
+      </div>
+      <div class="card">
+        <a href="#">/systematic-debugging</a>
+        <div class="meta">Diagnose bugs methodically: reproduce, isolate, identify root cause, fix, verify.</div>
+      </div>
+      <div class="card">
+        <a href="#">/subagent-driven-development</a>
+        <div class="meta">Dispatch fresh subagents per task for parallel execution with two-stage review.</div>
+      </div>
+      <div class="card">
+        <a href="#">/dispatching-parallel-agents</a>
+        <div class="meta">Run 2+ independent tasks in parallel using separate agents.</div>
+      </div>
+      <div class="card">
+        <a href="#">/using-git-worktrees</a>
+        <div class="meta">Create isolated git worktrees for feature work. Smart directory selection and safety checks.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Review & Quality -->
+  <div class="section">
+    <div class="section-title"><span class="icon">&#9989;</span> Code Review &amp; Quality</div>
+    <div class="grid">
+      <div class="card">
+        <a href="#">/requesting-code-review</a>
+        <div class="meta">Review completed work against requirements before merging. Catches issues early.</div>
+      </div>
+      <div class="card">
+        <a href="#">/receiving-code-review</a>
+        <div class="meta">Process code review feedback with technical rigor. Verify suggestions before implementing.</div>
+      </div>
+      <div class="card">
+        <a href="#">/verification-before-completion</a>
+        <div class="meta">Run verification commands and confirm output before claiming work is complete.</div>
+      </div>
+      <div class="card">
+        <a href="#">/finishing-a-development-branch</a>
+        <div class="meta">Complete feature work: merge, PR, or cleanup. Structured decision on how to integrate.</div>
+      </div>
+      <div class="card">
+        <a href="#">/writing-skills</a>
+        <div class="meta">Create new skills, edit existing ones, verify they work before deployment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference -->
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128161;</span> Quick Reference</div>
+    <table class="audit-table">
+      <tr><th>Task</th><th>Skill to Use</th><th>When</th></tr>
+      <tr><td>Write a LinkedIn article</td><td><code>/linkedin-article</code></td><td>Mon / Wed / Fri</td></tr>
+      <tr><td>Produce a YouTube video</td><td><code>/video</code></td><td>15-min target, Kokoro + Higgsfield</td></tr>
+      <tr><td>Publish a blog post</td><td><code>/publish 041</code></td><td>After writing blog in blog/</td></tr>
+      <tr><td>Check LinkedIn comments</td><td><code>/linkedin-article monitor</code></td><td>Within 24h of publishing</td></tr>
+      <tr><td>Get topic ideas</td><td><code>/linkedin-article suggest</code></td><td>Before starting a new article</td></tr>
+      <tr><td>Start a new feature</td><td><code>/brainstorming</code></td><td>Before ANY creative/code work</td></tr>
+      <tr><td>Plan implementation</td><td><code>/writing-plans</code></td><td>After spec is approved</td></tr>
+      <tr><td>Fix a bug</td><td><code>/systematic-debugging</code></td><td>Before proposing any fix</td></tr>
+      <tr><td>Run parallel tasks</td><td><code>/dispatching-parallel-agents</code></td><td>2+ independent tasks</td></tr>
+      <tr><td>Finish a branch</td><td><code>/finishing-a-development-branch</code></td><td>Tests pass, ready to merge</td></tr>
+    </table>
   </div>
 </div>
 
