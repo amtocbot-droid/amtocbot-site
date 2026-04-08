@@ -56,3 +56,23 @@ CREATE TABLE IF NOT EXISTS site_config (
   updated_by TEXT,
   updated_at TEXT DEFAULT (datetime('now'))
 );
+
+-- ── Automation Control ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS automation_runs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  job_name TEXT NOT NULL,
+  started_at TEXT NOT NULL,
+  finished_at TEXT,
+  status TEXT NOT NULL DEFAULT 'running',
+  summary TEXT,
+  trigger_type TEXT DEFAULT 'cron',
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_automation_job_date ON automation_runs(job_name, started_at DESC);
+
+-- Seed automation control flags
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.metrics-scrape.paused', 'false');
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.metrics-scrape.trigger_requested', 'false');
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.engage-refresh.paused', 'false');
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.engage-refresh.trigger_requested', 'false');
