@@ -234,7 +234,7 @@
     {
       "id": "004",
       "date": "2026-03-31",
-      "title": "How Neural Networks Actually Learn \u2014 Explained Simply",
+      "title": "How Neural Networks Actually Learn — Explained Simply",
       "level": "Beginner",
       "topic": "AI, Machine Learning",
       "blogUrl": "https://amtocsoft.blogspot.com/2026/03/how-neural-networks-actually-learn.html",
@@ -425,7 +425,7 @@
   "videos": [
     {
       "id": "P007",
-      "title": "AI Agents as Attack Surface \u2014 The Security Crisis Nobody Talks About",
+      "title": "AI Agents as Attack Surface — The Security Crisis Nobody Talks About",
       "type": "podcast",
       "level": "Advanced",
       "date": "2026-04-08",
@@ -435,7 +435,11 @@
       "topics": [
         "AI Agent Security",
         "Podcast"
-      ]
+      ],
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V020",
@@ -450,7 +454,11 @@
         "CyberSecurity",
         "SecureCoding"
       ],
-      "date": "2026-04-08"
+      "date": "2026-04-08",
+      "views": 2,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V019",
@@ -465,7 +473,11 @@
         "network security",
         "identity"
       ],
-      "date": "2026-04-07"
+      "date": "2026-04-07",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V018",
@@ -480,7 +492,11 @@
         "oauth 2.1",
         "rate limiting"
       ],
-      "date": "2026-04-07"
+      "date": "2026-04-07",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V001",
@@ -489,7 +505,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/GzLfILXnFVQ",
       "duration": "5:42",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V002",
@@ -498,7 +518,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/ncRkC_iftyE",
       "duration": "5:06",
-      "type": "video"
+      "type": "video",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V003",
@@ -507,7 +531,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/l11Cg4V0xmI",
       "duration": "5:17",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V004",
@@ -516,16 +544,24 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/bDjBnVbhnAw",
       "duration": "5:29",
-      "type": "video"
+      "type": "video",
+      "views": 2,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V005",
       "date": "2026-04-02",
-      "title": "GraphRAG vs RAG \u2014 Visual Comparison",
+      "title": "GraphRAG vs RAG — Visual Comparison",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/6CLFdguCA1E",
       "duration": "5:06",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V006",
@@ -534,7 +570,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/xGQt4rQMTXc",
       "duration": "6:17",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V007",
@@ -543,7 +583,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/6idG7V87n98",
       "duration": "6:34",
-      "type": "video"
+      "type": "video",
+      "views": 3,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V008",
@@ -552,16 +596,24 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/KJGtghJgx2Y",
       "duration": "5:32",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V009",
       "date": "2026-04-03",
-      "title": "Open-Source AI Models Explained \u2014 Why They Matter",
+      "title": "Open-Source AI Models Explained — Why They Matter",
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/P7Vnxditwqw",
       "duration": "4:09",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V010",
@@ -570,7 +622,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/IT9vZ8_9z6Q",
       "duration": "5:25",
-      "type": "video"
+      "type": "video",
+      "views": 3,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V011",
@@ -579,16 +635,24 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/JcEyMXkxB5w",
       "duration": "4:00",
-      "type": "video"
+      "type": "video",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V012",
       "date": "2026-04-04",
-      "title": "Fine-Tuning vs RAG \u2014 Which Should You Use?",
+      "title": "Fine-Tuning vs RAG — Which Should You Use?",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/fX5gyDrJnqE",
       "duration": "5:30",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V013",
@@ -597,7 +661,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/74IKujEq3iU",
       "duration": "6:02",
-      "type": "video"
+      "type": "video",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V014",
@@ -606,7 +674,11 @@
       "level": "Advanced",
       "youtubeUrl": "https://youtu.be/eBqYErq5LpU",
       "duration": "6:11",
-      "type": "video"
+      "type": "video",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V015",
@@ -615,7 +687,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/aBSWWmXmpwE",
       "duration": "5:49",
-      "type": "video"
+      "type": "video",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "V016",
@@ -624,7 +700,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/GShL0LPqlfQ",
       "duration": "14:12",
-      "type": "video"
+      "type": "video",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P001",
@@ -633,17 +713,25 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/P4AeX9xkSfM",
       "duration": "~20 min",
-      "type": "podcast"
+      "type": "podcast",
+      "views": 10,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P002",
       "date": "2026-04-04",
-      "title": "Vibe Coding \u2014 The Security and Quality Reality Check",
+      "title": "Vibe Coding — The Security and Quality Reality Check",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/mtn7qDpRzyk",
       "spotifyUrl": "https://creators.spotify.com/pod/show/2X82OW5nzyaXT0AQ7HZhHh/episode/5YN55eaVyyhWqAxOiU5Q7m",
       "duration": "28:12",
-      "type": "podcast"
+      "type": "podcast",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S001",
@@ -652,7 +740,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/aSgyJApWsLM",
       "duration": "0:36",
-      "type": "short"
+      "type": "short",
+      "views": 126,
+      "likes": 1,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S002",
@@ -661,7 +753,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/OEnvOZneEks",
       "duration": "0:46",
-      "type": "short"
+      "type": "short",
+      "views": 78,
+      "likes": 1,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S003",
@@ -670,7 +766,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/fuZtqOx5Kcw",
       "duration": "0:29",
-      "type": "short"
+      "type": "short",
+      "views": 183,
+      "likes": 3,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S004",
@@ -679,7 +779,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/B8d-0_PX3Gs",
       "duration": "0:35",
-      "type": "short"
+      "type": "short",
+      "views": 2,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S005",
@@ -688,7 +792,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/34IgaLPd5vY",
       "duration": "0:41",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S006",
@@ -697,16 +805,24 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/Kc6Qag-zIkQ",
       "duration": "0:42",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S007",
       "date": "2026-04-04",
-      "title": "How ChatGPT Searches the Internet \u2014 RAG",
+      "title": "How ChatGPT Searches the Internet — RAG",
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/GJ9tfpwwF1M",
       "duration": "0:35",
-      "type": "short"
+      "type": "short",
+      "views": 2,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S008",
@@ -715,16 +831,24 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/WnIVq0YpKoc",
       "duration": "0:43",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S009",
       "date": "2026-04-04",
-      "title": "GraphRAG vs RAG \u2014 Why Connections Matter",
+      "title": "GraphRAG vs RAG — Why Connections Matter",
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/PDGgbffRSKI",
       "duration": "0:40",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S010",
@@ -733,7 +857,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/BcUPpwvW6DU",
       "duration": "0:34",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S011",
@@ -742,7 +870,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/kzZnXgUJ3MY",
       "duration": "0:42",
-      "type": "short"
+      "type": "short",
+      "views": 5,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S012",
@@ -751,7 +883,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/SG-b180MpJw",
       "duration": "0:45",
-      "type": "short"
+      "type": "short",
+      "views": 27,
+      "likes": 1,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S013",
@@ -760,7 +896,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtu.be/6UIXakXg36E",
       "duration": "0:38",
-      "type": "short"
+      "type": "short",
+      "views": 2,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S014",
@@ -769,7 +909,11 @@
       "level": "Advanced",
       "youtubeUrl": "https://youtu.be/X2gN9ycKesg",
       "duration": "0:40",
-      "type": "short"
+      "type": "short",
+      "views": 9,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S015",
@@ -778,7 +922,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtu.be/3JQlWlDg2js",
       "duration": "0:36",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S016",
@@ -787,7 +935,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/JJuGhVpJde0",
       "duration": "0:40",
-      "type": "short"
+      "type": "short",
+      "views": 87,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S017",
@@ -796,7 +948,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/T9KSf_WWZqM",
       "duration": "0:38",
-      "type": "short"
+      "type": "short",
+      "views": 82,
+      "likes": 1,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S018",
@@ -805,7 +961,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/cCqqJJxwB3U",
       "duration": "0:34",
-      "type": "short"
+      "type": "short",
+      "views": 52,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S019",
@@ -814,7 +974,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/TDyHTPJhvYM",
       "duration": "0:41",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S020",
@@ -823,7 +987,11 @@
       "level": "Advanced",
       "youtubeUrl": "https://youtube.com/shorts/uJWTUAZrwiw",
       "duration": "0:48",
-      "type": "short"
+      "type": "short",
+      "views": 193,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S021",
@@ -832,7 +1000,11 @@
       "level": "Professional",
       "youtubeUrl": "https://youtube.com/shorts/9Ktxgk2_c18",
       "duration": "0:50",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S022",
@@ -841,7 +1013,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtube.com/shorts/qmChJ1sLGc0",
       "duration": "0:42",
-      "type": "short"
+      "type": "short",
+      "views": 93,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S023",
@@ -850,7 +1026,11 @@
       "level": "Advanced",
       "youtubeUrl": "https://youtube.com/shorts/xiUVN3Z1uM4",
       "duration": "0:52",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S024",
@@ -859,7 +1039,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/ZrqmeG5sCyc",
       "duration": "0:42",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S025",
@@ -868,7 +1052,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtube.com/shorts/sD-23XM2T-o",
       "duration": "0:40",
-      "type": "short"
+      "type": "short",
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S026",
@@ -877,7 +1065,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/aHfx0BTtlls",
       "duration": "0:42",
-      "type": "short"
+      "type": "short",
+      "views": 5,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S027",
@@ -886,7 +1078,11 @@
       "level": "Beginner",
       "youtubeUrl": "https://youtube.com/shorts/rUw6t8_ksZ8",
       "duration": "0:41",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S028",
@@ -895,7 +1091,11 @@
       "level": "Intermediate",
       "youtubeUrl": "https://youtube.com/shorts/9gK5NKE2V1Q",
       "duration": "0:39",
-      "type": "short"
+      "type": "short",
+      "views": 76,
+      "likes": 1,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S029",
@@ -904,7 +1104,11 @@
       "level": "Advanced",
       "youtubeUrl": "https://youtube.com/shorts/W1h5P4MpDqQ",
       "duration": "0:46",
-      "type": "short"
+      "type": "short",
+      "views": 54,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "S030",
@@ -913,7 +1117,11 @@
       "level": "Professional",
       "youtubeUrl": "https://youtube.com/shorts/QW0CWgrOZ4M",
       "duration": "0:48",
-      "type": "short"
+      "type": "short",
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P003",
@@ -927,7 +1135,11 @@
       "topics": [
         "AI Dev Tools",
         "Podcast"
-      ]
+      ],
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P004",
@@ -941,7 +1153,11 @@
       "topics": [
         "Voice AI",
         "Podcast"
-      ]
+      ],
+      "views": 1,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P005",
@@ -956,7 +1172,11 @@
         "Fine-Tuning",
         "RAG",
         "Podcast"
-      ]
+      ],
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     },
     {
       "id": "P006",
@@ -970,7 +1190,11 @@
       "topics": [
         "Model Optimization",
         "Podcast"
-      ]
+      ],
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "lastScraped": "2026-04-08"
     }
   ],
   "milestones": [
