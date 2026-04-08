@@ -310,6 +310,7 @@
   <div class="tab" data-tab="audit">Audit</div>
   <div class="tab" data-tab="skills">Skills</div>
   <div class="tab admin-only" data-tab="admin" style="display:none;">Admin</div>
+  <div class="tab admin-only" data-tab="automation" style="display:none;">Automation</div>
 </div>
 <div class="tab-bar-line"></div>
 
@@ -1036,6 +1037,31 @@
   </div>
 </div>
 
+<!-- ==================== TAB 7: AUTOMATION ==================== -->
+<div class="panel" id="automation">
+  <div class="tip">
+    <strong>Automation Control:</strong> Monitor, trigger, pause, and resume nightly jobs.
+  </div>
+
+  <div id="automation-cards" class="stat-grid">
+    <!-- Populated by JavaScript -->
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="icon">&#128202;</span> Run History</div>
+    <table class="audit-table" id="automation-history-table">
+      <thead>
+        <tr><th>Time</th><th>Job</th><th>Trigger</th><th>Status</th><th>Summary</th></tr>
+      </thead>
+      <tbody id="automation-history-body">
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr class="skeleton-row"><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 </div><!-- end #main-content -->
 
 <script>
@@ -1483,7 +1509,114 @@
     if (e.target.dataset && e.target.dataset.tab === 'admin') {
       loadAdminStats();
     }
+    if (e.target.dataset && e.target.dataset.tab === 'automation') {
+      loadAutomationStatus();
+    }
   });
+
+  // ── Automation Tab ─────────────────────────────────────────
+  function loadAutomationStatus() {
+    fetch('/api/admin/automation/status', { credentials: 'include' })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.error) return;
+        renderAutomationCards(data.jobs);
+        renderAutomationHistory(data.jobs);
+      })
+      .catch(function(e) { console.error('Automation status error:', e); });
+  }
+
+  function renderAutomationCards(jobs) {
+    var container = document.getElementById('automation-cards');
+    if (!container) return;
+    container.innerHTML = '';
+
+    var labels = {
+      'metrics-scrape': 'Metrics Scraper',
+      'engage-refresh': 'Engage Refresh'
+    };
+
+    Object.keys(jobs).forEach(function(jobName) {
+      var job = jobs[jobName];
+      var label = labels[jobName] || jobName;
+      var statusIcon = job.paused ? '⏸' : '●';
+      var statusText = job.paused ? 'Paused' : 'Active';
+      var statusColor = job.paused ? '#f59e0b' : '#22c55e';
+
+      var lastRun = job.last_run;
+      var lastText = lastRun ? new Date(lastRun.started_at).toLocaleString() : 'Never';
+      var resultIcon = !lastRun ? '—' : (lastRun.status === 'success' ? '✅' : '❌');
+      var resultText = lastRun ? (resultIcon + ' ' + (lastRun.summary || lastRun.status)) : '—';
+
+      var card = document.createElement('div');
+      card.className = 'stat-card';
+      card.style.textAlign = 'left';
+      card.style.padding = '1rem';
+      card.innerHTML = '<div style="font-weight:600;color:#e2e8f0;margin-bottom:0.5rem;">' + label + '</div>'
+        + '<div style="font-size:0.85rem;color:' + statusColor + ';margin-bottom:0.25rem;">' + statusIcon + ' ' + statusText + '</div>'
+        + '<div style="font-size:0.8rem;color:#94a3b8;margin-bottom:0.25rem;">Last: ' + lastText + '</div>'
+        + '<div style="font-size:0.8rem;color:#94a3b8;margin-bottom:0.75rem;">' + resultText + '</div>'
+        + '<div style="font-size:0.8rem;color:#64748b;margin-bottom:0.75rem;">Schedule: ' + job.schedule + '</div>'
+        + '<div style="display:flex;gap:0.5rem;">'
+        + '<button class="btn-primary" onclick="automationAction(\'' + jobName + '\',\'trigger\')" style="font-size:0.75rem;padding:0.3rem 0.6rem;">Run Now</button>'
+        + (job.paused
+            ? '<button class="btn-secondary" onclick="automationAction(\'' + jobName + '\',\'resume\')" style="font-size:0.75rem;padding:0.3rem 0.6rem;">Resume</button>'
+            : '<button class="btn-secondary" onclick="automationAction(\'' + jobName + '\',\'pause\')" style="font-size:0.75rem;padding:0.3rem 0.6rem;">Pause</button>')
+        + '</div>';
+      container.appendChild(card);
+    });
+  }
+
+  function renderAutomationHistory(jobs) {
+    var tbody = document.getElementById('automation-history-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    var allRuns = [];
+    Object.keys(jobs).forEach(function(jobName) {
+      (jobs[jobName].recent_runs || []).forEach(function(run) {
+        run._jobName = jobName;
+        allRuns.push(run);
+      });
+    });
+
+    allRuns.sort(function(a, b) { return b.started_at.localeCompare(a.started_at); });
+
+    allRuns.slice(0, 20).forEach(function(run) {
+      var tr = document.createElement('tr');
+      var statusIcon = run.status === 'success' ? '✅' : (run.status === 'failed' ? '❌' : '⏳');
+      var time = new Date(run.started_at).toLocaleString(undefined, { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+      tr.innerHTML = '<td class="audit-date">' + time + '</td>'
+        + '<td>' + run._jobName + '</td>'
+        + '<td>' + (run.trigger_type || 'cron') + '</td>'
+        + '<td>' + statusIcon + '</td>'
+        + '<td>' + (run.summary || '—') + '</td>';
+      tbody.appendChild(tr);
+    });
+
+    if (allRuns.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:#64748b;text-align:center;">No runs recorded yet</td></tr>';
+    }
+  }
+
+  function automationAction(job, action) {
+    fetch('/api/admin/automation/' + action, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ job: job })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.ok) {
+        showToast(data.message || 'Done', 'success');
+        setTimeout(loadAutomationStatus, 500);
+      } else {
+        showToast('Error: ' + (data.error || 'Unknown'), 'error');
+      }
+    })
+    .catch(function(e) { showToast('Error: ' + e, 'error'); });
+  }
 
   // ===== Init =====
   verifyTokenFromURL();
