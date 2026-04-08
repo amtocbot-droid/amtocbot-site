@@ -76,3 +76,78 @@ INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.metrics-scrap
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.metrics-scrape.trigger_requested', 'false');
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.engage-refresh.paused', 'false');
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.engage-refresh.trigger_requested', 'false');
+
+-- ── Content Data ───────────────────────────────────────────────
+INSERT OR IGNORE INTO schema_version (version, description) VALUES (2, 'Content tables: content, metrics_history, milestones, platforms, summaries');
+
+CREATE TABLE IF NOT EXISTS content (
+  id           TEXT PRIMARY KEY,
+  type         TEXT NOT NULL,
+  title        TEXT NOT NULL,
+  date         TEXT NOT NULL,
+  level        TEXT,
+  status       TEXT DEFAULT 'Published',
+  topic        TEXT,
+  tags         TEXT,
+  blog_url     TEXT,
+  youtube_url  TEXT,
+  youtube_id   TEXT,
+  linkedin_url TEXT,
+  twitter_url  TEXT,
+  spotify_url  TEXT,
+  duration     TEXT,
+  description  TEXT,
+  views        INTEGER DEFAULT 0,
+  likes        INTEGER DEFAULT 0,
+  comments     INTEGER DEFAULT 0,
+  last_scraped TEXT,
+  created_at   TEXT DEFAULT (datetime('now')),
+  updated_at   TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_content_type ON content(type);
+CREATE INDEX IF NOT EXISTS idx_content_date ON content(date DESC);
+CREATE INDEX IF NOT EXISTS idx_content_type_date ON content(type, date DESC);
+
+CREATE TABLE IF NOT EXISTS metrics_history (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  content_id   TEXT NOT NULL REFERENCES content(id),
+  scraped_date TEXT NOT NULL,
+  views        INTEGER DEFAULT 0,
+  likes        INTEGER DEFAULT 0,
+  comments     INTEGER DEFAULT 0,
+  UNIQUE(content_id, scraped_date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_metrics_content ON metrics_history(content_id, scraped_date DESC);
+
+CREATE TABLE IF NOT EXISTS milestones (
+  id      INTEGER PRIMARY KEY AUTOINCREMENT,
+  name    TEXT NOT NULL,
+  target  INTEGER NOT NULL,
+  current INTEGER DEFAULT 0,
+  status  TEXT DEFAULT 'in-progress'
+);
+
+CREATE TABLE IF NOT EXISTS platforms (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  platform TEXT NOT NULL,
+  handle   TEXT NOT NULL,
+  url      TEXT,
+  icon     TEXT
+);
+
+CREATE TABLE IF NOT EXISTS summaries (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  period       TEXT NOT NULL,
+  label        TEXT NOT NULL,
+  blogs        INTEGER DEFAULT 0,
+  videos       INTEGER DEFAULT 0,
+  shorts       INTEGER DEFAULT 0,
+  podcasts     INTEGER DEFAULT 0,
+  social_posts INTEGER DEFAULT 0
+);
+
+-- Seed scalar config values
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('tiktok_count', '0');
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('platform_count', '8');
