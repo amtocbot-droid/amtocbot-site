@@ -424,11 +424,70 @@
   ],
   "videos": [
     {
+      "id": "P007",
+      "title": "AI Agents as Attack Surface \u2014 The Security Crisis Nobody Talks About",
+      "type": "podcast",
+      "level": "Advanced",
+      "date": "2026-04-08",
+      "description": "Alex and Sam explore AI agent security risks: OAuth 2.1, rate limiting, Zero Trust, secrets management, and a 7-step security checklist.",
+      "duration": "11:36",
+      "youtubeId": "Zt1Cumzt_Kg",
+      "topics": [
+        "AI Agent Security",
+        "Podcast"
+      ]
+    },
+    {
+      "id": "V020",
+      "title": "29 Million Secrets Leaked: How to Stop Hardcoding Credentials",
+      "youtubeUrl": "https://youtu.be/9X5RKeNTYuI",
+      "type": "video",
+      "level": "Beginner",
+      "tags": [
+        "SecretsManagement",
+        "GitSecurity",
+        "APIKeys",
+        "CyberSecurity",
+        "SecureCoding"
+      ],
+      "date": "2026-04-08"
+    },
+    {
+      "id": "V019",
+      "title": "Zero Trust Explained: The Complete Beginner's Guide (2026)",
+      "youtubeUrl": "https://youtu.be/-AFo3g0pYqg",
+      "type": "video",
+      "level": "Beginner",
+      "tags": [
+        "zero trust",
+        "zero trust explained",
+        "cybersecurity",
+        "network security",
+        "identity"
+      ],
+      "date": "2026-04-07"
+    },
+    {
+      "id": "V018",
+      "title": "API Security for AI Agents: What's Different? | Zero Trust, OAuth 2.1, Rate Limiting",
+      "youtubeUrl": "https://youtu.be/8f9VXQf9__s",
+      "type": "video",
+      "level": "Intermediate",
+      "tags": [
+        "api security",
+        "ai agents",
+        "zero trust",
+        "oauth 2.1",
+        "rate limiting"
+      ],
+      "date": "2026-04-07"
+    },
+    {
       "id": "V001",
       "date": "2026-03-31",
       "title": "Neural Networks Explained",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/BaTNHXy1rP4",
+      "youtubeUrl": "https://youtu.be/GzLfILXnFVQ",
       "duration": "5:42",
       "type": "video"
     },
@@ -437,7 +496,7 @@
       "date": "2026-04-01",
       "title": "AI Agents Explained",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/I6Imu6boOn4",
+      "youtubeUrl": "https://youtu.be/ncRkC_iftyE",
       "duration": "5:06",
       "type": "video"
     },
@@ -446,7 +505,7 @@
       "date": "2026-04-01",
       "title": "What is MCP?",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/UR-0s7Q80k0",
+      "youtubeUrl": "https://youtu.be/l11Cg4V0xmI",
       "duration": "5:17",
       "type": "video"
     },
@@ -455,7 +514,7 @@
       "date": "2026-04-02",
       "title": "RAG Explained in 6 Minutes",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/SYfLQljOcsQ",
+      "youtubeUrl": "https://youtu.be/bDjBnVbhnAw",
       "duration": "5:29",
       "type": "video"
     },
@@ -464,7 +523,7 @@
       "date": "2026-04-02",
       "title": "GraphRAG vs RAG \u2014 Visual Comparison",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/FFkFf0m-Lps",
+      "youtubeUrl": "https://youtu.be/6CLFdguCA1E",
       "duration": "5:06",
       "type": "video"
     },
@@ -473,7 +532,7 @@
       "date": "2026-04-02",
       "title": "Build a RAG App from Scratch",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/6noqObMD0a0",
+      "youtubeUrl": "https://youtu.be/xGQt4rQMTXc",
       "duration": "6:17",
       "type": "video"
     },
@@ -482,7 +541,7 @@
       "date": "2026-04-02",
       "title": "Cursor vs Copilot vs Claude Code",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/9XMKX2YF9eE",
+      "youtubeUrl": "https://youtu.be/6idG7V87n98",
       "duration": "6:34",
       "type": "video"
     },
@@ -491,7 +550,7 @@
       "date": "2026-04-02",
       "title": "5 AI Coding Workflows You Need to Know",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/REnegkpb5RM",
+      "youtubeUrl": "https://youtu.be/KJGtghJgx2Y",
       "duration": "5:32",
       "type": "video"
     },
@@ -500,7 +559,7 @@
       "date": "2026-04-03",
       "title": "Open-Source AI Models Explained \u2014 Why They Matter",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/H1jV9dODAvE",
+      "youtubeUrl": "https://youtu.be/P7Vnxditwqw",
       "duration": "4:09",
       "type": "video"
     },
@@ -509,7 +568,7 @@
       "date": "2026-04-03",
       "title": "Run AI on Your Laptop: Ollama Tutorial",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/_d0p9hndWEo",
+      "youtubeUrl": "https://youtu.be/IT9vZ8_9z6Q",
       "duration": "5:25",
       "type": "video"
     },
@@ -518,7 +577,7 @@
       "date": "2026-04-03",
       "title": "Build a Local AI Chatbot with Python & Ollama",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/j51IpWQ7df0",
+      "youtubeUrl": "https://youtu.be/JcEyMXkxB5w",
       "duration": "4:00",
       "type": "video"
     },
@@ -527,7 +586,7 @@
       "date": "2026-04-04",
       "title": "Fine-Tuning vs RAG \u2014 Which Should You Use?",
       "level": "Intermediate",
-      "youtubeUrl": "https://youtu.be/llzZee0AVC8",
+      "youtubeUrl": "https://youtu.be/fX5gyDrJnqE",
       "duration": "5:30",
       "type": "video"
     },
@@ -536,7 +595,7 @@
       "date": "2026-04-05",
       "title": "What Is Quantization? Make AI Models 4x Smaller",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/jjtni9l7Fn0",
+      "youtubeUrl": "https://youtu.be/74IKujEq3iU",
       "duration": "6:02",
       "type": "video"
     },
@@ -563,7 +622,7 @@
       "date": "2026-04-06",
       "title": "What Is Voice AI? The Complete Guide to Building Voice Agents",
       "level": "Beginner",
-      "youtubeUrl": "https://youtu.be/uZU0BwFHcEo",
+      "youtubeUrl": "https://youtu.be/GShL0LPqlfQ",
       "duration": "14:12",
       "type": "video"
     },
