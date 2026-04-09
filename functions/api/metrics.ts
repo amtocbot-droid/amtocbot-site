@@ -29,25 +29,19 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return new Response(JSON.stringify({
       error: 'KV not configured',
       metrics: null,
-      syncStatus: null,
     }), { status: 200, headers: corsHeaders });
   }
 
   try {
-    const [metricsRaw, syncRaw] = await Promise.all([
-      env.METRICS_KV.get('platform-metrics'),
-      env.METRICS_KV.get('sync-status'),
-    ]);
+    const metricsRaw = await env.METRICS_KV.get('platform-metrics');
 
     return new Response(JSON.stringify({
       metrics: metricsRaw ? JSON.parse(metricsRaw) : null,
-      syncStatus: syncRaw ? JSON.parse(syncRaw) : null,
     }), { status: 200, headers: corsHeaders });
   } catch {
     return new Response(JSON.stringify({
       error: 'Failed to read from KV',
       metrics: null,
-      syncStatus: null,
     }), { status: 500, headers: corsHeaders });
   }
 };
