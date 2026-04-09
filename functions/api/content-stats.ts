@@ -1,48 +1,50 @@
-/**
- * Cloudflare Pages Function: Public content stats endpoint.
- * Returns blog/video/shorts/podcast counts from cached sync status in KV.
- *
- * GET /api/content-stats
- *
- * No auth required — serves public data for the homepage stats bar.
- */
-import { Env, corsHeaders, jsonResponse, optionsHandler, countContent, ContentJson } from './_shared/auth';
+// functions/api/content-stats.ts — public stats endpoint, reads from D1
+import { corsHeaders, jsonResponse, optionsHandler } from './_shared/auth';
+
+interface Env {
+  ENGAGE_DB: D1Database;
+}
 
 export const onRequestOptions = optionsHandler;
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env } = context;
-
-  const countFromJson = async (): Promise<Response> => {
-    try {
-      const jsonUrl = new URL('/assets/data/content.json', context.request.url);
-      const resp = await fetch(jsonUrl.toString());
-      if (!resp.ok) throw new Error('Failed to fetch content.json');
-      const data = await resp.json() as ContentJson;
-      const stats = countContent(data);
-      return jsonResponse({ ...stats, lastSync: null });
-    } catch {
-      return jsonResponse({ blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 0, lastSync: null });
-    }
-  };
-
-  if (!env.METRICS_KV) {
-    return countFromJson();
-  }
+  const db = env.ENGAGE_DB;
 
   try {
-    const syncRaw = await env.METRICS_KV.get('sync-status');
-    if (!syncRaw) return countFromJson();
+    const { results } = await db.prepare(`
+      SELECT type, COUNT(*) as count FROM content GROUP BY type
+    `).all<{ type: string; count: number }>();
 
-    // KV already contains merged stats (D1 overrides applied at sync/update time)
-    return new Response(syncRaw, {
-      status: 200,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
-    });
-  } catch {
+    const counts: Record<string, number> = { blogs: 0, videos: 0, shorts: 0, podcasts: 0 };
+    for (const row of results || []) {
+      if (row.type === 'blog') counts.blogs = row.count;
+      else if (row.type === 'video') counts.videos = row.count;
+      else if (row.type === 'short') counts.shorts = row.count;
+      else if (row.type === 'podcast') counts.podcasts = row.count;
+    }
+
+    // Scalar counts from site_config
+    const { results: configRows } = await db.prepare(
+      "SELECT key, value FROM site_config WHERE key IN ('tiktok_count', 'platform_count')"
+    ).all<{ key: string; value: string }>();
+
+    let tiktok = 0, platforms = 8;
+    for (const row of configRows || []) {
+      if (row.key === 'tiktok_count') tiktok = parseInt(row.value, 10) || 0;
+      if (row.key === 'platform_count') platforms = parseInt(row.value, 10) || 8;
+    }
+
     return jsonResponse({
-      error: 'Failed to read from KV',
-      blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 0, lastSync: null,
-    }, 500);
+      lastSync: new Date().toISOString(),
+      ...counts,
+      tiktok,
+      platforms,
+    });
+  } catch (e) {
+    return jsonResponse({
+      lastSync: null,
+      blogs: 0, videos: 0, shorts: 0, podcasts: 0, tiktok: 0, platforms: 8,
+    });
   }
 };
