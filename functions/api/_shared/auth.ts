@@ -19,9 +19,12 @@ export interface Env {
 export interface ContentJson {
   blogs?: unknown[];
   videos?: Array<{ type?: string }>;
+  milestones?: unknown[];
+  platforms?: unknown[];
+  weeklySummary?: unknown[];
+  monthlySummary?: unknown[];
   tiktokCount?: number;
   platformCount?: number;
-  platforms?: unknown[];
 }
 
 export interface SyncData {
@@ -32,6 +35,108 @@ export interface SyncData {
   podcasts: number;
   tiktok: number;
   platforms: number;
+}
+
+export interface ContentRow {
+  id: string;
+  type: string;
+  title: string;
+  date: string;
+  level: string | null;
+  status: string;
+  topic: string | null;
+  tags: string | null;
+  blog_url: string | null;
+  youtube_url: string | null;
+  youtube_id: string | null;
+  linkedin_url: string | null;
+  twitter_url: string | null;
+  spotify_url: string | null;
+  duration: string | null;
+  description: string | null;
+  views: number;
+  likes: number;
+  comments: number;
+  last_scraped: string | null;
+}
+
+/** Convert a D1 content row to the camelCase shape the frontend expects for blogs. */
+export function toBlogJson(row: ContentRow) {
+  return {
+    id: row.id,
+    date: row.date,
+    title: row.title,
+    level: row.level || '',
+    topic: row.topic || '',
+    blogUrl: row.blog_url || '',
+    linkedinUrl: row.linkedin_url || '',
+    twitterUrl: row.twitter_url || '',
+    status: row.status,
+  };
+}
+
+/** Convert a D1 content row to the camelCase shape the frontend expects for videos/shorts/podcasts. */
+export function toVideoJson(row: ContentRow) {
+  const obj: Record<string, unknown> = {
+    id: row.id,
+    type: row.type,
+    title: row.title,
+    date: row.date,
+    level: row.level || '',
+    youtubeUrl: row.youtube_url || '',
+    youtubeId: row.youtube_id || '',
+    duration: row.duration || '',
+    views: row.views,
+    likes: row.likes,
+    comments: row.comments,
+    lastScraped: row.last_scraped || '',
+  };
+  if (row.tags) {
+    try { obj.tags = JSON.parse(row.tags); } catch { obj.tags = []; }
+  }
+  if (row.spotify_url) obj.spotifyUrl = row.spotify_url;
+  if (row.description) obj.description = row.description;
+  return obj;
+}
+
+/** Fetch all content from D1 and assemble into the ContentJson shape. */
+export async function getContentFromD1(db: D1Database): Promise<ContentJson & Record<string, unknown>> {
+  const [contentResult, milestonesResult, platformsResult, weeklySummaryResult, monthlySummaryResult, configResult] = await Promise.all([
+    db.prepare('SELECT * FROM content ORDER BY date DESC').all<ContentRow>(),
+    db.prepare('SELECT * FROM milestones').all(),
+    db.prepare('SELECT * FROM platforms').all(),
+    db.prepare("SELECT * FROM summaries WHERE period = 'week' ORDER BY id DESC").all(),
+    db.prepare("SELECT * FROM summaries WHERE period = 'month' ORDER BY id DESC").all(),
+    db.prepare("SELECT key, value FROM site_config WHERE key IN ('tiktok_count', 'platform_count')").all<{ key: string; value: string }>(),
+  ]);
+
+  const rows = contentResult.results || [];
+  const blogs = rows.filter(r => r.type === 'blog').map(toBlogJson);
+  const videos = rows.filter(r => r.type !== 'blog').map(toVideoJson);
+
+  let tiktokCount = 0;
+  let platformCount = 8;
+  for (const row of configResult.results || []) {
+    if (row.key === 'tiktok_count') tiktokCount = parseInt(row.value, 10) || 0;
+    if (row.key === 'platform_count') platformCount = parseInt(row.value, 10) || 8;
+  }
+
+  return {
+    blogs,
+    videos: videos as Array<{ type?: string }>,
+    milestones: milestonesResult.results || [],
+    platforms: platformsResult.results || [],
+    weeklySummary: (weeklySummaryResult.results || []).map(r => {
+      const s = r as Record<string, unknown>;
+      return { week: s.label, blogs: s.blogs, videos: s.videos, shorts: s.shorts, podcasts: s.podcasts, socialPosts: s.social_posts };
+    }),
+    monthlySummary: (monthlySummaryResult.results || []).map(r => {
+      const s = r as Record<string, unknown>;
+      return { month: s.label, blogs: s.blogs, videos: s.videos, podcasts: s.podcasts };
+    }),
+    tiktokCount,
+    platformCount,
+  };
 }
 
 const STAT_KEYS = ['blogs', 'videos', 'shorts', 'podcasts', 'tiktok', 'platforms'] as const;
