@@ -2,8 +2,9 @@
 """
 scrape-metrics.py — Scrape YouTube + Blogger engagement metrics.
 
-Reads content.json, fetches stats from APIs, writes updated numbers
-back to content.json and content-tracker.md.
+Fetches content list from D1 (via /api/content), scrapes stats from
+YouTube and Blogger APIs, posts updated metrics to D1 (via
+/api/admin/content/metrics), and updates content-tracker.md.
 
 Usage:
   python3 scripts/scrape-metrics.py                # scrape all
@@ -34,8 +35,9 @@ except ImportError:
 # ── Paths ──────────────────────────────────────────────────────
 SITE_DIR = Path(__file__).resolve().parent.parent
 CONTENT_DIR = Path("/Users/amtoc/amtocsoft-content")
-CONTENT_JSON = SITE_DIR / "public" / "assets" / "data" / "content.json"
 CONTENT_TRACKER = CONTENT_DIR / "metrics" / "content-tracker.md"
+
+CONTENT_API_URL = "https://amtocbot.com/api/content"
 
 CONFIG_DIR = os.path.expanduser("~/.config/amtocsoft")
 CLIENT_SECRETS = os.path.join(CONFIG_DIR, "client_secrets.json")
@@ -49,8 +51,29 @@ YT_SCOPES = [
     "https://www.googleapis.com/auth/youtube",
 ]
 BLOGGER_SCOPES = [
-    "https://www.googleapis.com/auth/blogger.readonly",
+    "https://www.googleapis.com/auth/blogger",
 ]
+
+
+# ── Fetch Content from D1 ─────────────────────────────────────
+
+def fetch_content_from_d1():
+    """Fetch content list from /api/content (public endpoint)."""
+    import urllib.request
+    req = urllib.request.Request(
+        CONTENT_API_URL,
+        headers={"User-Agent": "AmtocSoft-Scraper/1.0"},
+    )
+    try:
+        resp = urllib.request.urlopen(req, timeout=30)
+        data = json.loads(resp.read())
+        video_count = len(data.get("videos", []))
+        blog_count = len(data.get("blogs", []))
+        print(f"  📥 D1: fetched {video_count} videos, {blog_count} blogs")
+        return data
+    except Exception as e:
+        print(f"  ❌ Failed to fetch content from D1: {e}")
+        sys.exit(1)
 
 
 # ── Auth ───────────────────────────────────────────────────────
@@ -157,43 +180,6 @@ def scrape_blogger(content_data):
     except Exception as e:
         print(f"  ⚠  Blogger: API error — {e}")
         return {}, 0
-
-
-# ── Update content.json ───────────────────────────────────────
-
-def update_content_json(content_data, yt_stats, blogger_stats, dry_run):
-    """Merge scraped stats into content.json."""
-    today = date.today().isoformat()
-    changes = 0
-
-    for entry in content_data.get("videos", []):
-        cid = entry["id"]
-        if cid in yt_stats:
-            for key, val in yt_stats[cid].items():
-                if entry.get(key) != val:
-                    entry[key] = val
-                    changes += 1
-            entry["lastScraped"] = today
-
-    # Blogger blog-level total
-    if "_blog_total" in blogger_stats:
-        content_data["blogPageViews"] = blogger_stats["_blog_total"]
-        content_data["blogLastScraped"] = today
-        changes += 1
-
-    if changes == 0:
-        print("  📊 content.json: no changes")
-        return False
-
-    if dry_run:
-        print(f"  📊 content.json: would update {changes} fields (dry run)")
-        return False
-
-    with open(CONTENT_JSON, "w") as f:
-        json.dump(content_data, f, indent=2, ensure_ascii=False)
-        f.write("\n")
-    print(f"  📊 content.json: updated {changes} fields")
-    return True
 
 
 # ── Update content-tracker.md ──────────────────────────────────
@@ -326,12 +312,8 @@ def main():
     started = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     print(f"🔄 scrape-metrics.py — {date.today().isoformat()}")
 
-    if not CONTENT_JSON.exists():
-        print(f"  ❌ content.json not found at {CONTENT_JSON}")
-        sys.exit(1)
-
-    with open(CONTENT_JSON) as f:
-        content_data = json.load(f)
+    # Fetch content from D1 API
+    content_data = fetch_content_from_d1()
 
     yt_stats, yt_total = {}, 0
     blogger_stats, blogger_total = {}, 0
@@ -342,8 +324,7 @@ def main():
     if do_blogger:
         blogger_stats, blogger_total = scrape_blogger(content_data)
 
-    # Update files
-    json_changed = update_content_json(content_data, yt_stats, blogger_stats, args.dry_run)
+    # Update content-tracker.md
     tracker_changed = update_content_tracker(yt_stats, args.dry_run)
 
     summary = build_summary(yt_stats, yt_total, blogger_stats, blogger_total)
@@ -358,7 +339,7 @@ def main():
     if args.report_url:
         post_report(args.report_url, summary, started, status)
 
-    if json_changed or tracker_changed:
+    if tracker_changed:
         print("  ✅ Files updated")
     else:
         print("  ✅ Done (no file changes)")
