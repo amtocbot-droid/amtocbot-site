@@ -207,35 +207,6 @@ export async function cleanExpiredSessions(db: D1Database): Promise<void> {
   await db.prepare('DELETE FROM sessions WHERE expires_at < datetime(\'now\')').run();
 }
 
-/** Fetch content.json from GitHub with cache-busting. */
-export async function fetchContentFromGitHub(githubToken?: string): Promise<ContentJson> {
-  const url = `https://raw.githubusercontent.com/amtocbot-droid/amtocbot-site/main/public/assets/data/content.json?t=${Date.now()}`;
-  const headers: Record<string, string> = { 'Accept': 'application/json', 'Cache-Control': 'no-cache' };
-  if (githubToken) headers['Authorization'] = `token ${githubToken}`;
-
-  const resp = await fetch(url, { headers });
-  if (!resp.ok) throw new Error(`GitHub fetch failed: ${resp.status}`);
-  return resp.json() as Promise<ContentJson>;
-}
-
-/** Count content items from parsed content.json in a single pass. */
-export function countContent(content: ContentJson): Omit<SyncData, 'lastSync'> {
-  const allVideos = content.videos || [];
-  let videos = 0, shorts = 0, podcasts = 0;
-  for (const v of allVideos) {
-    if (v.type === 'video') videos++;
-    else if (v.type === 'short') shorts++;
-    else if (v.type === 'podcast') podcasts++;
-  }
-  return {
-    blogs: (content.blogs || []).length,
-    videos,
-    shorts,
-    podcasts,
-    tiktok: content.tiktokCount ?? 0,
-    platforms: content.platformCount ?? 8,
-  };
-}
 
 /** Apply D1 site_config overrides to a stats object. Mutates in place. */
 export async function applyConfigOverrides(db: D1Database, stats: Record<string, unknown>): Promise<void> {

@@ -265,6 +265,7 @@ def post_metrics_to_d1(url, yt_stats, blogger_stats):
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {token}",
+            "User-Agent": "AmtocSoft-Scraper/1.0",
         },
     )
     try:
@@ -297,6 +298,7 @@ def post_report(url, summary, started, status):
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {token}",
+            "User-Agent": "AmtocSoft-Scraper/1.0",
         },
     )
     try:

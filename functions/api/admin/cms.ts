@@ -9,7 +9,7 @@
  */
 import {
   Env, jsonResponse, getSessionUser, logAudit, optionsHandler,
-  fetchContentFromGitHub, countContent, applyConfigOverrides,
+  applyConfigOverrides,
 } from '../_shared/auth';
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
@@ -49,9 +49,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const action = url.searchParams.get('action');
 
   if (action === 'sync') {
-    const content = await fetchContentFromGitHub(env.GITHUB_TOKEN);
-    const stats = countContent(content);
-    const syncData: Record<string, unknown> = { lastSync: new Date().toISOString(), ...stats };
+    // Count content from D1 directly
+    const { results: counts } = await db.prepare(
+      `SELECT type, COUNT(*) as cnt FROM content GROUP BY type`
+    ).all<{ type: string; cnt: number }>();
+    const statsMap: Record<string, number> = {};
+    for (const row of counts || []) statsMap[row.type] = row.cnt;
+
+    const syncData: Record<string, unknown> = {
+      lastSync: new Date().toISOString(),
+      blogs: statsMap['blog'] ?? 0,
+      videos: statsMap['video'] ?? 0,
+      shorts: statsMap['short'] ?? 0,
+      podcasts: statsMap['podcast'] ?? 0,
+      tiktok: 0,
+      platforms: 8,
+    };
 
     await applyConfigOverrides(db, syncData);
 
