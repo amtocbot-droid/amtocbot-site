@@ -25,7 +25,7 @@ export class ContentService {
     if (this.loaded) return;
     this.loaded = true;
 
-    this.http.get<ContentData>('/assets/data/content.json').subscribe((data) => {
+    this.http.get<ContentData>('/api/content').subscribe((data) => {
       this.blogs.set(data.blogs);
       this.videos.set(data.videos);
       this.milestones.set(data.milestones);
