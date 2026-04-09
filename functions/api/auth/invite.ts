@@ -2,7 +2,7 @@
  * POST /api/auth/invite
  * Admin-only: creates a new user and sends welcome email.
  */
-import { Env, jsonResponse, optionsHandler, getSessionUser, logAudit, sendBrevoEmail } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler, getSessionUser, logAudit, sendBrevoEmail, VALID_ROLES } from '../_shared/auth';
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
@@ -17,7 +17,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const body = await request.json() as { username?: string; email?: string; role?: string };
     const username = body.username?.trim();
     const email = body.email?.trim().toLowerCase();
-    const role = body.role === 'admin' ? 'admin' : 'member';
+    const role = body.role && VALID_ROLES.includes(body.role) ? body.role : 'member';
 
     if (!username || !email || !email.includes('@')) {
       return jsonResponse({ error: 'Username and valid email required' }, 400);

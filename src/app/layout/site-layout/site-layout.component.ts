@@ -281,6 +281,7 @@ export class SiteLayoutComponent {
     { path: '/metrics', label: 'Metrics', icon: 'bar_chart' },
     { path: '/resources', label: 'Resources', icon: 'link' },
     { path: '/about', label: 'About', icon: 'info' },
+    { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
   ];
 
   subscribeStatus = '';

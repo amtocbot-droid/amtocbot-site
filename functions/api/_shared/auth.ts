@@ -9,6 +9,35 @@ export interface SessionUser {
   role: string;
 }
 
+// ── Role & Permission System ──────────────────────────────────
+export type Role = 'admin' | 'tester' | 'approver' | 'reviewer';
+export const VALID_ROLES: readonly string[] = ['admin', 'tester', 'approver', 'reviewer'] as const;
+
+export type Permission =
+  | 'dashboard.view'
+  | 'issues.create' | 'issues.update_status' | 'issues.assign' | 'issues.close' | 'issues.comment'
+  | 'content.qa.update' | 'content.qa.approve' | 'content.qa.reject'
+  | 'users.manage';
+
+const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
+  admin:    [], // admin bypasses the map — gets all permissions
+  tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update'],
+  approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject'],
+  reviewer: ['dashboard.view', 'issues.comment'],
+};
+
+export function hasPermission(user: SessionUser, perm: Permission): boolean {
+  if (user.role === 'admin') return true;
+  const perms = ROLE_PERMISSIONS[user.role as Role];
+  return perms ? perms.includes(perm) : false;
+}
+
+export function requirePermission(user: SessionUser | null, perm: Permission): Response | null {
+  if (!user) return jsonResponse({ error: 'Authentication required' }, 401);
+  if (!hasPermission(user, perm)) return jsonResponse({ error: 'Insufficient permissions' }, 403);
+  return null;
+}
+
 export interface Env {
   BREVO_API_KEY: string;
   ENGAGE_DB: D1Database;
