@@ -37,9 +37,18 @@ SPOTIFY_SHOW = "https://open.spotify.com/show/2X82OW5nzyaXT0AQ7HZhHh"
 # ── Data loading ───────────────────────────────────────────────────────────
 
 def load_content():
-    """Load and parse content.json, return structured counts and entries."""
-    with open(CONTENT_JSON) as f:
-        data = json.load(f)
+    """Load and parse content from API (D1-backed), with JSON file fallback."""
+    import urllib.request
+
+    api_url = "https://amtocbot.com/api/content"
+    try:
+        req = urllib.request.Request(api_url, headers={"Accept": "application/json"})
+        resp = urllib.request.urlopen(req, timeout=10)
+        data = json.loads(resp.read())
+    except Exception as e:
+        print(f"  ⚠  API fetch failed ({e}), falling back to content.json")
+        with open(CONTENT_JSON) as f:
+            data = json.load(f)
 
     blogs = data.get("blogs", [])
     videos_raw = data.get("videos", [])
