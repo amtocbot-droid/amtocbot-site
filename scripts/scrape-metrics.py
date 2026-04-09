@@ -249,6 +249,34 @@ def build_summary(yt_stats, yt_total, blogger_stats, blogger_total):
     return ". ".join(parts) if parts else "No data scraped"
 
 
+def post_metrics_to_d1(url, yt_stats, blogger_stats):
+    """POST scraped metrics to /api/admin/content/metrics."""
+    import urllib.request
+
+    payload = json.dumps({
+        "youtube": {cid: stats for cid, stats in yt_stats.items()},
+        "blogger": {"total_views": blogger_stats.get("_blog_total", 0)} if blogger_stats else None,
+    }).encode()
+
+    token = os.environ.get("SYNC_SECRET", "")
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+        },
+    )
+    try:
+        resp = urllib.request.urlopen(req)
+        result = json.loads(resp.read())
+        print(f"  📤 D1 metrics: updated {result.get('updated', 0)} items")
+        return True
+    except Exception as e:
+        print(f"  ⚠  Failed to post metrics to D1: {e}")
+        return False
+
+
 def post_report(url, summary, started, status):
     """POST run summary to the automation log endpoint."""
     import urllib.request
@@ -287,6 +315,7 @@ def main():
     parser.add_argument("--all", action="store_true", help="Both (default)")
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
     parser.add_argument("--report-url", default=None, help="POST summary to this URL")
+    parser.add_argument("--metrics-url", default=None, help="POST metrics to D1 content/metrics endpoint")
     args = parser.parse_args()
 
     do_youtube = args.youtube or args.all or (not args.youtube and not args.blogger)
@@ -317,6 +346,10 @@ def main():
 
     summary = build_summary(yt_stats, yt_total, blogger_stats, blogger_total)
     status = "success" if (yt_stats or blogger_stats) else "no_data"
+
+    # Post metrics to D1
+    if args.metrics_url and (yt_stats or blogger_stats):
+        post_metrics_to_d1(args.metrics_url, yt_stats, blogger_stats)
 
     print(f"\n  📊 Summary: {summary}")
 

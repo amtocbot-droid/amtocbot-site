@@ -45,6 +45,7 @@ fi
 # Run the scraper
 python3 scripts/scrape-metrics.py --all \
     --report-url "$API_BASE/log" \
+    --metrics-url "https://amtocbot.com/api/admin/content/metrics" \
     >> "$LOG_FILE" 2>&1 || {
     echo "$(date '+%Y-%m-%d %H:%M:%S') — Scraper failed" >> "$LOG_FILE"
     exit 1
