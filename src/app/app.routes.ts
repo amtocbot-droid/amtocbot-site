@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { SiteLayoutComponent } from './layout/site-layout/site-layout.component';
+import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,12 @@ export const routes: Routes = [
       { path: 'about', loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent) },
       { path: 'planner', loadComponent: () => import('./features/planner/planner.component').then(m => m.PlannerComponent) },
       { path: 'admin', loadComponent: () => import('./features/admin/admin.component').then(m => m.AdminComponent) },
+      {
+        path: 'dashboard',
+        loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        canActivate: [authGuard],
+        data: { roles: ['admin', 'tester', 'approver', 'reviewer'] },
+      },
     ],
   },
   { path: '**', redirectTo: '' },

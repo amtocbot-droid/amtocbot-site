@@ -190,3 +190,43 @@ INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.calendar-gene
 -- Seed scalar config values
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('tiktok_count', '0');
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('platform_count', '8');
+
+-- ── Dashboard: QA Pipeline + Issue Tracker ────────────────────
+INSERT OR IGNORE INTO schema_version (version, description) VALUES (4, 'Dashboard: issues, issue_comments, content.qa_status');
+
+-- QA columns on content (applied via ALTER in migration 004)
+-- content.qa_status TEXT DEFAULT 'draft'
+-- content.qa_updated_at TEXT
+-- content.qa_updated_by INTEGER
+
+-- Issues
+CREATE TABLE IF NOT EXISTS issues (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  title        TEXT NOT NULL,
+  description  TEXT,
+  type         TEXT NOT NULL DEFAULT 'bug',
+  severity     TEXT NOT NULL DEFAULT 'medium',
+  status       TEXT NOT NULL DEFAULT 'open',
+  content_id   TEXT REFERENCES content(id),
+  created_by   INTEGER NOT NULL REFERENCES users(id),
+  assigned_to  INTEGER REFERENCES users(id),
+  closed_by    INTEGER REFERENCES users(id),
+  closed_at    TEXT,
+  created_at   TEXT DEFAULT (datetime('now')),
+  updated_at   TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_issues_status ON issues(status);
+CREATE INDEX IF NOT EXISTS idx_issues_content ON issues(content_id);
+CREATE INDEX IF NOT EXISTS idx_issues_assigned ON issues(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_issues_created ON issues(created_at DESC);
+
+-- Issue comments
+CREATE TABLE IF NOT EXISTS issue_comments (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  issue_id   INTEGER NOT NULL REFERENCES issues(id),
+  user_id    INTEGER NOT NULL REFERENCES users(id),
+  username   TEXT NOT NULL,
+  body       TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_comments_issue ON issue_comments(issue_id, created_at);
