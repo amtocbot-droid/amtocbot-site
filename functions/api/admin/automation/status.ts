@@ -53,6 +53,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const schedules: Record<string, string> = {
       'metrics-scrape': '1:30 AM ET daily',
       'engage-refresh': '2:00 AM ET daily',
+      'calendar-generate': '11:00 PM ET Sunday',
     };
 
     jobs[jobName] = {
