@@ -51,14 +51,6 @@ python3 scripts/scrape-metrics.py --all \
     exit 1
 }
 
-# Auto-commit content.json if changed
-if ! git diff --quiet public/assets/data/content.json 2>/dev/null; then
-    git add public/assets/data/content.json
-    git commit -m "chore: nightly metrics update ($(date '+%Y-%m-%d'))" >> "$LOG_FILE" 2>&1
-    git push >> "$LOG_FILE" 2>&1
-    echo "$(date '+%Y-%m-%d %H:%M:%S') — Site repo pushed" >> "$LOG_FILE"
-fi
-
 # Auto-commit content-tracker.md if changed
 cd "$CONTENT_DIR"
 if ! git diff --quiet metrics/content-tracker.md 2>/dev/null; then
