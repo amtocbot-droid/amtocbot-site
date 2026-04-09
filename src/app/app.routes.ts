@@ -14,6 +14,7 @@ export const routes: Routes = [
       { path: 'metrics', loadComponent: () => import('./features/metrics/metrics.component').then(m => m.MetricsComponent) },
       { path: 'resources', loadComponent: () => import('./features/resources/resources.component').then(m => m.ResourcesComponent) },
       { path: 'about', loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent) },
+      { path: 'planner', loadComponent: () => import('./features/planner/planner.component').then(m => m.PlannerComponent) },
       { path: 'admin', loadComponent: () => import('./features/admin/admin.component').then(m => m.AdminComponent) },
     ],
   },

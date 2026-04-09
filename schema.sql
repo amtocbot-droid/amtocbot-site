@@ -148,6 +148,45 @@ CREATE TABLE IF NOT EXISTS summaries (
   social_posts INTEGER DEFAULT 0
 );
 
+-- ── Calendar Planner ──────────────────────────────────────────
+INSERT OR IGNORE INTO schema_version (version, description) VALUES (3, 'Calendar planner: calendar_proposals, calendar_items');
+
+CREATE TABLE IF NOT EXISTS calendar_proposals (
+  id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+  week_start          TEXT NOT NULL,
+  status              TEXT DEFAULT 'draft',
+  generated_at        TEXT,
+  trigger_type        TEXT DEFAULT 'cron',
+  trend_sources       TEXT,
+  performance_summary TEXT,
+  created_at          TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_proposals_week ON calendar_proposals(week_start DESC);
+
+CREATE TABLE IF NOT EXISTS calendar_items (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  proposal_id     INTEGER NOT NULL REFERENCES calendar_proposals(id),
+  day             TEXT NOT NULL,
+  slot            INTEGER DEFAULT 0,
+  type            TEXT NOT NULL,
+  title           TEXT NOT NULL,
+  topic           TEXT,
+  level           TEXT,
+  reasoning       TEXT,
+  status          TEXT DEFAULT 'proposed',
+  content_id      TEXT,
+  created_at      TEXT DEFAULT (datetime('now')),
+  updated_at      TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_items_proposal ON calendar_items(proposal_id);
+CREATE INDEX IF NOT EXISTS idx_items_day ON calendar_items(day);
+
+-- Seed calendar automation flags
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.calendar-generate.paused', 'false');
+INSERT OR IGNORE INTO site_config (key, value) VALUES ('automation.calendar-generate.trigger_requested', 'false');
+
 -- Seed scalar config values
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('tiktok_count', '0');
 INSERT OR IGNORE INTO site_config (key, value) VALUES ('platform_count', '8');
