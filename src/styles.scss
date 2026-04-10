@@ -49,3 +49,57 @@ a { transition: color 0.2s ease; }
 a[mat-button], a[mat-raised-button], a[mat-stroked-button], a[mat-icon-button] {
   text-decoration: none;
 }
+
+/* ── Theme: Custom Properties ───────────────────────────────── */
+body.theme-warm-glow {
+  --bg-primary: #0a0a0a;
+  --bg-surface: rgba(255,255,255,0.04);
+  --bg-surface-hover: rgba(255,255,255,0.07);
+  --border-color: rgba(255,255,255,0.08);
+  --accent: #fb923c;
+  --accent-end: #f43f5e;
+  --accent-gradient: linear-gradient(90deg, #fb923c, #f43f5e);
+  --text-primary: #e2e8f0;
+  --text-secondary: #9ca3af;
+  --text-accent: #fb923c;
+  --header-bg: rgba(10,10,10,0.96);
+  --card-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+body.theme-dark-tech {
+  --bg-primary: #0f0f23;
+  --bg-surface: rgba(255,255,255,0.05);
+  --bg-surface-hover: rgba(255,255,255,0.09);
+  --border-color: rgba(255,255,255,0.1);
+  --accent: #7c3aed;
+  --accent-end: #4f46e5;
+  --accent-gradient: linear-gradient(90deg, #7c3aed, #4f46e5);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-accent: #a78bfa;
+  --header-bg: rgba(15,15,35,0.96);
+  --card-shadow: 0 2px 16px rgba(0,0,0,0.5);
+}
+
+body.theme-light {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --border-color: #e2e8f0;
+  --accent: #6366f1;
+  --accent-end: #8b5cf6;
+  --accent-gradient: linear-gradient(90deg, #6366f1, #8b5cf6);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-accent: #6366f1;
+  --header-bg: rgba(255,255,255,0.96);
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Apply bg-primary to the page regardless of Material's surface var */
+body.theme-warm-glow,
+body.theme-dark-tech,
+body.theme-light {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
