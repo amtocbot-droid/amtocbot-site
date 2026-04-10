@@ -8,7 +8,8 @@ const STORAGE_KEY = 'amtocbot-theme';
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private platformId = inject(PLATFORM_ID);
-  currentTheme = signal<Theme>('theme-warm-glow');
+  private readonly _currentTheme = signal<Theme>('theme-warm-glow');
+  readonly currentTheme = this._currentTheme.asReadonly();
 
   loadTheme(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -29,6 +30,6 @@ export class ThemeService {
       document.body.classList.remove(...ALL_THEMES);
       document.body.classList.add(theme);
     }
-    this.currentTheme.set(theme);
+    this._currentTheme.set(theme);
   }
 }
