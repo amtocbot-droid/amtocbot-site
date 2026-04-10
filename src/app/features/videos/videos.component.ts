@@ -1,177 +1,139 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ContentService } from '../../shared/services/content.service';
+
+type VideoFilter = 'all' | 'video' | 'short';
+const LEVEL_COLORS: Record<string, string> = {
+  'Beginner': '#22c55e', 'Intermediate': '#3b82f6', 'Advanced': '#f59e0b', 'Professional': '#ef4444',
+};
 
 @Component({
   selector: 'app-videos',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatChipsModule, MatIconModule],
+  imports: [],
   template: `
     <div class="videos-page">
-      <h1 class="page-title">Videos, Shorts & Podcast</h1>
+      <div class="page-header">
+        <h1 class="page-title">Videos</h1>
+        <p class="page-sub">{{ filtered().length }} items</p>
+      </div>
 
-      <h2 class="section-title">YouTube Videos</h2>
+      <div class="filter-bar">
+        <button class="chip" [class.active]="typeFilter() === 'all'" (click)="typeFilter.set('all')">All</button>
+        <button class="chip" [class.active]="typeFilter() === 'video'" (click)="typeFilter.set('video')">Full Videos</button>
+        <button class="chip" [class.active]="typeFilter() === 'short'" (click)="typeFilter.set('short')">Shorts</button>
+      </div>
+
       <div class="card-grid">
-        @for (video of videoList(); track video.id) {
-          <mat-card class="video-card">
-            <img [src]="getThumbnail(video.youtubeUrl)"
-                 [alt]="video.title"
-                 class="video-thumb" />
-            <mat-card-header>
-              <mat-card-title>{{ video.title }}</mat-card-title>
-              <mat-card-subtitle>{{ video.duration }}</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-content>
-              <mat-chip-set>
-                <mat-chip [class]="'level-' + video.level.toLowerCase()">
-                  {{ video.level }}
-                </mat-chip>
-              </mat-chip-set>
-            </mat-card-content>
-            <mat-card-actions>
-              <a mat-button [href]="video.youtubeUrl" target="_blank" rel="noopener">
-                <mat-icon>play_circle</mat-icon> Watch on YouTube
-              </a>
-            </mat-card-actions>
-          </mat-card>
+        @for (v of filtered(); track v.id) {
+          <a [href]="v.youtubeUrl" target="_blank" rel="noopener" class="video-card">
+            <div class="thumb-wrap">
+              <img [src]="thumb(v.youtubeUrl)" [alt]="v.title" class="thumb" loading="lazy" />
+              @if (v.duration) {
+                <span class="duration">{{ v.duration }}</span>
+              }
+              <span class="type-badge" [class.short-badge]="v.type === 'short'">
+                {{ v.type === 'short' ? 'Short' : 'Video' }}
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="badge" [style.background]="levelColor(v.level)">{{ v.level }}</span>
+                <span class="card-date">{{ v.date }}</span>
+              </div>
+              <div class="card-title">{{ v.title }}</div>
+              <span class="card-cta">Watch →</span>
+            </div>
+          </a>
         }
       </div>
 
-      @if (shortsList().length > 0) {
-        <h2 class="section-title shorts-heading">YouTube Shorts</h2>
-        <div class="card-grid shorts-grid">
-          @for (short of shortsList(); track short.id) {
-            <mat-card class="video-card short-card">
-              <img [src]="getThumbnail(short.youtubeUrl)"
-                   [alt]="short.title"
-                   class="video-thumb short-thumb" />
-              <mat-card-header>
-                <mat-card-title class="short-title">{{ short.title }}</mat-card-title>
-                <mat-card-subtitle>{{ short.duration }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-actions>
-                <a mat-button [href]="short.youtubeUrl" target="_blank" rel="noopener">
-                  <mat-icon>play_circle</mat-icon> Watch
-                </a>
-              </mat-card-actions>
-            </mat-card>
-          }
-        </div>
-      }
-
-      @if (podcastList().length > 0) {
-        <h2 class="section-title podcast-heading">Podcast</h2>
-        <div class="card-grid">
-          @for (ep of podcastList(); track ep.id) {
-            <mat-card class="video-card podcast-card">
-              <img [src]="getThumbnail(ep.youtubeUrl)"
-                   [alt]="ep.title"
-                   class="video-thumb" />
-              <mat-card-header>
-                <mat-card-title>{{ ep.title }}</mat-card-title>
-                <mat-card-subtitle>{{ ep.duration }}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                <mat-chip-set>
-                  <mat-chip class="podcast-chip">Podcast</mat-chip>
-                </mat-chip-set>
-              </mat-card-content>
-              <mat-card-actions>
-                <a mat-button [href]="ep.youtubeUrl" target="_blank" rel="noopener">
-                  <mat-icon>headphones</mat-icon> Listen
-                </a>
-              </mat-card-actions>
-            </mat-card>
-          }
-        </div>
+      @if (filtered().length === 0) {
+        <p class="empty">No videos found.</p>
       }
     </div>
   `,
   styles: [`
-    .videos-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem;
+    .videos-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-header { margin-bottom: 1.5rem; }
+    .page-title { font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 0 0 0.25rem; }
+    .page-sub { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+    .filter-bar { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .chip {
+      padding: 0.3rem 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      background: none;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-
-    .page-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 0 0 1.5rem;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #334155;
-      margin: 0 0 1.25rem;
-    }
-
-    .podcast-heading { margin-top: 3rem; }
-
+    .chip:hover { border-color: var(--accent); color: var(--text-accent); }
+    .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
     }
-
     .video-card {
-      transition: box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .video-card:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    .video-card:hover { border-color: var(--accent); box-shadow: var(--card-shadow); }
+    .thumb-wrap { position: relative; }
+    .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+    .duration {
+      position: absolute;
+      bottom: 0.4rem;
+      right: 0.4rem;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
     }
-
-    .video-thumb {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      object-fit: cover;
-      border-radius: 4px 4px 0 0;
+    .type-badge {
+      position: absolute;
+      top: 0.4rem;
+      left: 0.4rem;
+      background: rgba(251,146,60,0.85);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
     }
-
-    .shorts-heading { margin-top: 3rem; }
-
-    .shorts-grid {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    }
-
-    .short-card {
-      max-width: 220px;
-    }
-
-    .short-thumb {
-      aspect-ratio: 9 / 16 !important;
-    }
-
-    .short-title {
-      font-size: 0.9rem !important;
-    }
-
-    .podcast-chip {
-      background: #7c3aed !important;
-      color: #fff !important;
-    }
+    .short-badge { background: rgba(167,139,250,0.85) !important; }
+    .card-body { padding: 0.85rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .card-meta { display: flex; align-items: center; gap: 0.5rem; }
+    .badge { font-size: 0.65rem; font-weight: 700; color: #fff; padding: 0.15rem 0.5rem; border-radius: 4px; }
+    .card-date { font-size: 0.7rem; color: var(--text-secondary); }
+    .card-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-cta { font-size: 0.78rem; color: var(--text-accent); font-weight: 600; margin-top: 0.25rem; }
+    .empty { text-align: center; color: var(--text-secondary); padding: 3rem; }
   `],
 })
 export class VideosComponent implements OnInit {
-  private content = inject(ContentService);
+  private cs = inject(ContentService);
+  typeFilter = signal<VideoFilter>('all');
 
-  videoList = computed(() => this.content.videos().filter(v => v.type === 'video'));
-  shortsList = computed(() => this.content.videos().filter(v => v.type === 'short'));
-  podcastList = computed(() => this.content.videos().filter(v => v.type === 'podcast'));
+  filtered = computed(() => {
+    const f = this.typeFilter();
+    const all = this.cs.videos().filter(v => v.type === 'video' || v.type === 'short');
+    return f === 'all' ? all : all.filter(v => v.type === f);
+  });
 
-  ngOnInit(): void {
-    this.content.load();
-  }
-
-  getThumbnail(url: string): string {
-    const id = url.split('/').pop() ?? '';
-    return `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  }
+  ngOnInit(): void { this.cs.load(); }
+  thumb(url: string): string { return `https://img.youtube.com/vi/${url.split('/').pop() ?? ''}/hqdefault.jpg`; }
+  levelColor(level: string): string { return LEVEL_COLORS[level] ?? '#6b7280'; }
 }
 
 export default VideosComponent;
