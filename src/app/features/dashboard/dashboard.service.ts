@@ -144,4 +144,8 @@ export class DashboardService {
   updateUserRole(userId: number, role: string): Observable<{ success: boolean; username: string; role: string }> {
     return this.http.patch<{ success: boolean; username: string; role: string }>(`/api/dashboard/users/${userId}`, { role });
   }
+
+  inviteUser(data: { username: string; email: string; role: string }): Observable<{ success: boolean; message: string }> {
+    return this.http.post<{ success: boolean; message: string }>('/api/auth/invite', data);
+  }
 }

@@ -35,6 +35,7 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
         </nav>
 
         <div class="header-right">
+          <a routerLink="/dashboard" routerLinkActive="nav-active" class="dashboard-link">Dashboard</a>
           <app-theme-toggle />
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener" class="courses-btn">
             Get Courses →
@@ -64,6 +65,8 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
             <a routerLink="/resources" (click)="mobileOpen.set(false)" class="mobile-link">Resources</a>
             <a routerLink="/metrics" (click)="mobileOpen.set(false)" class="mobile-link">Metrics</a>
           </details>
+          <a routerLink="/dashboard" routerLinkActive="mobile-active" class="mobile-link"
+             (click)="mobileOpen.set(false)">Dashboard</a>
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener"
              class="courses-btn mobile-courses" (click)="mobileOpen.set(false)">
             Get Courses →
@@ -200,6 +203,20 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
       display: flex;
       align-items: center;
       gap: 1rem;
+    }
+    .dashboard-link {
+      color: var(--text-secondary, #9ca3af);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .dashboard-link:hover,
+    .dashboard-link.nav-active {
+      color: var(--text-accent, #fb923c);
+      background: var(--bg-surface, rgba(255,255,255,0.04));
     }
     .courses-btn {
       background: var(--accent-gradient, linear-gradient(90deg, #fb923c, #f43f5e));
