@@ -15,6 +15,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService, type Permission } from '../../shared/services/auth.service';
 import { DashboardService, type DashboardStats, type ContentItem, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
+import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,6 +25,7 @@ import { DashboardService, type DashboardStats, type ContentItem, type Issue, ty
     MatCardModule, MatButtonModule, MatIconModule, MatTabsModule, MatTableModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatChipsModule,
     MatProgressBarModule, MatDialogModule, MatSnackBarModule,
+    ReferralsTabComponent,
   ],
   template: `
     <div class="dashboard-container">
@@ -341,6 +343,36 @@ import { DashboardService, type DashboardStats, type ContentItem, type Issue, ty
         @if (auth.hasRole('admin')) {
           <mat-tab label="Users">
             <div class="tab-content">
+              <mat-card class="invite-card">
+                <mat-card-header>
+                  <mat-card-title>Invite User</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="invite-form">
+                    <mat-form-field>
+                      <mat-label>Username</mat-label>
+                      <input matInput [(ngModel)]="inviteForm.username" placeholder="e.g. johndoe" />
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-label>Email</mat-label>
+                      <input matInput [(ngModel)]="inviteForm.email" placeholder="user@example.com" type="email" />
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-label>Role</mat-label>
+                      <mat-select [(ngModel)]="inviteForm.role">
+                        <mat-option value="tester">tester</mat-option>
+                        <mat-option value="approver">approver</mat-option>
+                        <mat-option value="reviewer">reviewer</mat-option>
+                        <mat-option value="admin">admin</mat-option>
+                        <mat-option value="member">member</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" (click)="inviteUser()" [disabled]="!inviteForm.username || !inviteForm.email">
+                      <mat-icon>person_add</mat-icon> Invite
+                    </button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
               <table mat-table [dataSource]="users()" class="full-width-table">
                 <ng-container matColumnDef="username">
                   <th mat-header-cell *matHeaderCellDef>Username</th>
@@ -373,6 +405,15 @@ import { DashboardService, type DashboardStats, type ContentItem, type Issue, ty
                 <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
               </table>
+            </div>
+          </mat-tab>
+        }
+
+        <!-- Referrals Tab — admin only -->
+        @if (auth.role() === 'admin') {
+          <mat-tab label="Referrals">
+            <div class="tab-content">
+              <app-referrals-tab />
             </div>
           </mat-tab>
         }
@@ -418,6 +459,9 @@ import { DashboardService, type DashboardStats, type ContentItem, type Issue, ty
     .issue-link { color: #3b82f6; cursor: pointer; text-decoration: none; }
     .issue-link:hover { text-decoration: underline; }
     .inline-select { width: 120px; }
+    .invite-card { margin-bottom: 16px; }
+    .invite-form { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .invite-form mat-form-field { width: 180px; }
 
     /* Chips */
     .type-chip, .qa-chip, .severity-chip {
@@ -472,6 +516,7 @@ export class DashboardComponent implements OnInit {
   showNewIssue = false;
   newIssue = { title: '', description: '', type: 'bug', severity: 'medium' };
   newComment = '';
+  inviteForm = { username: '', email: '', role: 'tester' };
 
   ngOnInit() {
     this.loadStats();
@@ -561,6 +606,18 @@ export class DashboardComponent implements OnInit {
     this.svc.listUsers().subscribe({
       next: r => { this.users.set(r.users); this.loading.set(false); },
       error: () => { this.toast('Failed to load users'); this.loading.set(false); },
+    });
+  }
+
+  inviteUser() {
+    if (!this.inviteForm.username || !this.inviteForm.email) return;
+    this.svc.inviteUser(this.inviteForm).subscribe({
+      next: (r) => {
+        this.toast(r.message);
+        this.inviteForm = { username: '', email: '', role: 'tester' };
+        this.loadUsers();
+      },
+      error: (e) => this.toast(e.error?.error || 'Failed to invite user'),
     });
   }
 
