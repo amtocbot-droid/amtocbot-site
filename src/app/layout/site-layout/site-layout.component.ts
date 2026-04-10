@@ -1,176 +1,306 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
+import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-site-layout',
   standalone: true,
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-  ],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, ThemeToggleComponent],
   template: `
-    <mat-sidenav-container class="layout-container">
-      <mat-sidenav #sidenav mode="over" class="mobile-nav">
-        <mat-nav-list>
-          @for (link of navLinks; track link.path) {
-            <a mat-list-item
-               [routerLink]="link.path"
-               routerLinkActive="active-link"
-               [routerLinkActiveOptions]="{ exact: link.path === '/' }"
-               (click)="sidenav.close()">
-              <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
-              <span>{{ link.label }}</span>
-            </a>
-          }
-        </mat-nav-list>
-      </mat-sidenav>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-inner">
+        <a routerLink="/" class="logo">
+          <img src="logo-32.png" alt="AmtocSoft logo" width="28" height="28" />
+          AmtocSoft
+        </a>
 
-      <mat-sidenav-content>
-        <mat-toolbar class="header">
-          <button mat-icon-button class="menu-btn" (click)="sidenav.toggle()">
-            <mat-icon>menu</mat-icon>
-          </button>
-          <a routerLink="/" class="logo">
-            <img src="logo-32.png" alt="AmtocSoft" class="logo-icon" width="28" height="28" />
-            AmtocSoft
-          </a>
-          <span class="spacer"></span>
-          <nav class="desktop-nav">
-            @for (link of navLinks; track link.path) {
-              <a mat-button
-                 [routerLink]="link.path"
-                 routerLinkActive="active-nav"
-                 [routerLinkActiveOptions]="{ exact: link.path === '/' }">
-                {{ link.label }}
-              </a>
-            }
-          </nav>
-        </mat-toolbar>
-
-        <main class="content">
-          <router-outlet />
-        </main>
-
-        <footer class="footer">
-          <div class="footer-inner">
-            <span class="footer-brand">Powered by AmtocSoft</span>
-            <a href="https://buymeacoffee.com/amtocsoft" target="_blank" rel="noopener" class="bmc-link">☕ Buy Me a Coffee</a>
-            <div class="footer-links">
-              <a href="https://amtocsoft.blogspot.com" target="_blank" rel="noopener" aria-label="Blog">
-                <mat-icon>article</mat-icon>
-              </a>
-              <a href="https://www.youtube.com/@quietsentinelshadow" target="_blank" rel="noopener" aria-label="YouTube">
-                <mat-icon>play_circle</mat-icon>
-              </a>
-              <a href="https://www.linkedin.com/in/toc-am-b301373b4/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                <mat-icon>person</mat-icon>
-              </a>
-              <a href="https://x.com/AmToc96282" target="_blank" rel="noopener" aria-label="X / Twitter">
-                <mat-icon>tag</mat-icon>
-              </a>
-              <a href="https://www.tiktok.com/@amtocbot" target="_blank" rel="noopener" aria-label="TikTok">
-                <mat-icon>music_note</mat-icon>
-              </a>
-              <a href="https://www.instagram.com/amtocsoft" target="_blank" rel="noopener" aria-label="Instagram">
-                <mat-icon>photo_camera</mat-icon>
-              </a>
-              <a href="https://github.com/amtocbot-droid" target="_blank" rel="noopener" aria-label="GitHub">
-                <mat-icon>code</mat-icon>
-              </a>
-              <a href="mailto:hello@amtocbot.com" aria-label="Email">
-                <mat-icon>email</mat-icon>
-              </a>
-            </div>
-            <div class="footer-newsletter">
-              <span class="footer-newsletter-label">Get AI insights weekly:</span>
-              <form class="newsletter-form" (submit)="onSubscribe($event)">
-                <input type="email" placeholder="your@email.com" class="newsletter-input" required #emailInput />
-                <button type="submit" class="newsletter-btn">Subscribe</button>
-              </form>
-              @if (subscribeStatus) {
-                <span class="newsletter-status">{{ subscribeStatus }}</span>
-              }
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <div class="nav-dropdown">
+            <button class="nav-btn">Learn <span class="chevron">▾</span></button>
+            <div class="dropdown-menu">
+              <a routerLink="/blog" routerLinkActive="dropdown-active" class="dropdown-item">Blog</a>
+              <a routerLink="/videos" routerLinkActive="dropdown-active" class="dropdown-item">Videos</a>
+              <a routerLink="/podcasts" routerLinkActive="dropdown-active" class="dropdown-item">Podcasts</a>
             </div>
           </div>
-        </footer>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
-  `,
-  styles: [`
-    :host { display: block; height: 100%; }
+          <div class="nav-dropdown">
+            <button class="nav-btn">Community <span class="chevron">▾</span></button>
+            <div class="dropdown-menu">
+              <a routerLink="/about" routerLinkActive="dropdown-active" class="dropdown-item">About</a>
+              <a routerLink="/resources" routerLinkActive="dropdown-active" class="dropdown-item">Resources</a>
+              <a routerLink="/metrics" routerLinkActive="dropdown-active" class="dropdown-item">Metrics</a>
+            </div>
+          </div>
+        </nav>
 
-    .layout-container { height: 100%; }
+        <div class="header-right">
+          <app-theme-toggle />
+          <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener" class="courses-btn">
+            Get Courses →
+          </a>
+        </div>
 
-    .header {
-      background: #1e3a8a;
-      color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+        <button class="hamburger" (click)="mobileOpen.set(!mobileOpen())" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile overlay -->
+    @if (mobileOpen()) {
+      <div class="mobile-overlay" (click)="mobileOpen.set(false)" role="dialog" aria-modal="true">
+        <nav class="mobile-nav" (click)="$event.stopPropagation()" aria-label="Mobile navigation">
+          <button class="mobile-close" (click)="mobileOpen.set(false)" aria-label="Close menu">✕</button>
+          <details open>
+            <summary class="mobile-section">Learn</summary>
+            <a routerLink="/blog" (click)="mobileOpen.set(false)" class="mobile-link">Blog</a>
+            <a routerLink="/videos" (click)="mobileOpen.set(false)" class="mobile-link">Videos</a>
+            <a routerLink="/podcasts" (click)="mobileOpen.set(false)" class="mobile-link">Podcasts</a>
+          </details>
+          <details>
+            <summary class="mobile-section">Community</summary>
+            <a routerLink="/about" (click)="mobileOpen.set(false)" class="mobile-link">About</a>
+            <a routerLink="/resources" (click)="mobileOpen.set(false)" class="mobile-link">Resources</a>
+            <a routerLink="/metrics" (click)="mobileOpen.set(false)" class="mobile-link">Metrics</a>
+          </details>
+          <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener"
+             class="courses-btn mobile-courses" (click)="mobileOpen.set(false)">
+            Get Courses →
+          </a>
+          <div class="mobile-theme">
+            <span class="mobile-theme-label">Theme</span>
+            <app-theme-toggle />
+          </div>
+        </nav>
+      </div>
     }
 
+    <!-- Page content -->
+    <main class="content">
+      <router-outlet />
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="footer-brand">Powered by AmtocSoft</span>
+        <a href="https://buymeacoffee.com/amtocsoft" target="_blank" rel="noopener" class="bmc-link">
+          ☕ Buy Me a Coffee
+        </a>
+        <div class="footer-links">
+          <a href="https://amtocsoft.blogspot.com" target="_blank" rel="noopener" aria-label="Blog">📝</a>
+          <a href="https://www.youtube.com/@quietsentinelshadow" target="_blank" rel="noopener" aria-label="YouTube">▶</a>
+          <a href="https://www.linkedin.com/in/toc-am-b301373b4/" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+          <a href="https://x.com/AmToc96282" target="_blank" rel="noopener" aria-label="X">𝕏</a>
+          <a href="https://www.tiktok.com/@amtocbot" target="_blank" rel="noopener" aria-label="TikTok">♪</a>
+          <a href="https://github.com/amtocbot-droid" target="_blank" rel="noopener" aria-label="GitHub">&lt;/&gt;</a>
+          <a href="mailto:hello@amtocbot.com" aria-label="Email">✉</a>
+        </div>
+        <div class="footer-newsletter">
+          <span>Get AI insights weekly:</span>
+          <form class="newsletter-form" (submit)="onSubscribe($event)">
+            <input type="email" placeholder="your@email.com" class="newsletter-input" required #emailInput />
+            <button type="submit" class="newsletter-btn">Subscribe</button>
+          </form>
+          @if (subscribeStatus) {
+            <span class="newsletter-status">{{ subscribeStatus }}</span>
+          }
+        </div>
+      </div>
+    </footer>
+  `,
+  styles: [`
+    :host { display: block; }
+
+    /* ── Header ── */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--header-bg, rgba(10,10,10,0.96));
+      border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
     .logo {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-primary, #e2e8f0);
       text-decoration: none;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
     }
+    .logo img { border-radius: 4px; }
 
-    .logo-icon {
-      border-radius: 4px;
-    }
-
-    .spacer { flex: 1; }
-
-    .desktop-nav a {
-      color: rgba(255, 255, 255, 0.85);
+    /* ── Desktop nav dropdowns ── */
+    .desktop-nav { display: flex; gap: 0.25rem; }
+    .nav-dropdown { position: relative; }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary, #9ca3af);
+      font-size: 0.9rem;
       font-weight: 500;
-      text-transform: uppercase;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .nav-btn:hover {
+      color: var(--text-primary, #e2e8f0);
+      background: var(--bg-surface, rgba(255,255,255,0.04));
+    }
+    .chevron { font-size: 0.65rem; opacity: 0.7; }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      min-width: 150px;
+      background: var(--header-bg, rgba(10,10,10,0.96));
+      border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+      border-radius: 10px;
+      padding: 0.4rem 0;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--card-shadow, 0 8px 24px rgba(0,0,0,0.4));
+    }
+    .nav-dropdown:hover .dropdown-menu { display: block; }
+    .dropdown-item {
+      display: block;
+      padding: 0.55rem 1rem;
+      color: var(--text-secondary, #9ca3af);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.15s, background 0.15s;
+    }
+    .dropdown-item:hover,
+    .dropdown-item.dropdown-active {
+      color: var(--text-accent, #fb923c);
+      background: var(--bg-surface, rgba(255,255,255,0.04));
+    }
+
+    /* ── Header right ── */
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .courses-btn {
+      background: var(--accent-gradient, linear-gradient(90deg, #fb923c, #f43f5e));
+      color: #fff !important;
+      text-decoration: none;
+      padding: 0.45rem 1.1rem;
+      border-radius: 20px;
       font-size: 0.85rem;
-      letter-spacing: 0.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .courses-btn:hover { opacity: 0.9; }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      margin-left: auto;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text-primary, #e2e8f0);
+      border-radius: 2px;
     }
 
-    .desktop-nav a.active-nav {
-      color: #fff;
-      border-bottom: 2px solid #60a5fa;
+    /* ── Mobile overlay ── */
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 300;
+      backdrop-filter: blur(4px);
     }
-
-    .menu-btn { display: none; }
-
     .mobile-nav {
-      width: 260px;
-      background: #1a1f36;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(300px, 85vw);
+      height: 100vh;
+      background: var(--header-bg, rgba(10,10,10,0.98));
+      border-left: 1px solid var(--border-color);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
-
-    .mobile-nav a { color: #e2e8f0; }
-    .mobile-nav .active-link { color: #60a5fa; }
-
-    .content {
-      min-height: calc(100vh - 64px - 120px);
-      background: #f8fafc;
+    .mobile-close {
+      align-self: flex-end;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
     }
+    .mobile-nav details { border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+    .mobile-section {
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.6rem 0;
+      cursor: pointer;
+      list-style: none;
+    }
+    .mobile-section::-webkit-details-marker { display: none; }
+    .mobile-link {
+      display: block;
+      padding: 0.45rem 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .mobile-link:hover { color: var(--text-accent); }
+    .mobile-courses { display: inline-block; margin-top: 1rem; }
+    .mobile-theme {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: auto;
+      padding-top: 1.5rem;
+    }
+    .mobile-theme-label { color: var(--text-secondary); font-size: 0.85rem; }
 
+    /* ── Content ── */
+    .content { min-height: calc(100vh - 60px - 140px); }
+
+    /* ── Footer ── */
     .footer {
-      background: #1a1f36;
-      color: #94a3b8;
+      background: var(--bg-surface, rgba(255,255,255,0.04));
+      border-top: 1px solid var(--border-color);
       padding: 2rem 1.5rem;
     }
-
     .footer-inner {
       max-width: 1200px;
       margin: 0 auto;
@@ -180,110 +310,47 @@ import { MatListModule } from '@angular/material/list';
       flex-wrap: wrap;
       gap: 1rem;
     }
-
-    .footer-brand {
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .bmc-link {
-      color: #f59e0b;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .bmc-link:hover { color: #fbbf24; }
-
-    .footer-links {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .footer-links a {
-      color: #94a3b8;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: #60a5fa; }
-
-    .footer-newsletter {
-      width: 100%;
-      text-align: center;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #2d3548;
-    }
-
-    .footer-newsletter-label {
-      font-size: 0.85rem;
-      margin-right: 0.75rem;
-    }
-
-    .newsletter-form {
-      display: inline-flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
+    .footer-brand { color: var(--text-secondary); font-size: 0.9rem; }
+    .bmc-link { color: #f59e0b; font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+    .footer-links { display: flex; gap: 1rem; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 1rem; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--text-accent); }
+    .footer-newsletter { width: 100%; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem; margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.85rem; }
+    .newsletter-form { display: inline-flex; gap: 0.5rem; margin: 0.5rem 0; }
     .newsletter-input {
-      padding: 0.5rem 1rem;
-      border: 1px solid #475569;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--border-color);
       border-radius: 6px;
-      background: #2d3548;
-      color: #e2e8f0;
-      font-size: 0.9rem;
-      width: 220px;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      width: 200px;
     }
-
-    .newsletter-input::placeholder { color: #64748b; }
-
     .newsletter-btn {
-      padding: 0.5rem 1.25rem;
-      background: #3b82f6;
+      padding: 0.45rem 1rem;
+      background: var(--accent-gradient);
       color: #fff;
       border: none;
       border-radius: 6px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: background 0.2s;
     }
-
-    .newsletter-btn:hover { background: #2563eb; }
-
-    .newsletter-status {
-      display: block;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-      color: #60a5fa;
-    }
+    .newsletter-status { display: block; font-size: 0.8rem; color: var(--text-accent); margin-top: 0.25rem; }
 
     @media (max-width: 768px) {
-      .menu-btn { display: inline-flex; }
       .desktop-nav { display: none; }
-      .newsletter-form { flex-direction: column; align-items: center; }
-      .newsletter-input { width: 100%; max-width: 280px; }
+      .header-right { display: none; }
+      .hamburger { display: flex; }
     }
-
     @media (min-width: 769px) {
-      .menu-btn { display: none; }
+      .hamburger { display: none; }
+      .mobile-overlay { display: none; }
     }
   `],
 })
 export class SiteLayoutComponent {
-  navLinks = [
-    { path: '/', label: 'Home', icon: 'home' },
-    { path: '/blog', label: 'Blog', icon: 'article' },
-    { path: '/videos', label: 'Videos', icon: 'play_circle' },
-    { path: '/podcasts', label: 'Podcasts', icon: 'podcasts' },
-    { path: '/metrics', label: 'Metrics', icon: 'bar_chart' },
-    { path: '/resources', label: 'Resources', icon: 'link' },
-    { path: '/about', label: 'About', icon: 'info' },
-    { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
-  ];
-
+  mobileOpen = signal(false);
   subscribeStatus = '';
 
   async onSubscribe(event: Event): Promise<void> {
@@ -292,22 +359,13 @@ export class SiteLayoutComponent {
     const input = form.querySelector('input[type="email"]') as HTMLInputElement;
     const email = input?.value?.trim();
     if (!email) return;
-
     this.subscribeStatus = 'Subscribing...';
     try {
-      const resp = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      if (resp.ok) {
-        this.subscribeStatus = 'Subscribed! Check your inbox.';
-        input.value = '';
-      } else {
-        this.subscribeStatus = 'Something went wrong. Try again.';
-      }
+      const r = await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+      this.subscribeStatus = r.ok ? '✓ Subscribed! Check your inbox.' : 'Something went wrong.';
+      if (r.ok) input.value = '';
     } catch {
-      this.subscribeStatus = 'Network error. Try again later.';
+      this.subscribeStatus = 'Network error. Try again.';
     }
   }
 }
