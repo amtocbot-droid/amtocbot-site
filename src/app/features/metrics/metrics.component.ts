@@ -160,58 +160,53 @@ interface MetricsApiResponse {
     </div>
   `,
   styles: [`
-    .metrics-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem;
-    }
-
-    .page-title {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 0 0 2rem;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #334155;
-      margin: 2.5rem 0 1rem;
-    }
+    .metrics-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .page-title { font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 0 0 2rem; }
+    .section-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 2rem 0 1rem; }
 
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-
     .stat-card {
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 10px !important;
+      padding: 1.25rem !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
       text-align: center;
-      padding: 2rem 1rem;
+      box-shadow: none !important;
     }
+    .stat-icon { color: var(--text-accent) !important; font-size: 1.5rem !important; }
+    .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--text-accent); }
+    .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .stat-icon {
-      color: #1e40af;
-      font-size: 2rem;
-      width: 32px;
-      height: 32px;
-      margin-bottom: 0.5rem;
+    /* Platform table */
+    .platform-table {
+      width: 100%;
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
     }
+    .platform-table th { background: var(--bg-surface-hover) !important; color: var(--text-secondary) !important; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .platform-table td { color: var(--text-primary) !important; border-bottom-color: var(--border-color) !important; }
 
-    .stat-value {
-      display: block;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #1e40af;
+    /* Sync status */
+    .sync-card {
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-color) !important;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-top: 2rem;
     }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .sync-status { color: var(--text-secondary); font-size: 0.85rem; }
+    .last-sync { color: var(--text-accent); font-weight: 600; }
 
     .milestone-table {
       width: 100%;
@@ -245,11 +240,11 @@ interface MetricsApiResponse {
     .summary-card h3 {
       margin: 0 0 0.25rem;
       font-size: 1.1rem;
-      color: #1e293b;
+      color: var(--text-primary);
     }
 
     .summary-label {
-      color: #64748b;
+      color: var(--text-secondary);
       font-size: 0.85rem;
       margin: 0 0 1rem;
     }
@@ -259,20 +254,15 @@ interface MetricsApiResponse {
       flex-wrap: wrap;
       gap: 1rem;
       font-size: 0.95rem;
-      color: #334155;
+      color: var(--text-primary);
     }
 
     .summary-stats strong {
-      color: #1e40af;
-    }
-
-    .platform-table {
-      width: 100%;
-      margin-bottom: 1rem;
+      color: var(--text-accent);
     }
 
     .no-data {
-      color: #94a3b8;
+      color: var(--text-secondary);
       text-align: center;
       padding: 2rem;
       font-style: italic;
@@ -280,7 +270,7 @@ interface MetricsApiResponse {
 
     .refresh-time {
       font-size: 0.8rem;
-      color: #94a3b8;
+      color: var(--text-secondary);
       text-align: right;
       margin-top: 0.5rem;
     }
