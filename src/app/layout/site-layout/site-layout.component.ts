@@ -11,8 +11,8 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
     <header class="header">
       <div class="header-inner">
         <a routerLink="/" class="logo">
-          <img src="logo-32.png" alt="AmtocSoft logo" width="28" height="28" />
-          AmtocSoft
+          <img src="logo-32.png" alt="amtocbot logo" width="32" height="32" />
+          amtocbot
         </a>
 
         <nav class="desktop-nav" aria-label="Main navigation">
@@ -142,7 +142,7 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
       letter-spacing: 0.3px;
       flex-shrink: 0;
     }
-    .logo img { border-radius: 4px; }
+    .logo img { border-radius: 50%; }
 
     /* ── Desktop nav dropdowns ── */
     .desktop-nav { display: flex; gap: 0.25rem; }
