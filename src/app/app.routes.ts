@@ -23,6 +23,12 @@ export const routes: Routes = [
         canActivate: [authGuard],
         data: { roles: ['admin', 'tester', 'approver', 'reviewer'] },
       },
+      {
+        path: 'report',
+        loadComponent: () => import('./features/report/report.component').then(m => m.ReportComponent),
+        canActivate: [authGuard],
+        data: { roles: ['admin', 'tester'] },
+      },
     ],
   },
   { path: '**', redirectTo: '' },

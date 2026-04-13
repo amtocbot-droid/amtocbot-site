@@ -1,11 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-site-layout',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, ThemeToggleComponent],
+  // Note: CommonModule not needed — @if is available in standalone via Angular 17+
   template: `
     <!-- Header -->
     <header class="header">
@@ -35,6 +37,11 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
         </nav>
 
         <div class="header-right">
+          @if (auth.hasRole('admin', 'tester')) {
+            <a routerLink="/report" routerLinkActive="nav-active" class="dashboard-link report-link" title="Report an Issue">
+              🐛 Report
+            </a>
+          }
           <a routerLink="/dashboard" routerLinkActive="nav-active" class="dashboard-link">Dashboard</a>
           <app-theme-toggle />
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener" class="courses-btn">
@@ -67,6 +74,10 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
           </details>
           <a routerLink="/dashboard" routerLinkActive="mobile-active" class="mobile-link"
              (click)="mobileOpen.set(false)">Dashboard</a>
+          @if (auth.hasRole('admin', 'tester')) {
+            <a routerLink="/report" routerLinkActive="mobile-active" class="mobile-link"
+               (click)="mobileOpen.set(false)">🐛 Report Issue</a>
+          }
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener"
              class="courses-btn mobile-courses" (click)="mobileOpen.set(false)">
             Get Courses →
@@ -367,6 +378,7 @@ import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme
   `],
 })
 export class SiteLayoutComponent {
+  auth = inject(AuthService);
   mobileOpen = signal(false);
   subscribeStatus = '';
 

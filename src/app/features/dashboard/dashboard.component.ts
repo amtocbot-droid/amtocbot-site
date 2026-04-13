@@ -51,7 +51,7 @@ import { TutorialService } from './tutorial/tutorial.service';
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       }
 
-      <mat-tab-group (selectedTabChange)="onTabChange($event.index)" animationDuration="200ms">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event.index)" animationDuration="200ms">
         <!-- Overview Tab -->
         <mat-tab label="Overview">
           <div class="tab-content">
@@ -337,17 +337,22 @@ import { TutorialService } from './tutorial/tutorial.service';
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let item">
                     @if (auth.hasPermission('content.qa.update') && (item.qa_status === 'draft' || item.qa_status === 'flagged' || item.qa_status === 'rejected')) {
-                      <button mat-stroked-button color="primary" (click)="changeQA(item, 'in_review')">Submit for Review</button>
+                      <button mat-stroked-button color="primary" (click)="$event.stopPropagation(); changeQA(item, 'in_review')">Submit for Review</button>
                     }
                     @if (auth.hasPermission('content.qa.update') && item.qa_status !== 'flagged') {
-                      <button mat-stroked-button color="warn" (click)="changeQA(item, 'flagged')">Flag</button>
+                      <button mat-stroked-button color="warn" (click)="$event.stopPropagation(); changeQA(item, 'flagged')">Flag</button>
                     }
                     @if (auth.hasPermission('content.qa.approve') && item.qa_status === 'in_review') {
-                      <button mat-stroked-button color="primary" (click)="changeQA(item, 'approved')">Approve</button>
-                      <button mat-stroked-button color="warn" (click)="changeQA(item, 'rejected')">Reject</button>
+                      <button mat-stroked-button color="primary" (click)="$event.stopPropagation(); changeQA(item, 'approved')">Approve</button>
+                      <button mat-stroked-button color="warn" (click)="$event.stopPropagation(); changeQA(item, 'rejected')">Reject</button>
                     }
                     @if (auth.hasRole('admin') && item.qa_status === 'approved') {
-                      <button mat-stroked-button color="accent" (click)="changeQA(item, 'published')">Publish</button>
+                      <button mat-stroked-button color="accent" (click)="$event.stopPropagation(); changeQA(item, 'published')">Publish</button>
+                    }
+                    @if (auth.hasPermission('issues.create')) {
+                      <button mat-icon-button color="warn" title="Report Issue" (click)="$event.stopPropagation(); reportIssueFromContent(item)">
+                        <mat-icon>bug_report</mat-icon>
+                      </button>
                     }
                   </td>
                 </ng-container>
@@ -394,15 +399,23 @@ import { TutorialService } from './tutorial/tutorial.service';
             <!-- New Issue Form -->
             @if (showNewIssue) {
               <mat-card class="new-issue-card">
-                <mat-card-header><mat-card-title>New Issue</mat-card-title></mat-card-header>
+                <mat-card-header>
+                  <mat-card-title>{{ newIssue.content_id ? 'Report Issue' : 'New Issue' }}</mat-card-title>
+                </mat-card-header>
                 <mat-card-content>
+                  @if (newIssue.content_id) {
+                    <div class="linked-content-banner">
+                      <mat-icon>link</mat-icon>
+                      <span>Linked to: <strong>{{ newIssue.contentTitle }}</strong></span>
+                    </div>
+                  }
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Title</mat-label>
                     <input matInput [(ngModel)]="newIssue.title" />
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Description</mat-label>
-                    <textarea matInput [(ngModel)]="newIssue.description" rows="3"></textarea>
+                    <textarea matInput [(ngModel)]="newIssue.description" rows="3" placeholder="Describe the issue..."></textarea>
                   </mat-form-field>
                   <div class="form-row">
                     <mat-form-field appearance="outline">
@@ -427,7 +440,7 @@ import { TutorialService } from './tutorial/tutorial.service';
                   </div>
                   <div class="form-actions">
                     <button mat-raised-button color="primary" (click)="createIssue()" [disabled]="!newIssue.title">Create</button>
-                    <button mat-stroked-button (click)="showNewIssue = false">Cancel</button>
+                    <button mat-stroked-button (click)="cancelNewIssue()">Cancel</button>
                   </div>
                 </mat-card-content>
               </mat-card>
@@ -715,6 +728,13 @@ import { TutorialService } from './tutorial/tutorial.service';
     .feedback-body { margin: 0; white-space: pre-wrap; font-size: 14px; line-height: 1.5; }
     .resolve-btn { height: 24px; font-size: 11px; line-height: 24px; padding: 0 8px; }
     .no-feedback { color: #64748b; font-style: italic; font-size: 14px; }
+    .linked-content-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: #1e3a5f; border: 1px solid #3b82f6; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: #93c5fd;
+    }
+    .linked-content-banner mat-icon { font-size: 16px; height: 16px; width: 16px; color: #3b82f6; }
+    .linked-content-banner strong { color: #e2e8f0; }
   `],
 })
 export class DashboardComponent implements OnInit {
@@ -742,15 +762,19 @@ export class DashboardComponent implements OnInit {
   issueColumns = ['title', 'type', 'severity', 'status', 'assignee', 'created'];
   userColumns = ['username', 'email', 'role', 'invited_by', 'created_at'];
 
+  // Tab index (for programmatic switching)
+  selectedTabIndex = 0;
+
   // Filters
   contentTypeFilter = '';
   contentQAFilter = '';
   issueStatusFilter = '';
   issueSeverityFilter = '';
 
-  // New issue form
+  // New issue form (content_id + contentTitle are optional, used when reporting from a content row)
   showNewIssue = false;
-  newIssue = { title: '', description: '', type: 'bug', severity: 'medium' };
+  newIssue: { title: string; description: string; type: string; severity: string; content_id?: string; contentTitle?: string } =
+    { title: '', description: '', type: 'bug', severity: 'medium' };
   newComment = '';
   inviteForm = { username: '', email: '', role: 'tester' };
 
@@ -874,8 +898,30 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  reportIssueFromContent(item: ContentItem) {
+    const typeLabel = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+    this.newIssue = {
+      title: `[${typeLabel}] ${item.title}`,
+      description: '',
+      type: 'content_fix',
+      severity: 'medium',
+      content_id: item.id,
+      contentTitle: item.title,
+    };
+    this.showNewIssue = true;
+    // Switch to Issues tab (index 2 for all roles)
+    this.selectedTabIndex = 2;
+    if (this.issues().length === 0) this.loadIssues();
+  }
+
+  cancelNewIssue() {
+    this.showNewIssue = false;
+    this.newIssue = { title: '', description: '', type: 'bug', severity: 'medium' };
+  }
+
   createIssue() {
-    this.svc.createIssue(this.newIssue).subscribe({
+    const { contentTitle, ...payload } = this.newIssue;
+    this.svc.createIssue(payload).subscribe({
       next: () => {
         this.toast('Issue created');
         this.showNewIssue = false;
