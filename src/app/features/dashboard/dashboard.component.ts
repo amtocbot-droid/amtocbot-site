@@ -13,8 +13,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 import { AuthService, type Permission } from '../../shared/services/auth.service';
-import { DashboardService, type DashboardStats, type ContentItem, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
+import { DashboardService, type DashboardStats, type ContentItem, type ContentDetail, type ContentFeedback, type CreateContentBody, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
 import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
 
 @Component({
@@ -24,7 +25,7 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
     CommonModule, FormsModule,
     MatCardModule, MatButtonModule, MatIconModule, MatTabsModule, MatTableModule,
     MatSelectModule, MatFormFieldModule, MatInputModule, MatChipsModule,
-    MatProgressBarModule, MatDialogModule, MatSnackBarModule,
+    MatProgressBarModule, MatDialogModule, MatSnackBarModule, MatDividerModule,
     ReferralsTabComponent,
   ],
   template: `
@@ -101,73 +102,249 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
         <!-- Content QA Tab -->
         <mat-tab label="Content QA">
           <div class="tab-content">
-            <div class="filters-row">
-              <mat-form-field appearance="outline">
-                <mat-label>Type</mat-label>
-                <mat-select [(value)]="contentTypeFilter" (selectionChange)="loadContent()">
-                  <mat-option value="">All</mat-option>
-                  <mat-option value="blog">Blog</mat-option>
-                  <mat-option value="video">Video</mat-option>
-                  <mat-option value="short">Short</mat-option>
-                  <mat-option value="podcast">Podcast</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>QA Status</mat-label>
-                <mat-select [(value)]="contentQAFilter" (selectionChange)="loadContent()">
-                  <mat-option value="">All</mat-option>
-                  <mat-option value="draft">Draft</mat-option>
-                  <mat-option value="in_review">In Review</mat-option>
-                  <mat-option value="approved">Approved</mat-option>
-                  <mat-option value="published">Published</mat-option>
-                  <mat-option value="flagged">Flagged</mat-option>
-                  <mat-option value="rejected">Rejected</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
 
-            <table mat-table [dataSource]="contentItems()" class="full-width-table">
-              <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef>Title</th>
-                <td mat-cell *matCellDef="let item">{{ item.title }}</td>
-              </ng-container>
-              <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>Type</th>
-                <td mat-cell *matCellDef="let item">
-                  <span class="type-chip type-{{ item.type }}">{{ item.type }}</span>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef>Date</th>
-                <td mat-cell *matCellDef="let item">{{ item.date }}</td>
-              </ng-container>
-              <ng-container matColumnDef="qa_status">
-                <th mat-header-cell *matHeaderCellDef>QA Status</th>
-                <td mat-cell *matCellDef="let item">
-                  <span class="qa-chip qa-{{ item.qa_status }}">{{ item.qa_status }}</span>
-                </td>
-              </ng-container>
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let item">
-                  @if (auth.hasPermission('content.qa.update') && (item.qa_status === 'draft' || item.qa_status === 'flagged' || item.qa_status === 'rejected')) {
-                    <button mat-stroked-button color="primary" (click)="changeQA(item, 'in_review')">Submit for Review</button>
+            @if (showCreateContent) {
+              <!-- Create Content Form -->
+              <mat-card class="create-content-card">
+                <mat-card-header>
+                  <mat-card-title>New Content</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Title *</mat-label>
+                    <input matInput [(ngModel)]="newContent.title" placeholder="Enter content title" />
+                  </mat-form-field>
+                  <div class="form-row">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Type *</mat-label>
+                      <mat-select [(ngModel)]="newContent.type">
+                        <mat-option value="blog">Blog</mat-option>
+                        <mat-option value="video">Video</mat-option>
+                        <mat-option value="short">Short</mat-option>
+                        <mat-option value="podcast">Podcast</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Date *</mat-label>
+                      <input matInput type="date" [(ngModel)]="newContent.date" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Level</mat-label>
+                      <mat-select [(ngModel)]="newContent.level">
+                        <mat-option value="">— None —</mat-option>
+                        <mat-option value="Beginner">Beginner</mat-option>
+                        <mat-option value="Intermediate">Intermediate</mat-option>
+                        <mat-option value="Advanced">Advanced</mat-option>
+                        <mat-option value="Professional">Professional</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Topic / Tags</mat-label>
+                    <input matInput [(ngModel)]="newContent.topic" placeholder="e.g. TypeScript, AI" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>External URL</mat-label>
+                    <input matInput [(ngModel)]="newContent.external_url" placeholder="https://..." />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Body / Draft Content</mat-label>
+                    <textarea matInput [(ngModel)]="newContent.body_draft" rows="6" placeholder="Paste draft body text here..."></textarea>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Reviewer Instructions</mat-label>
+                    <textarea matInput [(ngModel)]="newContent.reviewer_instructions" rows="3" placeholder="Instructions for testers: what to check, focus areas..."></textarea>
+                  </mat-form-field>
+                  <div class="form-actions">
+                    <button mat-raised-button color="primary" (click)="createContent()" [disabled]="!newContent.title || !newContent.type || !newContent.date">
+                      <mat-icon>add</mat-icon> Create Content
+                    </button>
+                    <button mat-stroked-button (click)="showCreateContent = false">Cancel</button>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            } @else if (selectedContent()) {
+              <!-- Content Detail Panel -->
+              <mat-card class="content-detail-card">
+                <mat-card-content>
+                  <!-- Header row -->
+                  <div class="detail-header">
+                    <button mat-stroked-button (click)="selectedContent.set(null); contentFeedback.set([])">
+                      <mat-icon>arrow_back</mat-icon> Back to list
+                    </button>
+                    <span class="qa-chip qa-{{ selectedContent()!.qa_status }}">{{ selectedContent()!.qa_status }}</span>
+                    <span class="type-chip type-{{ selectedContent()!.type }}">{{ selectedContent()!.type }}</span>
+                  </div>
+
+                  <!-- Content metadata -->
+                  <h2 class="content-title">{{ selectedContent()!.title }}</h2>
+                  <div class="content-meta">
+                    <span>{{ selectedContent()!.date }}</span>
+                    @if (selectedContent()!.level) { <span class="meta-sep">·</span> <span>{{ selectedContent()!.level }}</span> }
+                    @if (selectedContent()!.topic) { <span class="meta-sep">·</span> <span>{{ selectedContent()!.topic }}</span> }
+                  </div>
+
+                  <!-- Reviewer Instructions — highlighted block -->
+                  @if (selectedContent()!.reviewer_instructions) {
+                    <div class="reviewer-instructions">
+                      <div class="ri-label"><mat-icon>assignment</mat-icon> Reviewer Instructions</div>
+                      <div class="ri-body">{{ selectedContent()!.reviewer_instructions }}</div>
+                    </div>
                   }
-                  @if (auth.hasPermission('content.qa.update') && item.qa_status !== 'flagged') {
-                    <button mat-stroked-button color="warn" (click)="changeQA(item, 'flagged')">Flag</button>
+
+                  <!-- Body draft or external URL -->
+                  @if (selectedContent()!.description) {
+                    <div class="body-draft">
+                      <h4>Draft Content</h4>
+                      <pre class="draft-text">{{ selectedContent()!.description }}</pre>
+                    </div>
                   }
-                  @if (auth.hasPermission('content.qa.approve') && item.qa_status === 'in_review') {
-                    <button mat-stroked-button color="primary" (click)="changeQA(item, 'approved')">Approve</button>
-                    <button mat-stroked-button color="warn" (click)="changeQA(item, 'rejected')">Reject</button>
+                  @if (selectedContent()!.external_url) {
+                    <div class="external-link">
+                      <mat-icon>open_in_new</mat-icon>
+                      <a [href]="selectedContent()!.external_url" target="_blank" rel="noopener">View External Content</a>
+                    </div>
                   }
-                  @if (auth.hasRole('admin') && item.qa_status === 'approved') {
-                    <button mat-stroked-button color="accent" (click)="changeQA(item, 'published')">Publish</button>
+                  @if (!selectedContent()!.description && !selectedContent()!.external_url) {
+                    <p class="no-body">No body draft or external URL provided.</p>
                   }
-                </td>
-              </ng-container>
-              <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: contentColumns;"></tr>
-            </table>
+
+                  <mat-divider style="margin: 16px 0"></mat-divider>
+
+                  <!-- QA Actions -->
+                  <div class="issue-actions">
+                    @if (auth.hasPermission('content.qa.update') && (selectedContent()!.qa_status === 'draft' || selectedContent()!.qa_status === 'flagged' || selectedContent()!.qa_status === 'rejected')) {
+                      <button mat-raised-button color="primary" (click)="changeQASelected('in_review')">Submit for Review</button>
+                    }
+                    @if (auth.hasPermission('content.qa.update') && selectedContent()!.qa_status !== 'flagged') {
+                      <button mat-stroked-button color="warn" (click)="changeQASelected('flagged')">Flag</button>
+                    }
+                    @if (auth.hasPermission('content.qa.approve') && selectedContent()!.qa_status === 'in_review') {
+                      <button mat-raised-button color="primary" (click)="changeQASelected('approved')">Approve</button>
+                      <button mat-stroked-button color="warn" (click)="changeQASelected('rejected')">Reject</button>
+                    }
+                    @if (auth.hasRole('admin') && selectedContent()!.qa_status === 'approved') {
+                      <button mat-raised-button color="accent" (click)="changeQASelected('published')">Publish</button>
+                    }
+                  </div>
+
+                  <mat-divider style="margin: 16px 0"></mat-divider>
+
+                  <!-- Feedback Thread -->
+                  <h3>Feedback <span class="feedback-count">({{ contentFeedback().length }})</span></h3>
+
+                  @for (fb of contentFeedback(); track fb.id) {
+                    <div class="feedback-item feedback-{{ fb.status }}">
+                      <div class="feedback-meta">
+                        <strong>{{ fb.username }}</strong>
+                        <span class="comment-time">{{ fb.created_at | date:'short' }}</span>
+                        <span class="qa-chip qa-{{ fb.status }}" style="font-size:10px;">{{ fb.status }}</span>
+                        @if (auth.hasPermission('content.qa.approve') && fb.status === 'open') {
+                          <button mat-button color="primary" class="resolve-btn" (click)="resolveFeedback(fb.id, 'resolved')">Resolve</button>
+                        }
+                        @if (auth.hasPermission('content.qa.approve') && fb.status === 'resolved') {
+                          <button mat-button class="resolve-btn" (click)="resolveFeedback(fb.id, 'open')">Reopen</button>
+                        }
+                      </div>
+                      <p class="feedback-body">{{ fb.body }}</p>
+                    </div>
+                  }
+
+                  @if (contentFeedback().length === 0) {
+                    <p class="no-feedback">No feedback yet.</p>
+                  }
+
+                  <!-- Add Feedback -->
+                  @if (auth.hasPermission('content.qa.update')) {
+                    <div class="add-comment">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Add feedback</mat-label>
+                        <textarea matInput [(ngModel)]="newFeedback" rows="3" placeholder="Describe what you checked, issues found, suggestions..."></textarea>
+                      </mat-form-field>
+                      <button mat-raised-button color="primary" (click)="addFeedback()" [disabled]="!newFeedback.trim()">Post Feedback</button>
+                    </div>
+                  }
+
+                </mat-card-content>
+              </mat-card>
+            } @else {
+              <!-- Filters + Content List -->
+              <div class="filters-row">
+                <mat-form-field appearance="outline">
+                  <mat-label>Type</mat-label>
+                  <mat-select [(value)]="contentTypeFilter" (selectionChange)="loadContent()">
+                    <mat-option value="">All</mat-option>
+                    <mat-option value="blog">Blog</mat-option>
+                    <mat-option value="video">Video</mat-option>
+                    <mat-option value="short">Short</mat-option>
+                    <mat-option value="podcast">Podcast</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>QA Status</mat-label>
+                  <mat-select [(value)]="contentQAFilter" (selectionChange)="loadContent()">
+                    <mat-option value="">All</mat-option>
+                    <mat-option value="draft">Draft</mat-option>
+                    <mat-option value="in_review">In Review</mat-option>
+                    <mat-option value="approved">Approved</mat-option>
+                    <mat-option value="published">Published</mat-option>
+                    <mat-option value="flagged">Flagged</mat-option>
+                    <mat-option value="rejected">Rejected</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                @if (auth.hasPermission('content.qa.update')) {
+                  <button mat-raised-button color="primary" (click)="showCreateContent = true">
+                    <mat-icon>add</mat-icon> New Content
+                  </button>
+                }
+              </div>
+
+              <table mat-table [dataSource]="contentItems()" class="full-width-table">
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Title</th>
+                  <td mat-cell *matCellDef="let item">
+                    <a class="issue-link" (click)="selectContent(item.id)">{{ item.title }}</a>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let item">
+                    <span class="type-chip type-{{ item.type }}">{{ item.type }}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef>Date</th>
+                  <td mat-cell *matCellDef="let item">{{ item.date }}</td>
+                </ng-container>
+                <ng-container matColumnDef="qa_status">
+                  <th mat-header-cell *matHeaderCellDef>QA Status</th>
+                  <td mat-cell *matCellDef="let item">
+                    <span class="qa-chip qa-{{ item.qa_status }}">{{ item.qa_status }}</span>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let item">
+                    @if (auth.hasPermission('content.qa.update') && (item.qa_status === 'draft' || item.qa_status === 'flagged' || item.qa_status === 'rejected')) {
+                      <button mat-stroked-button color="primary" (click)="changeQA(item, 'in_review')">Submit for Review</button>
+                    }
+                    @if (auth.hasPermission('content.qa.update') && item.qa_status !== 'flagged') {
+                      <button mat-stroked-button color="warn" (click)="changeQA(item, 'flagged')">Flag</button>
+                    }
+                    @if (auth.hasPermission('content.qa.approve') && item.qa_status === 'in_review') {
+                      <button mat-stroked-button color="primary" (click)="changeQA(item, 'approved')">Approve</button>
+                      <button mat-stroked-button color="warn" (click)="changeQA(item, 'rejected')">Reject</button>
+                    }
+                    @if (auth.hasRole('admin') && item.qa_status === 'approved') {
+                      <button mat-stroked-button color="accent" (click)="changeQA(item, 'published')">Publish</button>
+                    }
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: contentColumns;" (click)="selectContent(row.id)" class="clickable-row"></tr>
+              </table>
+            }
+
           </div>
         </mat-tab>
 
@@ -487,6 +664,36 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
     .severity-high { background: #ef4444; color: #fff; }
     .severity-medium { background: #f59e0b; color: #000; }
     .severity-low { background: #22c55e; color: #fff; }
+
+    /* Content create / detail */
+    .create-content-card { margin-bottom: 16px; }
+    .content-detail-card { margin-bottom: 16px; }
+    .detail-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .content-title { margin: 0 0 8px 0; font-size: 22px; font-weight: 700; }
+    .content-meta { color: #94a3b8; font-size: 13px; margin-bottom: 16px; }
+    .meta-sep { margin: 0 4px; }
+    .reviewer-instructions {
+      background: #422006; border: 1px solid #f59e0b; border-radius: 8px;
+      padding: 16px; margin: 16px 0;
+    }
+    .ri-label { display: flex; align-items: center; gap: 6px; font-weight: 700; color: #f59e0b; margin-bottom: 8px; font-size: 14px; }
+    .ri-label mat-icon { font-size: 18px; height: 18px; width: 18px; }
+    .ri-body { color: #fde68a; white-space: pre-wrap; line-height: 1.6; }
+    .body-draft { margin: 16px 0; }
+    .body-draft h4 { margin: 0 0 8px 0; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .draft-text { white-space: pre-wrap; background: #1e293b; padding: 16px; border-radius: 8px; font-family: inherit; font-size: 14px; line-height: 1.6; max-height: 400px; overflow-y: auto; margin: 0; }
+    .external-link { display: flex; align-items: center; gap: 6px; margin: 12px 0; color: #3b82f6; }
+    .external-link a { color: #3b82f6; text-decoration: none; }
+    .external-link a:hover { text-decoration: underline; }
+    .no-body { color: #64748b; font-style: italic; }
+    .feedback-count { font-size: 14px; color: #64748b; font-weight: 400; }
+    .feedback-item { padding: 12px; margin: 8px 0; border-radius: 8px; background: #1e293b; }
+    .feedback-open { border-left: 3px solid #f59e0b; }
+    .feedback-resolved { border-left: 3px solid #22c55e; opacity: 0.7; }
+    .feedback-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .feedback-body { margin: 0; white-space: pre-wrap; font-size: 14px; line-height: 1.5; }
+    .resolve-btn { height: 24px; font-size: 11px; line-height: 24px; padding: 0 8px; }
+    .no-feedback { color: #64748b; font-style: italic; font-size: 14px; }
   `],
 })
 export class DashboardComponent implements OnInit {
@@ -501,6 +708,13 @@ export class DashboardComponent implements OnInit {
   users = signal<DashboardUser[]>([]);
   selectedIssue = signal<Issue | null>(null);
   issueComments = signal<IssueComment[]>([]);
+
+  // Content detail + feedback
+  selectedContent = signal<ContentDetail | null>(null);
+  contentFeedback = signal<ContentFeedback[]>([]);
+  showCreateContent = false;
+  newContent: CreateContentBody = { title: '', type: 'blog', date: new Date().toISOString().slice(0, 10) };
+  newFeedback = '';
 
   contentColumns = ['title', 'type', 'date', 'qa_status', 'actions'];
   issueColumns = ['title', 'type', 'severity', 'status', 'assignee', 'created'];
@@ -548,6 +762,70 @@ export class DashboardComponent implements OnInit {
   changeQA(item: ContentItem, newStatus: string) {
     this.svc.updateContentQA(item.id, newStatus).subscribe({
       next: () => { this.toast(`QA status → ${newStatus}`); this.loadContent(); },
+      error: (e) => this.toast(e.error?.error || 'Failed to update QA status'),
+    });
+  }
+
+  selectContent(id: string) {
+    this.svc.getContent(id).subscribe({
+      next: r => {
+        this.selectedContent.set(r.content);
+        this.loadContentFeedback(id);
+      },
+      error: () => this.toast('Failed to load content'),
+    });
+  }
+
+  loadContentFeedback(contentId: string) {
+    this.svc.listContentFeedback(contentId).subscribe({
+      next: r => this.contentFeedback.set(r.items),
+      error: () => {},
+    });
+  }
+
+  createContent() {
+    if (!this.newContent.title || !this.newContent.type || !this.newContent.date) return;
+    this.svc.createContent(this.newContent).subscribe({
+      next: (r) => {
+        this.toast('Content created');
+        this.showCreateContent = false;
+        this.newContent = { title: '', type: 'blog', date: new Date().toISOString().slice(0, 10) };
+        this.loadContent();
+      },
+      error: (e) => this.toast(e.error?.error || 'Failed to create content'),
+    });
+  }
+
+  addFeedback() {
+    const content = this.selectedContent();
+    if (!content || !this.newFeedback.trim()) return;
+    this.svc.addContentFeedback(content.id, this.newFeedback).subscribe({
+      next: (r) => {
+        this.contentFeedback.update(f => [...f, r.item]);
+        this.newFeedback = '';
+      },
+      error: () => this.toast('Failed to add feedback'),
+    });
+  }
+
+  resolveFeedback(feedbackId: number, status: 'open' | 'resolved') {
+    const content = this.selectedContent();
+    if (!content) return;
+    this.svc.resolveContentFeedback(content.id, feedbackId, status).subscribe({
+      next: () => this.loadContentFeedback(content.id),
+      error: (e) => this.toast(e.error?.error || 'Failed to update feedback'),
+    });
+  }
+
+  changeQASelected(newStatus: string) {
+    const content = this.selectedContent();
+    if (!content) return;
+    this.svc.updateContentQA(content.id, newStatus).subscribe({
+      next: (r) => {
+        this.toast(`QA status → ${newStatus}`);
+        this.selectedContent.update(c => c ? { ...c, qa_status: r.qa_status } : null);
+        this.loadContent();
+      },
       error: (e) => this.toast(e.error?.error || 'Failed to update QA status'),
     });
   }

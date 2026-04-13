@@ -30,6 +30,35 @@ export interface ContentItem {
   youtube_url: string | null;
 }
 
+export interface ContentDetail extends ContentItem {
+  description: string | null;       // body_draft
+  external_url: string | null;
+  reviewer_instructions: string | null;
+}
+
+export interface ContentFeedback {
+  id: number;
+  content_id: string;
+  user_id: number;
+  username: string;
+  body: string;
+  status: 'open' | 'resolved';
+  resolved_by: number | null;
+  resolved_at: string | null;
+  created_at: string;
+}
+
+export interface CreateContentBody {
+  title: string;
+  type: string;
+  date: string;
+  level?: string;
+  topic?: string;
+  body_draft?: string;
+  external_url?: string;
+  reviewer_instructions?: string;
+}
+
 export interface Issue {
   id: number;
   title: string;
@@ -107,6 +136,32 @@ export class DashboardService {
 
   updateContentQA(id: string, qaStatus: string): Observable<{ success: boolean; qa_status: string }> {
     return this.http.patch<{ success: boolean; qa_status: string }>(`/api/dashboard/content/${id}/qa`, { qa_status: qaStatus });
+  }
+
+  // Content CRUD
+  createContent(data: CreateContentBody): Observable<{ success: boolean; id: string }> {
+    return this.http.post<{ success: boolean; id: string }>('/api/dashboard/content', data);
+  }
+
+  getContent(id: string): Observable<{ content: ContentDetail }> {
+    return this.http.get<{ content: ContentDetail }>(`/api/dashboard/content/${id}`);
+  }
+
+  updateContent(id: string, data: Partial<CreateContentBody>): Observable<{ success: boolean }> {
+    return this.http.patch<{ success: boolean }>(`/api/dashboard/content/${id}`, data);
+  }
+
+  // Content Feedback
+  listContentFeedback(contentId: string): Observable<{ items: ContentFeedback[] }> {
+    return this.http.get<{ items: ContentFeedback[] }>(`/api/dashboard/content/${contentId}/feedback`);
+  }
+
+  addContentFeedback(contentId: string, body: string): Observable<{ success: boolean; item: ContentFeedback }> {
+    return this.http.post<{ success: boolean; item: ContentFeedback }>(`/api/dashboard/content/${contentId}/feedback`, { body });
+  }
+
+  resolveContentFeedback(contentId: string, feedbackId: number, status: 'open' | 'resolved'): Observable<{ success: boolean }> {
+    return this.http.patch<{ success: boolean }>(`/api/dashboard/content/${contentId}/feedback/${feedbackId}`, { status });
   }
 
   // Issues

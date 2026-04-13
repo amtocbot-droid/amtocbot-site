@@ -1,0 +1,33 @@
+========================================
+2026-04-08 11:33:33 — Starting nightly refresh
+🔄 refresh-engage.py — 2026-04-08
+  📸 Snapshot already exists: 2026-04-08.html
+  📊 Found: 38 blogs, 19 videos, 30 shorts, 7 podcasts
+  ✏️  engage.html updated
+  📋 Snapshot index rebuilt: 1 entries
+  ✅ Done
+[main e354d6c] chore: nightly engage.html audit refresh (2026-04-08)
+ 3 files changed, 1559 insertions(+), 31 deletions(-)
+ create mode 100644 public/engage-snapshots/2026-04-08.html
+ create mode 100644 public/engage-snapshots/index.html
+2026-04-08 11:33:34 — Committed changes
+To https://github.com/amtocbot-droid/amtocbot-site.git
+   e81bd8e..e354d6c  main -> main
+2026-04-08 11:33:34 — Pushed to remote
+2026-04-08 11:33:34 — Done
+========================================
+2026-04-09 02:00:00 — Starting nightly refresh
+🔄 refresh-engage.py — 2026-04-09
+  ❌ content.json not found at /Users/amtoc/amtocbot-site/public/assets/data/content.json
+========================================
+2026-04-10 02:00:00 — Starting nightly refresh
+🔄 refresh-engage.py — 2026-04-10
+  ❌ content.json not found at /Users/amtoc/amtocbot-site/public/assets/data/content.json
+========================================
+2026-04-11 02:00:00 — Starting nightly refresh
+🔄 refresh-engage.py — 2026-04-11
+  ❌ content.json not found at /Users/amtoc/amtocbot-site/public/assets/data/content.json
+========================================
+2026-04-12 02:00:00 — Starting nightly refresh
+🔄 refresh-engage.py — 2026-04-12
+  ❌ content.json not found at /Users/amtoc/amtocbot-site/public/assets/data/content.json

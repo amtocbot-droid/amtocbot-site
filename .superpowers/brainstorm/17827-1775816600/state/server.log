@@ -1,0 +1,5 @@
+{"type":"server-started","port":61107,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:61107","screen_dir":"/Users/amtoc/amtocbot-site/.superpowers/brainstorm/17827-1775816600/content","state_dir":"/Users/amtoc/amtocbot-site/.superpowers/brainstorm/17827-1775816600/state"}
+{"type":"screen-added","file":"/Users/amtoc/amtocbot-site/.superpowers/brainstorm/17827-1775816600/content/visual-direction.html"}
+{"type":"screen-added","file":"/Users/amtoc/amtocbot-site/.superpowers/brainstorm/17827-1775816600/content/hero-layout.html"}
+{"type":"screen-added","file":"/Users/amtoc/amtocbot-site/.superpowers/brainstorm/17827-1775816600/content/waiting-1.html"}
+{"type":"server-stopped","reason":"idle timeout"}

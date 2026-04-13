@@ -40,6 +40,22 @@ export interface IssueCommentRow {
 export const QA_STATUSES = ['draft', 'in_review', 'approved', 'published', 'flagged', 'rejected'] as const;
 export type QAStatus = typeof QA_STATUSES[number];
 
+// ── Feedback statuses ─────────────────────────────────────────
+export const FEEDBACK_STATUSES = ['open', 'resolved'] as const;
+export type FeedbackStatus = typeof FEEDBACK_STATUSES[number];
+
+export interface ContentFeedbackRow {
+  id: number;
+  content_id: string;
+  user_id: number;
+  username: string;
+  body: string;
+  status: string;
+  resolved_by: number | null;
+  resolved_at: string | null;
+  created_at: string;
+}
+
 /** Require dashboard auth: any of the 4 dashboard roles OR bearer token. */
 export async function requireDashboardAuth(
   request: Request,
