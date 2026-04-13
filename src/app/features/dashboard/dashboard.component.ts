@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -310,10 +310,22 @@ import { TutorialService } from './tutorial/tutorial.service';
                 }
               </div>
 
-              <table mat-table [dataSource]="contentItems()" class="full-width-table">
+              <!-- QA Status summary bar -->
+              @if (contentItems().length > 0) {
+                <div class="qa-summary-bar">
+                  @for (s of qaStatusSummary(); track s.status) {
+                    <span class="qa-summary-pill qa-{{ s.status }}" (click)="contentQAFilter = s.status; loadContent()">
+                      {{ s.count }} {{ s.label }}
+                    </span>
+                  }
+                  <span class="qa-summary-total">{{ contentItems().length }} total</span>
+                </div>
+              }
+
+              <table mat-table [dataSource]="contentItems()" class="full-width-table qa-table">
                 <ng-container matColumnDef="title">
                   <th mat-header-cell *matHeaderCellDef>Title</th>
-                  <td mat-cell *matCellDef="let item">
+                  <td mat-cell *matCellDef="let item" class="title-td">
                     <a class="issue-link" (click)="selectContent(item.id)">{{ item.title }}</a>
                   </td>
                 </ng-container>
@@ -325,7 +337,7 @@ import { TutorialService } from './tutorial/tutorial.service';
                 </ng-container>
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef>Date</th>
-                  <td mat-cell *matCellDef="let item">{{ item.date }}</td>
+                  <td mat-cell *matCellDef="let item" class="date-td">{{ item.date }}</td>
                 </ng-container>
                 <ng-container matColumnDef="qa_status">
                   <th mat-header-cell *matHeaderCellDef>QA Status</th>
@@ -336,28 +348,43 @@ import { TutorialService } from './tutorial/tutorial.service';
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let item">
-                    @if (auth.hasPermission('content.qa.update') && (item.qa_status === 'draft' || item.qa_status === 'flagged' || item.qa_status === 'rejected')) {
-                      <button mat-stroked-button color="primary" (click)="$event.stopPropagation(); changeQA(item, 'in_review')">Submit for Review</button>
-                    }
-                    @if (auth.hasPermission('content.qa.update') && item.qa_status !== 'flagged') {
-                      <button mat-stroked-button color="warn" (click)="$event.stopPropagation(); changeQA(item, 'flagged')">Flag</button>
-                    }
-                    @if (auth.hasPermission('content.qa.approve') && item.qa_status === 'in_review') {
-                      <button mat-stroked-button color="primary" (click)="$event.stopPropagation(); changeQA(item, 'approved')">Approve</button>
-                      <button mat-stroked-button color="warn" (click)="$event.stopPropagation(); changeQA(item, 'rejected')">Reject</button>
-                    }
-                    @if (auth.hasRole('admin') && item.qa_status === 'approved') {
-                      <button mat-stroked-button color="accent" (click)="$event.stopPropagation(); changeQA(item, 'published')">Publish</button>
-                    }
-                    @if (auth.hasPermission('issues.create')) {
-                      <button mat-icon-button color="warn" title="Report Issue" (click)="$event.stopPropagation(); reportIssueFromContent(item)">
-                        <mat-icon>bug_report</mat-icon>
-                      </button>
-                    }
+                    <div class="action-group">
+                      @if (auth.hasPermission('content.qa.update') && (item.qa_status === 'draft' || item.qa_status === 'flagged' || item.qa_status === 'rejected')) {
+                        <button class="qa-action-btn qa-action-submit" (click)="$event.stopPropagation(); changeQA(item, 'in_review')">
+                          <mat-icon>rate_review</mat-icon> Review
+                        </button>
+                      }
+                      @if (auth.hasPermission('content.qa.update') && item.qa_status !== 'flagged') {
+                        <button class="qa-action-btn qa-action-flag" (click)="$event.stopPropagation(); changeQA(item, 'flagged')">
+                          <mat-icon>flag</mat-icon>
+                        </button>
+                      }
+                      @if (auth.hasPermission('content.qa.approve') && item.qa_status === 'in_review') {
+                        <button class="qa-action-btn qa-action-approve" (click)="$event.stopPropagation(); changeQA(item, 'approved')">
+                          <mat-icon>check</mat-icon> Approve
+                        </button>
+                        <button class="qa-action-btn qa-action-reject" (click)="$event.stopPropagation(); changeQA(item, 'rejected')">
+                          <mat-icon>close</mat-icon> Reject
+                        </button>
+                      }
+                      @if (auth.hasRole('admin') && item.qa_status === 'approved') {
+                        <button class="qa-action-btn qa-action-publish" (click)="$event.stopPropagation(); changeQA(item, 'published')">
+                          <mat-icon>publish</mat-icon> Publish
+                        </button>
+                      }
+                      @if (auth.hasPermission('issues.create')) {
+                        <button class="qa-action-btn qa-action-bug" title="Report Issue" (click)="$event.stopPropagation(); reportIssueFromContent(item)">
+                          <mat-icon>bug_report</mat-icon>
+                        </button>
+                      }
+                    </div>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: contentColumns;" (click)="selectContent(row.id)" class="clickable-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: contentColumns;"
+                    (click)="selectContent(row.id)"
+                    class="clickable-row qa-row"
+                    [class]="'qa-row qa-row-' + row.qa_status"></tr>
               </table>
             }
 
@@ -683,17 +710,18 @@ import { TutorialService } from './tutorial/tutorial.service';
     .type-video { background: #ef4444; color: #fff; }
     .type-short { background: #f59e0b; color: #000; }
     .type-podcast { background: #8b5cf6; color: #fff; }
-    .qa-draft { background: #475569; color: #fff; }
-    .qa-in_review { background: #f59e0b; color: #000; }
-    .qa-approved { background: #22c55e; color: #fff; }
-    .qa-published { background: #3b82f6; color: #fff; }
-    .qa-flagged { background: #ef4444; color: #fff; }
-    .qa-rejected { background: #dc2626; color: #fff; }
-    .qa-open { background: #f59e0b; color: #000; }
-    .qa-in_progress { background: #3b82f6; color: #fff; }
-    .qa-resolved { background: #22c55e; color: #fff; }
-    .qa-closed { background: #475569; color: #fff; }
-    .qa-wont_fix { background: #6b7280; color: #fff; }
+    /* QA / status chips — semantic colour palette */
+    .qa-draft      { background: rgba(71,85,105,0.35);   color: #94a3b8;  border: 1px solid rgba(71,85,105,0.5);   }
+    .qa-in_review  { background: rgba(245,158,11,0.2);   color: #fbbf24;  border: 1px solid rgba(245,158,11,0.4);  }
+    .qa-approved   { background: rgba(34,197,94,0.2);    color: #4ade80;  border: 1px solid rgba(34,197,94,0.4);   }
+    .qa-published  { background: rgba(6,182,212,0.2);    color: #22d3ee;  border: 1px solid rgba(6,182,212,0.4);   }
+    .qa-flagged    { background: rgba(249,115,22,0.2);   color: #fb923c;  border: 1px solid rgba(249,115,22,0.4);  }
+    .qa-rejected   { background: rgba(239,68,68,0.2);    color: #f87171;  border: 1px solid rgba(239,68,68,0.4);   }
+    .qa-open       { background: rgba(245,158,11,0.2);   color: #fbbf24;  border: 1px solid rgba(245,158,11,0.4);  }
+    .qa-in_progress{ background: rgba(59,130,246,0.2);   color: #60a5fa;  border: 1px solid rgba(59,130,246,0.4);  }
+    .qa-resolved   { background: rgba(34,197,94,0.2);    color: #4ade80;  border: 1px solid rgba(34,197,94,0.4);   }
+    .qa-closed     { background: rgba(71,85,105,0.35);   color: #94a3b8;  border: 1px solid rgba(71,85,105,0.5);   }
+    .qa-wont_fix   { background: rgba(107,114,128,0.25); color: #9ca3af;  border: 1px solid rgba(107,114,128,0.4); }
     .severity-critical { background: #dc2626; color: #fff; }
     .severity-high { background: #ef4444; color: #fff; }
     .severity-medium { background: #f59e0b; color: #000; }
@@ -735,6 +763,50 @@ import { TutorialService } from './tutorial/tutorial.service';
     }
     .linked-content-banner mat-icon { font-size: 16px; height: 16px; width: 16px; color: #3b82f6; }
     .linked-content-banner strong { color: #e2e8f0; }
+
+    /* ── QA status summary bar ─── */
+    .qa-summary-bar {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 10px 0 8px; margin-bottom: 4px;
+    }
+    .qa-summary-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; transition: opacity 0.15s;
+    }
+    .qa-summary-pill:hover { opacity: 0.8; }
+    .qa-summary-total { margin-left: auto; color: #475569; font-size: 12px; }
+
+    /* ── QA table row color coding ─── */
+    .qa-table .qa-row { border-left: 3px solid transparent; transition: border-color 0.15s; }
+    .qa-table .qa-row-flagged   { border-left-color: #f97316 !important; }
+    .qa-table .qa-row-rejected  { border-left-color: #ef4444 !important; }
+    .qa-table .qa-row-in_review { border-left-color: #f59e0b !important; }
+    .qa-table .qa-row-approved  { border-left-color: #22c55e !important; }
+    .qa-table .qa-row-draft     { border-left-color: #475569 !important; }
+    .qa-table .qa-row-published { border-left-color: #22d3ee !important; }
+    .qa-table .qa-row-flagged td   { background: rgba(249,115,22,0.04); }
+    .qa-table .qa-row-rejected td  { background: rgba(239,68,68,0.04); }
+    .qa-table .qa-row-in_review td { background: rgba(245,158,11,0.04); }
+
+    .title-td { max-width: 320px; }
+    .date-td { white-space: nowrap; color: #64748b; font-size: 12px; }
+
+    /* ── QA action buttons ─── */
+    .action-group { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; }
+    .qa-action-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+      border: 1px solid transparent; white-space: nowrap; transition: all 0.15s;
+    }
+    .qa-action-btn mat-icon { font-size: 13px; height: 13px; width: 13px; }
+    .qa-action-submit  { background: rgba(59,130,246,0.12);  color: #60a5fa;  border-color: rgba(59,130,246,0.3);  }
+    .qa-action-flag    { background: rgba(249,115,22,0.12);  color: #fb923c;  border-color: rgba(249,115,22,0.3);  }
+    .qa-action-approve { background: rgba(34,197,94,0.12);   color: #4ade80;  border-color: rgba(34,197,94,0.3);   }
+    .qa-action-reject  { background: rgba(239,68,68,0.12);   color: #f87171;  border-color: rgba(239,68,68,0.3);   }
+    .qa-action-publish { background: rgba(34,211,238,0.12);  color: #22d3ee;  border-color: rgba(34,211,238,0.3);  }
+    .qa-action-bug     { background: rgba(239,68,68,0.08);   color: #f87171;  border-color: rgba(239,68,68,0.2);   padding: 3px 6px; }
+    .qa-action-btn:hover { filter: brightness(1.15); }
   `],
 })
 export class DashboardComponent implements OnInit {
@@ -978,6 +1050,21 @@ export class DashboardComponent implements OnInit {
       error: (e) => { this.toast(e.error?.error || 'Failed to change role'); this.loadUsers(); },
     });
   }
+
+  qaStatusSummary = computed(() => {
+    const counts: Record<string, number> = {};
+    for (const item of this.contentItems()) {
+      counts[item.qa_status] = (counts[item.qa_status] ?? 0) + 1;
+    }
+    const order = ['flagged', 'rejected', 'in_review', 'draft', 'approved', 'published'];
+    const labels: Record<string, string> = {
+      flagged: 'Flagged', rejected: 'Rejected', in_review: 'In Review',
+      draft: 'Draft', approved: 'Approved', published: 'Published',
+    };
+    return order
+      .filter(s => counts[s])
+      .map(s => ({ status: s, label: labels[s] ?? s, count: counts[s] }));
+  });
 
   private toast(msg: string) {
     this.snackBar.open(msg, 'OK', { duration: 3000 });
