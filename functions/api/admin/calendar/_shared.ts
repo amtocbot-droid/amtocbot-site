@@ -131,7 +131,7 @@ export async function requireCalendarAuth(
   request: Request, db: D1Database, syncSecret?: string
 ): Promise<{ authorized: boolean; error?: Response }> {
   const user = await getSessionUser(request, db);
-  if (user && user.role === 'admin') return { authorized: true };
+  if (user && (user.role === 'admin' || user.role === 'superadmin')) return { authorized: true };
 
   const auth = request.headers.get('Authorization');
   const hasCfAccess = request.headers.get('CF-Access-JWT-Assertion');

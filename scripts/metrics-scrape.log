@@ -88,3 +88,30 @@ fatal: could not read Username for 'https://github.com': Device not configured
   📤 Report posted to https://amtocbot.com/api/admin/automation/log
   ✅ Done (no file changes)
 2026-04-12 01:30:06 — Done
+========================================
+2026-04-13 01:30:01 — Starting metrics scrape
+/Users/amtoc/Library/Python/3.9/lib/python/site-packages/google/oauth2/__init__.py:40: FutureWarning: You are using a Python version 3.9 past its end of life. Google will update google-auth with critical bug fixes on a best-effort basis, but not with any other fixes or features. Please upgrade your Python version, and then update google-auth.
+  warnings.warn(eol_message.format("3.9"), FutureWarning)
+/Users/amtoc/Library/Python/3.9/lib/python/site-packages/google/auth/__init__.py:54: FutureWarning: You are using a Python version 3.9 past its end of life. Google will update google-auth with critical bug fixes on a best-effort basis, but not with any other fixes or features. Please upgrade your Python version, and then update google-auth.
+  warnings.warn(eol_message.format("3.9"), FutureWarning)
+/Users/amtoc/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/Users/amtoc/Library/Python/3.9/lib/python/site-packages/google/api_core/_python_version_support.py:234: FutureWarning: You are using a non-supported Python version (3.9.6). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.10, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+🔄 scrape-metrics.py — 2026-04-13
+  📥 D1: fetched 57 videos, 44 blogs
+  🔄 Refreshing youtube token...
+  ✅ Token saved to /Users/amtoc/.config/amtocsoft/youtube_token.json
+  📺 YouTube: fetched stats for 57 items (1,271 total views)
+  🔄 Refreshing blogger token...
+  ✅ Token saved to /Users/amtoc/.config/amtocsoft/blogger_token.json
+  ⚠  Blogger: API error — <HttpError 404 when requesting https://blogger.googleapis.com/v3/blogs/1674696478057813305/pageviews?alt=json returned "Requested entity was not found.". Details: "[{'message': 'Requested entity was not found.', 'domain': 'global', 'reason': 'notFound'}]">
+  📋 content-tracker.md: updated 6 rows
+  📤 D1 metrics: updated 57 items
+
+  📊 Summary: YouTube: 57 items (1,271 views, top: S020 with 193)
+  📤 Report posted to https://amtocbot.com/api/admin/automation/log
+  ✅ Files updated
+[main 752dc5d] chore: nightly metrics update (2026-04-13)
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+fatal: could not read Username for 'https://github.com': Device not configured

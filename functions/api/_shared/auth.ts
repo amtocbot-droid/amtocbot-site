@@ -10,24 +10,37 @@ export interface SessionUser {
 }
 
 // ── Role & Permission System ──────────────────────────────────
-export type Role = 'admin' | 'tester' | 'approver' | 'reviewer';
-export const VALID_ROLES: readonly string[] = ['admin', 'tester', 'approver', 'reviewer'] as const;
+export type Role = 'superadmin' | 'admin' | 'tester' | 'approver' | 'reviewer';
+export const VALID_ROLES: readonly string[] = [
+  'superadmin', 'admin', 'tester', 'approver', 'reviewer',
+] as const;
 
 export type Permission =
   | 'dashboard.view'
   | 'issues.create' | 'issues.update_status' | 'issues.assign' | 'issues.close' | 'issues.comment'
   | 'content.qa.update' | 'content.qa.approve' | 'content.qa.reject'
-  | 'users.manage';
+  | 'users.manage'
+  | 'users.manage_admins'
+  | 'content.delete'
+  | 'audit.view'
+  | 'sessions.view';
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
-  admin:    [], // admin bypasses the map — gets all permissions
+  superadmin: [], // superadmin bypasses the map — gets all permissions
+  admin:    [],   // admin bypasses the map — gets all permissions except superadmin-only
   tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update'],
   approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject'],
   reviewer: ['dashboard.view', 'issues.comment'],
 };
 
 export function hasPermission(user: SessionUser, perm: Permission): boolean {
-  if (user.role === 'admin') return true;
+  if (user.role === 'superadmin') return true;
+  if (user.role === 'admin') {
+    // These permissions are superadmin-only — explicitly deny for admin
+    const superadminOnly: Permission[] = ['users.manage_admins', 'audit.view', 'sessions.view'];
+    if (superadminOnly.includes(perm)) return false;
+    return true;
+  }
   const perms = ROLE_PERMISSIONS[user.role as Role];
   return perms ? perms.includes(perm) : false;
 }

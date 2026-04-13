@@ -2,7 +2,7 @@
  * GET   /api/dashboard/content/:id  — Fetch a single content item.
  * PATCH /api/dashboard/content/:id  — Update editable fields of a content item.
  */
-import { Env, jsonResponse, optionsHandler, requireDashboardAuth, logAudit } from '../../_shared';
+import { Env, jsonResponse, optionsHandler, requireDashboardAuth, logAudit, getSessionUser, requirePermission } from '../../_shared';
 
 interface ContentRow {
   id: string;
@@ -82,7 +82,7 @@ export const onRequestPatch: PagesFunction<Env> = async (context) => {
     binds.push(body.external_url);
   }
   // Only admins can update reviewer_instructions
-  if (body.reviewer_instructions !== undefined && body.reviewer_instructions !== null && user.role === 'admin') {
+  if (body.reviewer_instructions !== undefined && body.reviewer_instructions !== null && (user.role === 'admin' || user.role === 'superadmin')) {
     sets.push('reviewer_instructions = ?');
     binds.push(body.reviewer_instructions);
   }
@@ -100,3 +100,24 @@ export const onRequestPatch: PagesFunction<Env> = async (context) => {
 };
 
 export const onRequestOptions = optionsHandler;
+
+export const onRequestDelete: PagesFunction<Env> = async ({ request, env, params }) => {
+  const db = env.ENGAGE_DB;
+  const user = await getSessionUser(request, db);
+  const denied = requirePermission(user, 'content.delete');
+  if (denied) return denied;
+
+  const id = (params as Record<string, string>)['id'];
+  if (!id) return jsonResponse({ error: 'Content ID required' }, 400);
+
+  const existing = await db.prepare('SELECT id, title FROM content WHERE id = ?')
+    .bind(id).first<{ id: string; title: string }>();
+  if (!existing) return jsonResponse({ error: 'Content not found' }, 404);
+
+  await db.prepare('DELETE FROM content WHERE id = ?').bind(id).run();
+
+  await logAudit(db, user!, 'content.deleted_permanently',
+    JSON.stringify({ id, title: existing.title }), request);
+
+  return jsonResponse({ success: true, id });
+};

@@ -1,14 +1,19 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export type Role = 'admin' | 'tester' | 'approver' | 'reviewer';
+export type Role = 'superadmin' | 'admin' | 'tester' | 'approver' | 'reviewer';
 export type Permission =
   | 'dashboard.view'
   | 'issues.create' | 'issues.update_status' | 'issues.assign' | 'issues.close' | 'issues.comment'
   | 'content.qa.update' | 'content.qa.approve' | 'content.qa.reject'
-  | 'users.manage';
+  | 'users.manage'
+  | 'users.manage_admins'
+  | 'content.delete'
+  | 'audit.view'
+  | 'sessions.view';
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
+  superadmin: [],
   admin:    [],
   tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update'],
   approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject'],
@@ -66,7 +71,12 @@ export class AuthService {
   hasPermission(perm: Permission): boolean {
     const r = this.role();
     if (!r) return false;
-    if (r === 'admin') return true;
+    if (r === 'superadmin') return true;
+    if (r === 'admin') {
+      const superadminOnly: Permission[] = ['users.manage_admins', 'audit.view', 'sessions.view'];
+      if (superadminOnly.includes(perm)) return false;
+      return true;
+    }
     const perms = ROLE_PERMISSIONS[r];
     return perms ? perms.includes(perm) : false;
   }

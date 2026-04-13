@@ -151,6 +151,10 @@ export class DashboardService {
     return this.http.patch<{ success: boolean }>(`/api/dashboard/content/${id}`, data);
   }
 
+  deleteContent(id: string): Observable<{ success: boolean; id: string }> {
+    return this.http.delete<{ success: boolean; id: string }>(`/api/dashboard/content/${id}`);
+  }
+
   // Content Feedback
   listContentFeedback(contentId: string): Observable<{ items: ContentFeedback[] }> {
     return this.http.get<{ items: ContentFeedback[] }>(`/api/dashboard/content/${contentId}/feedback`);

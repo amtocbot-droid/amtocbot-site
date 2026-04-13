@@ -8,7 +8,7 @@
  * All endpoints require admin session via engage_session cookie.
  */
 import {
-  Env, jsonResponse, getSessionUser, logAudit, optionsHandler,
+  Env, jsonResponse, getSessionUser, requirePermission, logAudit, optionsHandler,
   applyConfigOverrides,
 } from '../_shared/auth';
 
@@ -17,9 +17,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   const db = env.ENGAGE_DB;
 
   const user = await getSessionUser(request, db);
-  if (!user || user.role !== 'admin') {
-    return jsonResponse({ error: 'Admin access required' }, 403);
-  }
+  const denied = requirePermission(user, 'users.manage');
+  if (denied) return denied;
 
   // Count content from D1
   const { results: counts } = await db.prepare(
@@ -52,9 +51,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const db = env.ENGAGE_DB;
 
   const user = await getSessionUser(request, db);
-  if (!user || user.role !== 'admin') {
-    return jsonResponse({ error: 'Admin access required' }, 403);
-  }
+  const denied = requirePermission(user, 'users.manage');
+  if (denied) return denied;
 
   const url = new URL(request.url);
   const action = url.searchParams.get('action');

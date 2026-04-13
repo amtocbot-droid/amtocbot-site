@@ -40,7 +40,7 @@ export const onRequestPost: PagesFunction<EnvWithSecret> = async ({ request, env
   // 1. Require authenticated admin
   const user = await getSessionUser(request, db);
   if (!user) return jsonResponse({ error: 'Authentication required' }, 401);
-  if (user.role !== 'admin') return jsonResponse({ error: 'Admin access required' }, 403);
+  if (user.role !== 'admin' && user.role !== 'superadmin') return jsonResponse({ error: 'Admin access required' }, 403);
 
   // 2. Parse and validate body
   let body: ProxyRequestBody;

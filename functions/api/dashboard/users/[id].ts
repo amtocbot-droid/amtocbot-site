@@ -14,17 +14,35 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params 
   if (isNaN(userId)) return jsonResponse({ error: 'Invalid user ID' }, 400);
 
   const body = await request.json() as { role?: string };
-  if (!body.role || ![...VALID_ROLES, 'member'].includes(body.role)) {
-    return jsonResponse({ error: `Invalid role. Must be one of: ${[...VALID_ROLES, 'member'].join(', ')}` }, 400);
+
+  // Determine which roles this caller is allowed to assign
+  const isCallerSuperadmin = user.role === 'superadmin';
+  const assignableRoles = isCallerSuperadmin
+    ? [...VALID_ROLES, 'member']
+    : [...VALID_ROLES.filter((r: string) => r !== 'superadmin'), 'member'];
+
+  if (!body.role || !assignableRoles.includes(body.role)) {
+    return jsonResponse(
+      { error: `Invalid role. Must be one of: ${assignableRoles.join(', ')}` },
+      400,
+    );
   }
 
-  // Prevent admins from demoting themselves
-  if (userId === user.user_id && body.role !== 'admin') {
+  // Fetch target user to check their current role
+  const target = await db.prepare(
+    'SELECT id, username, role FROM users WHERE id = ?'
+  ).bind(userId).first<{ id: number; username: string; role: string }>();
+  if (!target) return jsonResponse({ error: 'User not found' }, 404);
+
+  // Only superadmin can change another superadmin's role
+  if (target.role === 'superadmin' && user.role !== 'superadmin') {
+    return jsonResponse({ error: "Only superadmin can modify another superadmin's role" }, 403);
+  }
+
+  // Prevent self-role-change
+  if (userId === user.user_id) {
     return jsonResponse({ error: 'Cannot change your own role' }, 400);
   }
-
-  const target = await db.prepare('SELECT id, username, role FROM users WHERE id = ?').bind(userId).first<{ id: number; username: string; role: string }>();
-  if (!target) return jsonResponse({ error: 'User not found' }, 404);
 
   await db.prepare('UPDATE users SET role = ? WHERE id = ?').bind(body.role, userId).run();
   await logAudit(db, user, 'role_changed', JSON.stringify({ userId, username: target.username, from: target.role, to: body.role }), request);

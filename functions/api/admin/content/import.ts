@@ -15,7 +15,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   // Auth: session (admin) or bearer token
   const user = await getSessionUser(request, db);
   const auth = request.headers.get('Authorization');
-  if ((!user || user.role !== 'admin') && auth !== `Bearer ${env.SYNC_SECRET}`) {
+  if ((!user || (user.role !== 'admin' && user.role !== 'superadmin')) && auth !== `Bearer ${env.SYNC_SECRET}`) {
     return jsonResponse({ error: 'Admin access required' }, 403);
   }
 

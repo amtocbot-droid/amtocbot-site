@@ -9,7 +9,7 @@ export const onRequestPatch: PagesFunction<Env> = async (context) => {
   const id = params.id as string;
 
   const user = await getSessionUser(request, db);
-  if (!user || user.role !== 'admin') {
+  if (!user || (user.role !== 'admin' && user.role !== 'superadmin')) {
     return jsonResponse({ error: 'Admin access required' }, 403);
   }
 

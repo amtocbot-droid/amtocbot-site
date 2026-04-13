@@ -48,7 +48,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   // Add admin-only extras
-  if (user.role === 'admin') {
+  if (user.role === 'admin' || user.role === 'superadmin') {
     return jsonResponse({ ...base, totalUsers: userCount?.total || 0 });
   }
 

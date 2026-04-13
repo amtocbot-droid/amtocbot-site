@@ -10,14 +10,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     const caller = await getSessionUser(request, db);
-    if (!caller || caller.role !== 'admin') {
+    if (!caller || (caller.role !== 'admin' && caller.role !== 'superadmin')) {
       return jsonResponse({ error: 'Admin access required' }, 403);
     }
 
     const body = await request.json() as { username?: string; email?: string; role?: string };
     const username = body.username?.trim();
     const email = body.email?.trim().toLowerCase();
-    const role = body.role && VALID_ROLES.includes(body.role) ? body.role : 'member';
+    // Only superadmin can assign the superadmin role
+    const allowedInviteRoles = [...VALID_ROLES].filter(r =>
+      r !== 'superadmin' || caller.role === 'superadmin'
+    );
+    const role = body.role && allowedInviteRoles.includes(body.role) ? body.role : 'member';
 
     if (!username || !email || !email.includes('@')) {
       return jsonResponse({ error: 'Username and valid email required' }, 400);

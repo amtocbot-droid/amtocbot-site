@@ -18,6 +18,7 @@ import { AuthService, type Permission } from '../../shared/services/auth.service
 import { DashboardService, type DashboardStats, type ContentItem, type ContentDetail, type ContentFeedback, type CreateContentBody, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
 import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
 import { AdminTabComponent } from './admin-tab/admin-tab.component';
+import { AuditLogTabComponent } from './audit-log-tab/audit-log-tab.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { TutorialService } from './tutorial/tutorial.service';
 
@@ -31,6 +32,7 @@ import { TutorialService } from './tutorial/tutorial.service';
     MatProgressBarModule, MatDialogModule, MatSnackBarModule, MatDividerModule,
     ReferralsTabComponent,
     AdminTabComponent,
+    AuditLogTabComponent,
     TutorialComponent,
   ],
   template: `
@@ -74,7 +76,7 @@ import { TutorialService } from './tutorial/tutorial.service';
                   <div class="stat-label">Total Content</div>
                 </mat-card-content>
               </mat-card>
-              @if (auth.hasRole('admin')) {
+              @if (auth.hasRole('admin', 'superadmin')) {
                 <mat-card class="stat-card">
                   <mat-card-content>
                     <div class="stat-value">{{ stats()?.totalUsers ?? '-' }}</div>
@@ -234,8 +236,13 @@ import { TutorialService } from './tutorial/tutorial.service';
                       <button mat-raised-button color="primary" (click)="changeQASelected('approved')">Approve</button>
                       <button mat-stroked-button color="warn" (click)="changeQASelected('rejected')">Reject</button>
                     }
-                    @if (auth.hasRole('admin') && selectedContent()!.qa_status === 'approved') {
+                    @if (auth.hasRole('admin', 'superadmin') && selectedContent()!.qa_status === 'approved') {
                       <button mat-raised-button color="accent" (click)="changeQASelected('published')">Publish</button>
+                    }
+                    @if (auth.hasPermission('content.delete')) {
+                      <button mat-stroked-button color="warn" (click)="deleteContentPermanently(selectedContent()!.id)">
+                        <mat-icon>delete_forever</mat-icon> Delete Permanently
+                      </button>
                     }
                   </div>
 
@@ -367,7 +374,7 @@ import { TutorialService } from './tutorial/tutorial.service';
                           <mat-icon>close</mat-icon> Reject
                         </button>
                       }
-                      @if (auth.hasRole('admin') && item.qa_status === 'approved') {
+                      @if (auth.hasRole('admin', 'superadmin') && item.qa_status === 'approved') {
                         <button class="qa-action-btn qa-action-publish" (click)="$event.stopPropagation(); changeQA(item, 'published')">
                           <mat-icon>publish</mat-icon> Publish
                         </button>
@@ -568,7 +575,7 @@ import { TutorialService } from './tutorial/tutorial.service';
         </mat-tab>
 
         <!-- Users Tab (admin only) -->
-        @if (auth.hasRole('admin')) {
+        @if (auth.hasRole('admin', 'superadmin')) {
           <mat-tab label="Users">
             <div class="tab-content">
               <mat-card class="invite-card">
@@ -588,10 +595,13 @@ import { TutorialService } from './tutorial/tutorial.service';
                     <mat-form-field>
                       <mat-label>Role</mat-label>
                       <mat-select [(ngModel)]="inviteForm.role">
+                        @if (auth.hasPermission('users.manage_admins')) {
+                          <mat-option value="superadmin">superadmin</mat-option>
+                          <mat-option value="admin">admin</mat-option>
+                        }
                         <mat-option value="tester">tester</mat-option>
                         <mat-option value="approver">approver</mat-option>
                         <mat-option value="reviewer">reviewer</mat-option>
-                        <mat-option value="admin">admin</mat-option>
                         <mat-option value="member">member</mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -613,8 +623,15 @@ import { TutorialService } from './tutorial/tutorial.service';
                 <ng-container matColumnDef="role">
                   <th mat-header-cell *matHeaderCellDef>Role</th>
                   <td mat-cell *matCellDef="let u">
-                    <mat-select [value]="u.role" (selectionChange)="changeUserRole(u.id, $event.value)" class="inline-select">
-                      <mat-option value="admin">admin</mat-option>
+                    <mat-select
+                      [value]="u.role"
+                      [disabled]="u.role === 'superadmin' && !auth.hasPermission('users.manage_admins')"
+                      (selectionChange)="changeUserRole(u.id, $event.value)"
+                      class="inline-select">
+                      @if (auth.hasPermission('users.manage_admins')) {
+                        <mat-option value="superadmin">superadmin</mat-option>
+                        <mat-option value="admin">admin</mat-option>
+                      }
                       <mat-option value="tester">tester</mat-option>
                       <mat-option value="approver">approver</mat-option>
                       <mat-option value="reviewer">reviewer</mat-option>
@@ -638,7 +655,7 @@ import { TutorialService } from './tutorial/tutorial.service';
         }
 
         <!-- Referrals Tab — admin only -->
-        @if (auth.role() === 'admin') {
+        @if ((auth.role() === 'admin' || auth.role() === 'superadmin')) {
           <mat-tab label="Referrals">
             <div class="tab-content">
               <app-referrals-tab />
@@ -647,10 +664,18 @@ import { TutorialService } from './tutorial/tutorial.service';
         }
 
         <!-- Admin Controls Tab — admin only -->
-        @if (auth.role() === 'admin') {
+        @if ((auth.role() === 'admin' || auth.role() === 'superadmin')) {
           <mat-tab label="Admin Controls">
             <div class="tab-content">
               <app-admin-tab />
+            </div>
+          </mat-tab>
+        }
+
+        @if (auth.hasPermission('audit.view')) {
+          <mat-tab label="Audit Log">
+            <div class="tab-content">
+              <app-audit-log-tab />
             </div>
           </mat-tab>
         }
@@ -862,7 +887,7 @@ export class DashboardComponent implements OnInit {
     if (index === 0) this.loadStats();
     else if (index === 1) this.loadContent();
     else if (index === 2) this.loadIssues();
-    else if (index === 3 && this.auth.hasRole('admin')) this.loadUsers();
+    else if (index === 3 && this.auth.hasRole('admin', 'superadmin')) this.loadUsers();
     // Referrals (index 4) and Admin Controls (index 5) load themselves
   }
 
@@ -953,6 +978,20 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  deleteContentPermanently(id: string): void {
+    if (!confirm('Permanently delete this content? This cannot be undone.')) return;
+    this.svc.deleteContent(id).subscribe({
+      next: () => {
+        this.toast('Content permanently deleted');
+        this.selectedContent.set(null);
+        this.contentFeedback.set([]);
+        this.loadContent();
+      },
+      error: (e: { error?: { error?: string } }) =>
+        this.toast(e?.error?.error || 'Failed to delete content'),
+    });
+  }
+
   loadIssues() {
     this.loading.set(true);
     this.selectedIssue.set(null);
@@ -1024,7 +1063,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadUsers() {
-    if (!this.auth.hasRole('admin')) return;
+    if (!this.auth.hasRole('admin', 'superadmin')) return;
     this.loading.set(true);
     this.svc.listUsers().subscribe({
       next: r => { this.users.set(r.users); this.loading.set(false); },
