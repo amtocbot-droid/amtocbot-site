@@ -17,6 +17,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { AuthService, type Permission } from '../../shared/services/auth.service';
 import { DashboardService, type DashboardStats, type ContentItem, type ContentDetail, type ContentFeedback, type CreateContentBody, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
 import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
+import { AdminTabComponent } from './admin-tab/admin-tab.component';
+import { TutorialComponent } from './tutorial/tutorial.component';
+import { TutorialService } from './tutorial/tutorial.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +30,8 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
     MatSelectModule, MatFormFieldModule, MatInputModule, MatChipsModule,
     MatProgressBarModule, MatDialogModule, MatSnackBarModule, MatDividerModule,
     ReferralsTabComponent,
+    AdminTabComponent,
+    TutorialComponent,
   ],
   template: `
     <div class="dashboard-container">
@@ -34,7 +39,13 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
         <h1>Dashboard</h1>
         <span class="role-badge">{{ auth.role() }}</span>
         <span class="user-name">{{ auth.username() }}</span>
+        <button mat-stroked-button class="help-btn" (click)="tutorial.start()" aria-label="Help tour">
+          <mat-icon>help_outline</mat-icon> Help
+        </button>
       </div>
+
+      <!-- Tutorial overlay -->
+      <app-tutorial />
 
       @if (loading()) {
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -594,6 +605,15 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
             </div>
           </mat-tab>
         }
+
+        <!-- Admin Controls Tab — admin only -->
+        @if (auth.role() === 'admin') {
+          <mat-tab label="Admin Controls">
+            <div class="tab-content">
+              <app-admin-tab />
+            </div>
+          </mat-tab>
+        }
       </mat-tab-group>
     </div>
   `,
@@ -605,7 +625,8 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
       background: #3b82f6; color: #fff; padding: 4px 12px; border-radius: 12px;
       font-size: 12px; font-weight: 600; text-transform: uppercase;
     }
-    .user-name { color: #94a3b8; font-size: 14px; }
+    .user-name { color: #94a3b8; font-size: 14px; flex: 1; }
+    .help-btn { margin-left: auto; color: #94a3b8; border-color: #334155; font-size: 13px; }
     .tab-content { padding: 16px 0; }
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .stat-card { text-align: center; }
@@ -698,6 +719,7 @@ import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
 })
 export class DashboardComponent implements OnInit {
   auth = inject(AuthService);
+  tutorial = inject(TutorialService);
   private svc = inject(DashboardService);
   private snackBar = inject(MatSnackBar);
 
@@ -734,13 +756,18 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.loadStats();
+    // Auto-start tutorial for first-time visitors per role
+    setTimeout(() => this.tutorial.maybeAutoStart(), 500);
   }
 
   onTabChange(index: number) {
+    // Tab order: 0=Overview, 1=ContentQA, 2=Issues, 3=Users(admin), 4=Referrals(admin), 5=AdminControls(admin)
+    // For non-admins: 0=Overview, 1=ContentQA, 2=Issues
     if (index === 0) this.loadStats();
     else if (index === 1) this.loadContent();
     else if (index === 2) this.loadIssues();
-    else if (index === 3) this.loadUsers();
+    else if (index === 3 && this.auth.hasRole('admin')) this.loadUsers();
+    // Referrals (index 4) and Admin Controls (index 5) load themselves
   }
 
   loadStats() {
