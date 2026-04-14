@@ -15,7 +15,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService, type Permission } from '../../shared/services/auth.service';
-import { DashboardService, type DashboardStats, type ContentItem, type ContentDetail, type ContentFeedback, type CreateContentBody, type Issue, type IssueComment, type DashboardUser } from './dashboard.service';
+import { DashboardService, type DashboardStats, type ContentItem, type ContentDetail, type ContentFeedback, type CreateContentBody, type Issue, type IssueComment, type DashboardUser, type SecurityAlert } from './dashboard.service';
 import { ReferralsTabComponent } from './referrals-tab/referrals-tab.component';
 import { AdminTabComponent } from './admin-tab/admin-tab.component';
 import { AuditLogTabComponent } from './audit-log-tab/audit-log-tab.component';
@@ -109,6 +109,44 @@ import { TutorialService } from './tutorial/tutorial.service';
                 </div>
               </mat-card-content>
             </mat-card>
+
+            @if (auth.hasRole('admin', 'superadmin')) {
+              <mat-card class="security-alerts-card" [class.has-alerts]="(stats()?.securityAlerts?.count ?? 0) > 0">
+                <mat-card-header>
+                  <mat-card-title>
+                    Security Alerts
+                    @if ((stats()?.securityAlerts?.count ?? 0) > 0) {
+                      <span class="alert-badge">{{ stats()!.securityAlerts!.count }}</span>
+                    }
+                  </mat-card-title>
+                  <mat-card-subtitle>Unauthorized access attempts — last 24h</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  @if ((stats()?.securityAlerts?.count ?? 0) === 0) {
+                    <p class="no-alerts">✓ No unauthorized access attempts in the last 24 hours.</p>
+                  } @else {
+                    <div class="alert-list">
+                      @for (alert of stats()!.securityAlerts!.recent; track alert.created_at) {
+                        <div class="alert-item">
+                          <span class="alert-reason alert-reason--{{ alert.reason }}">
+                            {{ alert.reason === 'unauthenticated' ? 'Not logged in' : 'Wrong role' }}
+                          </span>
+                          <span class="alert-path">{{ alert.path }}</span>
+                          <span class="alert-user">{{ alert.username }}</span>
+                          <span class="alert-ip">{{ alert.ip }}</span>
+                          <span class="alert-time">{{ alert.created_at | date:'short' }}</span>
+                        </div>
+                      }
+                    </div>
+                    @if (auth.hasPermission('audit.view')) {
+                      <button mat-button class="audit-link-btn" (click)="goToAuditLog()">
+                        View full audit log →
+                      </button>
+                    }
+                  }
+                </mat-card-content>
+              </mat-card>
+            }
           </div>
         </mat-tab>
 
@@ -832,6 +870,23 @@ import { TutorialService } from './tutorial/tutorial.service';
     .qa-action-publish { background: rgba(34,211,238,0.12);  color: #22d3ee;  border-color: rgba(34,211,238,0.3);  }
     .qa-action-bug     { background: rgba(239,68,68,0.08);   color: #f87171;  border-color: rgba(239,68,68,0.2);   padding: 3px 6px; }
     .qa-action-btn:hover { filter: brightness(1.15); }
+
+    /* ── Security Alerts card ─── */
+    .security-alerts-card { margin-top: 24px; border: 1px solid rgba(255,255,255,0.08); }
+    .security-alerts-card.has-alerts { border-color: rgba(239, 68, 68, 0.4); }
+    .alert-badge { display: inline-block; background: #ef4444; color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 12px; font-weight: 700; margin-left: 8px; vertical-align: middle; }
+    .no-alerts { color: #22c55e; font-size: 14px; margin: 0; }
+    .alert-list { display: flex; flex-direction: column; gap: 8px; }
+    .alert-item { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.06)); }
+    .alert-item:last-child { border-bottom: none; }
+    .alert-reason { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+    .alert-reason--unauthenticated { background: rgba(251,146,60,0.2); color: #fb923c; }
+    .alert-reason--unauthorized { background: rgba(239,68,68,0.2); color: #ef4444; }
+    .alert-path { font-family: monospace; color: #e2e8f0; }
+    .alert-user { color: #94a3b8; }
+    .alert-ip { color: #64748b; font-size: 12px; }
+    .alert-time { color: #475569; font-size: 12px; margin-left: auto; }
+    .audit-link-btn { margin-top: 8px; color: #fb923c; padding: 0; }
   `],
 })
 export class DashboardComponent implements OnInit {
@@ -889,6 +944,11 @@ export class DashboardComponent implements OnInit {
     else if (index === 2) this.loadIssues();
     else if (index === 3 && this.auth.hasRole('admin', 'superadmin')) this.loadUsers();
     // Referrals (index 4) and Admin Controls (index 5) load themselves
+  }
+
+  goToAuditLog(): void {
+    // Tab order: 0 Overview, 1 ContentQA, 2 Issues, 3 Users, 4 Referrals, 5 AdminControls, 6 AuditLog
+    this.selectedTabIndex = 6;
   }
 
   loadStats() {

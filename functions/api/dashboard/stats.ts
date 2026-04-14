@@ -49,7 +49,35 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   // Add admin-only extras
   if (user.role === 'admin' || user.role === 'superadmin') {
-    return jsonResponse({ ...base, totalUsers: userCount?.total || 0 });
+    const [alertCount, alertRecent] = await Promise.all([
+      db.prepare(`
+        SELECT COUNT(*) as count FROM audit_logs
+        WHERE action = 'access.denied'
+          AND created_at >= datetime('now', '-24 hours')
+      `).first<{ count: number }>(),
+      db.prepare(`
+        SELECT username, detail, ip_address, created_at
+        FROM audit_logs
+        WHERE action = 'access.denied'
+          AND created_at >= datetime('now', '-24 hours')
+        ORDER BY created_at DESC LIMIT 5
+      `).all<{ username: string; detail: string; ip_address: string; created_at: string }>(),
+    ]);
+
+    const recentAlerts = (alertRecent.results || []).map(row => {
+      let path = ''; let reason: 'unauthenticated' | 'unauthorized' = 'unauthorized';
+      try {
+        const p = JSON.parse(row.detail) as { path?: string; reason?: string };
+        path = p.path || ''; reason = p.reason === 'unauthenticated' ? 'unauthenticated' : 'unauthorized';
+      } catch { /* ignore */ }
+      return { username: row.username, path, reason, ip: row.ip_address, created_at: row.created_at };
+    });
+
+    return jsonResponse({
+      ...base,
+      totalUsers: userCount?.total || 0,
+      securityAlerts: { count: alertCount?.count || 0, recent: recentAlerts },
+    });
   }
 
   // Add role-specific stats

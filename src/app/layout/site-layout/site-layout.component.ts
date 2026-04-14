@@ -37,12 +37,20 @@ import { AuthService } from '../../shared/services/auth.service';
         </nav>
 
         <div class="header-right">
-          @if (auth.hasRole('admin', 'tester')) {
+          @if (auth.hasRole('admin', 'tester', 'superadmin')) {
             <a routerLink="/report" routerLinkActive="nav-active" class="dashboard-link report-link" title="Report an Issue">
               🐛 Report
             </a>
           }
-          <a routerLink="/dashboard" routerLinkActive="nav-active" class="dashboard-link">Dashboard</a>
+          @if (auth.authenticated()) {
+            <a routerLink="/planner" routerLinkActive="nav-active" class="dashboard-link">Planner</a>
+          }
+          @if (auth.hasRole('admin', 'superadmin')) {
+            <a routerLink="/admin" routerLinkActive="nav-active" class="dashboard-link">Admin</a>
+          }
+          @if (auth.authenticated()) {
+            <a routerLink="/dashboard" routerLinkActive="nav-active" class="dashboard-link">Dashboard</a>
+          }
           <app-theme-toggle />
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener" class="courses-btn">
             Get Courses →
@@ -72,11 +80,21 @@ import { AuthService } from '../../shared/services/auth.service';
             <a routerLink="/resources" (click)="mobileOpen.set(false)" class="mobile-link">Resources</a>
             <a routerLink="/metrics" (click)="mobileOpen.set(false)" class="mobile-link">Metrics</a>
           </details>
-          <a routerLink="/dashboard" routerLinkActive="mobile-active" class="mobile-link"
-             (click)="mobileOpen.set(false)">Dashboard</a>
-          @if (auth.hasRole('admin', 'tester')) {
+          @if (auth.authenticated()) {
+            <a routerLink="/dashboard" routerLinkActive="mobile-active" class="mobile-link"
+               (click)="mobileOpen.set(false)">Dashboard</a>
+          }
+          @if (auth.authenticated()) {
+            <a routerLink="/planner" routerLinkActive="mobile-active" class="mobile-link"
+               (click)="mobileOpen.set(false)">Planner</a>
+          }
+          @if (auth.hasRole('admin', 'tester', 'superadmin')) {
             <a routerLink="/report" routerLinkActive="mobile-active" class="mobile-link"
                (click)="mobileOpen.set(false)">🐛 Report Issue</a>
+          }
+          @if (auth.hasRole('admin', 'superadmin')) {
+            <a routerLink="/admin" routerLinkActive="mobile-active" class="mobile-link"
+               (click)="mobileOpen.set(false)">Admin</a>
           }
           <a href="https://amtocsoft.com/#pricing" target="_blank" rel="noopener"
              class="courses-btn mobile-courses" (click)="mobileOpen.set(false)">

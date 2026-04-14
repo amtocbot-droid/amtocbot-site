@@ -4,6 +4,14 @@ import { Observable } from 'rxjs';
 
 // ── Types ─────────────────────────────────────────────────────
 
+export interface SecurityAlert {
+  username: string;
+  path: string;
+  reason: 'unauthenticated' | 'unauthorized';
+  ip: string;
+  created_at: string;
+}
+
 export interface DashboardStats {
   openIssues: number;
   pendingApprovals: number;
@@ -14,6 +22,7 @@ export interface DashboardStats {
   recentActivity: { action: string; username: string; detail: string | null; created_at: string }[];
   myIssuesCount?: number;
   assignedToMe?: number;
+  securityAlerts?: { count: number; recent: SecurityAlert[] };
 }
 
 export interface ContentItem {
