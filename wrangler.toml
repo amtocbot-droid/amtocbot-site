@@ -11,5 +11,9 @@ binding = "ENGAGE_DB"
 database_name = "engage-db"
 database_id = "e3ba9916-844b-47f1-9c43-8ed761dbf753"
 
+[[r2_buckets]]
+binding = "TUTORIAL_MEDIA"
+bucket_name = "tutorial-media"
+
 # Secrets (set via: npx wrangler pages secret put AMTOCSOFT_ADMIN_KEY --project-name=amtocbot-site)
 # AMTOCSOFT_ADMIN_KEY — forwarded as X-Admin-Key to amtocsoft.com admin endpoints
