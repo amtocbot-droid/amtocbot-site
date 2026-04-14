@@ -1,15 +1,17 @@
 // src/app/features/learn/learn-lesson.component.ts
 
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LearnService } from './learn.service';
 import { Language, Lesson, Level } from './curriculum/types';
 import { PlaygroundComponent } from './playground/playground.component';
+import { RecordingComponent } from './recording/recording.component';
+import { RecordingFeedComponent } from './recording/recording-feed.component';
 
 @Component({
   selector: 'app-learn-lesson',
   standalone: true,
-  imports: [RouterLink, PlaygroundComponent],
+  imports: [RouterLink, PlaygroundComponent, RecordingComponent, RecordingFeedComponent],
   template: `
     <div class="lesson-page">
       @if (lesson()) {
@@ -53,15 +55,24 @@ import { PlaygroundComponent } from './playground/playground.component';
         <!-- Playground (Plan B) -->
         <app-playground [lesson]="lesson()!" [language]="playgroundLanguage()" />
 
-        <!-- Record Your Understanding (Plan C — coming soon) -->
-        <section class="actions-section">
-          <div class="action-btn-group">
-            <button class="action-btn btn-disabled" disabled title="Coming soon — Plan C adds voice recording">
-              <span class="material-symbols-outlined">mic</span>
-              Record Your Understanding
-            </button>
-          </div>
-          <p class="coming-soon-note">Voice recording coming in the next update.</p>
+        <!-- Record Your Understanding (Plan C) -->
+        <section class="recording-section">
+          <app-recording
+            [language]="language()"
+            [level]="level()"
+            [slug]="lesson()!.slug"
+            (recordingSubmitted)="onRecordingSubmitted()"
+          />
+        </section>
+
+        <!-- Community Feed (Plan C) -->
+        <section class="feed-section">
+          <app-recording-feed
+            #feed
+            [language]="language()"
+            [level]="level()"
+            [slug]="lesson()!.slug"
+          />
         </section>
 
         <nav class="lesson-nav" aria-label="Lesson navigation">
@@ -112,11 +123,8 @@ import { PlaygroundComponent } from './playground/playground.component';
     .reflection-icon { font-size: 1.5rem; color: var(--color-primary, #6366f1); flex-shrink: 0; margin-top: 0.125rem; }
     .reflection-label { font-weight: 700; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-primary, #6366f1); margin-bottom: 0.375rem; }
     .reflection-text { margin: 0; font-size: 1rem; line-height: 1.6; color: var(--color-text, #374151); }
-    .actions-section { margin-bottom: 2.5rem; }
-    .action-btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.625rem; }
-    .action-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; border-radius: 8px; font-size: 0.9375rem; font-weight: 600; cursor: pointer; border: 2px solid var(--color-border, #e5e7eb); background: var(--color-surface, #ffffff); color: var(--color-text, #111827); transition: all 0.15s; }
-    .action-btn.btn-disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
-    .coming-soon-note { font-size: 0.8125rem; color: var(--color-muted, #9ca3af); margin: 0; }
+    .recording-section { margin-bottom: 0; }
+    .feed-section { margin-bottom: 2.5rem; }
     .lesson-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 2rem; border-top: 1px solid var(--color-border, #e5e7eb); flex-wrap: wrap; }
     .lesson-nav-btn { padding: 0.625rem 1.125rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9375rem; background: var(--color-surface, #f9fafb); border: 1px solid var(--color-border, #e5e7eb); color: var(--color-text, #111827); transition: border-color 0.15s, color 0.15s; }
     .lesson-nav-btn:hover { border-color: var(--color-primary, #6366f1); color: var(--color-primary, #6366f1); }
@@ -130,12 +138,18 @@ export class LearnLessonComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private learnService = inject(LearnService);
 
+  @ViewChild('feed') feedComponent!: RecordingFeedComponent;
+
   language = signal<Language>('html');
   level = signal<Level>('beginner');
   lesson = signal<Lesson | undefined>(undefined);
 
   languageLabel = signal('');
   levelLabel = signal('');
+
+  onRecordingSubmitted(): void {
+    this.feedComponent?.refresh();
+  }
 
   protected readonly playgroundLanguage = computed(() => {
     const lang = this.route.snapshot.paramMap.get('language');
