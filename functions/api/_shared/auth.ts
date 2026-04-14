@@ -56,6 +56,8 @@ export interface Env {
   ENGAGE_DB: D1Database;
   METRICS_KV?: KVNamespace;
   GITHUB_TOKEN?: string;
+  TUTORIAL_MEDIA: R2Bucket;
+  TUTORIAL_MEDIA_BASE_URL: string;
 }
 
 export interface ContentJson {
