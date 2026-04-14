@@ -24,6 +24,7 @@ import { AuthService } from '../../shared/services/auth.service';
               <a routerLink="/blog" routerLinkActive="dropdown-active" class="dropdown-item">Blog</a>
               <a routerLink="/videos" routerLinkActive="dropdown-active" class="dropdown-item">Videos</a>
               <a routerLink="/podcasts" routerLinkActive="dropdown-active" class="dropdown-item">Podcasts</a>
+              <a routerLink="/learn" routerLinkActive="dropdown-active" class="dropdown-item">Tutorials</a>
             </div>
           </div>
           <div class="nav-dropdown">
@@ -73,6 +74,7 @@ import { AuthService } from '../../shared/services/auth.service';
             <a routerLink="/blog" (click)="mobileOpen.set(false)" class="mobile-link">Blog</a>
             <a routerLink="/videos" (click)="mobileOpen.set(false)" class="mobile-link">Videos</a>
             <a routerLink="/podcasts" (click)="mobileOpen.set(false)" class="mobile-link">Podcasts</a>
+            <a routerLink="/learn" (click)="mobileOpen.set(false)" class="mobile-link">Tutorials</a>
           </details>
           <details>
             <summary class="mobile-section">Community</summary>

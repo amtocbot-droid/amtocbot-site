@@ -15,6 +15,9 @@ export const routes: Routes = [
       { path: 'metrics', loadComponent: () => import('./features/metrics/metrics.component').then(m => m.MetricsComponent) },
       { path: 'resources', loadComponent: () => import('./features/resources/resources.component').then(m => m.ResourcesComponent) },
       { path: 'about', loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent) },
+      { path: 'learn', loadComponent: () => import('./features/learn/learn-catalog.component').then(m => m.LearnCatalogComponent) },
+      { path: 'learn/:language', loadComponent: () => import('./features/learn/learn-track.component').then(m => m.LearnTrackComponent) },
+      { path: 'learn/:language/:level/:slug', loadComponent: () => import('./features/learn/learn-lesson.component').then(m => m.LearnLessonComponent) },
       {
         path: 'planner',
         loadComponent: () => import('./features/planner/planner.component').then(m => m.PlannerComponent),
