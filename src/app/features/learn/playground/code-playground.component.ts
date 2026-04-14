@@ -41,7 +41,9 @@ import { Lesson } from '../curriculum/types';
               <mat-spinner diameter="16" style="display:inline-block;margin-right:6px;"></mat-spinner>
               Running...
             } @else {
-              <mat-icon>play_arrow</mat-icon> Run Code
+              <ng-container>
+                <mat-icon>play_arrow</mat-icon> Run Code
+              </ng-container>
             }
           </button>
         </div>
@@ -75,9 +77,9 @@ export class CodePlaygroundComponent implements OnInit {
 
   ngOnInit(): void { this.codeValue = this.lesson.starterCode; }
 
-  handleTab(event: KeyboardEvent): void {
+  handleTab(event: Event): void {
     event.preventDefault();
-    const ta = event.target as HTMLTextAreaElement;
+    const ta = (event as KeyboardEvent).target as HTMLTextAreaElement;
     const start = ta.selectionStart;
     const end = ta.selectionEnd;
     this.codeValue = this.codeValue.slice(0, start) + '    ' + this.codeValue.slice(end);

@@ -1,14 +1,15 @@
 // src/app/features/learn/learn-lesson.component.ts
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LearnService } from './learn.service';
 import { Language, Lesson, Level } from './curriculum/types';
+import { PlaygroundComponent } from './playground/playground.component';
 
 @Component({
   selector: 'app-learn-lesson',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, PlaygroundComponent],
   template: `
     <div class="lesson-page">
       @if (lesson()) {
@@ -49,18 +50,18 @@ import { Language, Lesson, Level } from './curriculum/types';
           </blockquote>
         </section>
 
+        <!-- Playground (Plan B) -->
+        <app-playground [lesson]="lesson()!" [language]="playgroundLanguage()" />
+
+        <!-- Record Your Understanding (Plan C — coming soon) -->
         <section class="actions-section">
           <div class="action-btn-group">
-            <button class="action-btn btn-disabled" disabled title="Coming soon — Plan B adds interactive playgrounds">
-              <span class="material-symbols-outlined">code</span>
-              Practice in Playground
-            </button>
             <button class="action-btn btn-disabled" disabled title="Coming soon — Plan C adds voice recording">
               <span class="material-symbols-outlined">mic</span>
               Record Your Understanding
             </button>
           </div>
-          <p class="coming-soon-note">Interactive playground and recording coming in the next update.</p>
+          <p class="coming-soon-note">Voice recording coming in the next update.</p>
         </section>
 
         <nav class="lesson-nav" aria-label="Lesson navigation">
@@ -135,6 +136,11 @@ export class LearnLessonComponent implements OnInit {
 
   languageLabel = signal('');
   levelLabel = signal('');
+
+  protected readonly playgroundLanguage = computed(() => {
+    const lang = this.route.snapshot.paramMap.get('language');
+    return (lang === 'java' ? 'java' : 'csharp') as 'csharp' | 'java';
+  });
 
   ngOnInit(): void {
     const langParam = this.route.snapshot.paramMap.get('language') ?? '';
