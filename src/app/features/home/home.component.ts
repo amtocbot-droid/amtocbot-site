@@ -435,6 +435,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   activeTab = signal<Tab>('blog');
   subStatus = signal('');
 
+  private statsBarInView = false;
+  private statsLoaded = false;
+
   heroLatestBlog = computed(() => this.content.blogs()[0] ?? null);
   heroLatestVideo = computed(() => this.content.videos().find(v => v.type === 'video') ?? null);
   heroLatestPodcast = computed(() => this.content.videos().find(v => v.type === 'podcast') ?? null);
@@ -445,14 +448,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.content.load();
     this.http.get<ContentStats>('/api/content-stats').subscribe({
-      next: s => this.liveStats.set(s),
-      error: () => this.liveStats.set({
-        blogs: this.content.blogs().length,
-        videos: this.content.videos().filter(v => v.type === 'video').length,
-        shorts: this.content.videos().filter(v => v.type === 'short').length,
-        podcasts: this.content.videos().filter(v => v.type === 'podcast').length,
-        tiktok: 19, platforms: 8, lastSync: null,
-      }),
+      next: s => {
+        this.liveStats.set(s);
+        this.statsLoaded = true;
+        if (this.statsBarInView) { this.countUp(); }
+      },
+      error: () => {
+        this.liveStats.set({
+          blogs: this.content.blogs().length,
+          videos: this.content.videos().filter(v => v.type === 'video').length,
+          shorts: this.content.videos().filter(v => v.type === 'short').length,
+          podcasts: this.content.videos().filter(v => v.type === 'podcast').length,
+          tiktok: 19, platforms: 8, lastSync: null,
+        });
+        this.statsLoaded = true;
+        if (this.statsBarInView) { this.countUp(); }
+      },
     });
   }
 
@@ -461,7 +472,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const el = document.querySelector('.stats-bar');
     if (!el) return;
     const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) { this.countUp(); obs.disconnect(); }
+      if (entries[0].isIntersecting) {
+        this.statsBarInView = true;
+        obs.disconnect();
+        if (this.statsLoaded) { this.countUp(); }
+      }
     }, { threshold: 0.3 });
     obs.observe(el);
   }
