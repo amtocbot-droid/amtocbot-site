@@ -16,6 +16,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MediaStudioService, MediaItem, JobProgress } from './media-studio.service';
+import { AdminService } from './admin.service';
 
 interface ItemWithJob extends MediaItem {
   activeJobId?: string;
@@ -310,6 +311,7 @@ const STAGE_ORDER = [
 export class MediaStudioTabComponent implements OnInit {
   svc = inject(MediaStudioService);
   private snack = inject(MatSnackBar);
+  private adminSvc = inject(AdminService);
 
   items = signal<ItemWithJob[]>([]);
   loading = signal(false);
@@ -436,6 +438,12 @@ export class MediaStudioTabComponent implements OnInit {
             }
           });
           this.snack.open(`✓ ${doneStage}`, 'Dismiss', { duration: 2500 });
+          if (doneStage === 'uploaded' && progress.data) {
+            this.adminSvc.updatePipelineStage(item.item_id, 'uploaded').subscribe({
+              next: () => this.snack.open('Pipeline updated in D1', 'Dismiss', { duration: 2000 }),
+              error: () => { /* D1 sync failure is non-fatal */ },
+            });
+          }
         }
       },
       error: (e: Error) => {
