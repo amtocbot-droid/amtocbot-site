@@ -1,3 +1,4 @@
+// src/app/features/dashboard/admin-tab/admin-tab.component.ts
 import { Component, signal } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CmsConfigComponent } from './cms-config.component';
@@ -5,6 +6,7 @@ import { AutomationControlsComponent } from './automation-controls.component';
 import { PublishingQueueComponent } from './publishing-queue.component';
 import { SocialQueueComponent } from './social-queue.component';
 import { PipelineQueueComponent } from './pipeline-queue.component';
+import { MediaStudioTabComponent } from './media-studio-tab.component';
 
 @Component({
   selector: 'app-admin-tab',
@@ -16,6 +18,7 @@ import { PipelineQueueComponent } from './pipeline-queue.component';
     PublishingQueueComponent,
     SocialQueueComponent,
     PipelineQueueComponent,
+    MediaStudioTabComponent,
   ],
   template: `
     <div class="admin-container">
@@ -55,28 +58,24 @@ import { PipelineQueueComponent } from './pipeline-queue.component';
           }
         </mat-tab>
 
+        <mat-tab label="Media Studio">
+          @if (activeTabIndex() === 5) {
+            <app-media-studio-tab />
+          }
+        </mat-tab>
+
       </mat-tab-group>
     </div>
   `,
   styles: [`
-    .admin-container {
-      padding: 0;
-    }
-
+    .admin-container { padding: 0; }
     .admin-tabs {
       --mat-tab-header-active-label-text-color: #3b82f6;
       --mat-tab-header-active-indicator-color: #3b82f6;
       --mat-tab-header-inactive-label-text-color: #94a3b8;
     }
-
-    ::ng-deep .admin-tabs .mat-mdc-tab-body-content {
-      padding: 0 1rem;
-      overflow: visible;
-    }
-
-    ::ng-deep .admin-tabs .mat-mdc-tab-header {
-      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-    }
+    ::ng-deep .admin-tabs .mat-mdc-tab-body-content { padding: 0 1rem; overflow: visible; }
+    ::ng-deep .admin-tabs .mat-mdc-tab-header { border-bottom: 1px solid rgba(148, 163, 184, 0.15); }
   `],
 })
 export class AdminTabComponent {
