@@ -147,13 +147,14 @@ const STAGE_ORDER = [
                   </div>
                   @if (stageGe(item.stage, 'narrated') && !stageGe(item.stage, 'assembled')) {
                     <mat-form-field appearance="outline" class="path-field">
-                      <mat-label>Background video/image path (from Higgsfield)</mat-label>
+                      <mat-label>Background video/image path (optional — blank = black bg)</mat-label>
                       <input matInput [(ngModel)]="item.bgPath"
                         placeholder="/Users/amtoc/Downloads/higgsfield-bg.mp4">
+                      <mat-hint>Leave blank to assemble with a plain black background</mat-hint>
                     </mat-form-field>
                     <button mat-flat-button color="primary"
                       (click)="assemble(item)"
-                      [disabled]="item.jobStatus === 'running' || !item.bgPath">
+                      [disabled]="item.jobStatus === 'running'">
                       <mat-icon>build</mat-icon> Assemble
                     </button>
                   }
