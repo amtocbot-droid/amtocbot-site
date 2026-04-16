@@ -145,17 +145,18 @@ const STAGE_ORDER = [
                       <mat-icon class="done-icon">check_circle</mat-icon>
                     }
                   </div>
-                  @if (stageGe(item.stage, 'narrated') && !stageGe(item.stage, 'assembled')) {
+                  @if (stageGe(item.stage, 'narrated')) {
                     <mat-form-field appearance="outline" class="path-field">
                       <mat-label>Background video/image path (optional — blank = black bg)</mat-label>
                       <input matInput [(ngModel)]="item.bgPath"
                         placeholder="/Users/amtoc/Downloads/higgsfield-bg.mp4">
-                      <mat-hint>Leave blank to assemble with a plain black background</mat-hint>
+                      <mat-hint>Leave blank for black background. Paste a Higgsfield clip path to re-assemble.</mat-hint>
                     </mat-form-field>
-                    <button mat-flat-button color="primary"
+                    <button mat-flat-button [color]="stageGe(item.stage, 'assembled') ? 'warn' : 'primary'"
                       (click)="assemble(item)"
                       [disabled]="item.jobStatus === 'running'">
-                      <mat-icon>build</mat-icon> Assemble
+                      <mat-icon>{{ stageGe(item.stage, 'assembled') ? 'refresh' : 'build' }}</mat-icon>
+                      {{ stageGe(item.stage, 'assembled') ? 'Re-assemble' : 'Assemble' }}
                     </button>
                   }
                   @if (item.output_file) {
