@@ -27,7 +27,7 @@ const LEVEL_COLORS: Record<string, string> = {
         @for (v of filtered(); track v.id) {
           <a [href]="v.youtubeUrl" target="_blank" rel="noopener" class="video-card">
             <div class="thumb-wrap">
-              <img [src]="thumb(v.youtubeUrl)" [alt]="v.title" class="thumb" loading="lazy" />
+              <img [src]="thumb(v)" [alt]="v.title" class="thumb" loading="lazy" />
               @if (v.duration) {
                 <span class="duration">{{ v.duration }}</span>
               }
@@ -132,7 +132,18 @@ export class VideosComponent implements OnInit {
   });
 
   ngOnInit(): void { this.cs.load(); }
-  thumb(url: string): string { return `https://img.youtube.com/vi/${url.split('/').pop() ?? ''}/hqdefault.jpg`; }
+  thumb(v: { youtubeId?: string; youtubeUrl: string }): string {
+    const id = v.youtubeId || this.extractVideoId(v.youtubeUrl);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+  }
+  private extractVideoId(url: string): string {
+    // watch?v=ID or youtu.be/ID
+    const wMatch = url.match(/[?&]v=([^&]+)/);
+    if (wMatch) return wMatch[1];
+    // shorts/ID or youtu.be/ID
+    const pMatch = url.match(/(?:shorts|youtu\.be)\/([^/?]+)/);
+    return pMatch ? pMatch[1] : '';
+  }
   levelColor(level: string): string { return LEVEL_COLORS[level] ?? '#6b7280'; }
 }
 

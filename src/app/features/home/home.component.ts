@@ -122,7 +122,7 @@ type Tab = 'blog' | 'video' | 'podcast';
           <div class="card-grid">
             @for (v of tabVideos(); track v.id) {
               <a [href]="v.youtubeUrl" target="_blank" rel="noopener" class="content-card video-card">
-                <img [src]="thumb(v.youtubeUrl)" [alt]="v.title" class="video-thumb" loading="lazy" />
+                <img [src]="thumb(v)" [alt]="v.title" class="video-thumb" loading="lazy" />
                 <div class="card-body">
                   <div class="card-meta">
                     <span class="card-level" [style.background]="levelColor(v.level)">{{ v.level }}</span>
@@ -141,7 +141,7 @@ type Tab = 'blog' | 'video' | 'podcast';
           <div class="card-grid">
             @for (ep of tabPodcasts(); track ep.id) {
               <a [href]="ep.youtubeUrl" target="_blank" rel="noopener" class="content-card video-card">
-                <img [src]="thumb(ep.youtubeUrl)" [alt]="ep.title" class="video-thumb" loading="lazy" />
+                <img [src]="thumb(ep)" [alt]="ep.title" class="video-thumb" loading="lazy" />
                 <div class="card-body">
                   <div class="card-meta">
                     <span class="card-level podcast-badge">Podcast</span>
@@ -518,8 +518,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     } catch { this.subStatus.set('Network error.'); }
   }
 
-  thumb(url: string): string {
-    return `https://img.youtube.com/vi/${url.split('/').pop() ?? ''}/hqdefault.jpg`;
+  thumb(v: { youtubeId?: string; youtubeUrl: string }): string {
+    const id = v.youtubeId || this.extractVideoId(v.youtubeUrl);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+  }
+  private extractVideoId(url: string): string {
+    const wMatch = url.match(/[?&]v=([^&]+)/);
+    if (wMatch) return wMatch[1];
+    const pMatch = url.match(/(?:shorts|youtu\.be)\/([^/?]+)/);
+    return pMatch ? pMatch[1] : '';
   }
 
   topicColor(topic: string): string {

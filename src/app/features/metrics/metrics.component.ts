@@ -291,9 +291,9 @@ export class MetricsComponent implements OnInit {
 
   liveBlogs = computed(() => this.syncStatus()?.blogs ?? this.content.blogs().length);
   liveVideos = computed(() => this.syncStatus()?.videos ?? this.content.videos().filter(v => v.type === 'video').length);
-  liveShorts = computed(() => this.syncStatus()?.shorts ?? 0);
-  livePodcasts = computed(() => this.syncStatus()?.podcasts ?? 0);
-  totalPlatforms = computed(() => this.content.platforms().length);
+  liveShorts = computed(() => this.syncStatus()?.shorts ?? this.content.videos().filter(v => v.type === 'short').length);
+  livePodcasts = computed(() => this.syncStatus()?.podcasts ?? this.content.videos().filter(v => v.type === 'podcast').length);
+  totalPlatforms = computed(() => this.content.platforms().length || 8);
 
   ngOnInit(): void {
     this.content.load();

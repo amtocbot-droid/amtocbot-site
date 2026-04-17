@@ -17,6 +17,7 @@ export interface Video {
   title: string;
   level: string;
   youtubeUrl: string;
+  youtubeId?: string;
   spotifyUrl?: string;
   duration: string;
   type: 'video' | 'podcast' | 'short';

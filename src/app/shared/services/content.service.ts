@@ -25,8 +25,11 @@ export class ContentService {
     if (this.loaded) return;
     this.loaded = true;
 
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     this.http.get<ContentData>('/api/content').subscribe((data) => {
-      this.blogs.set(data.blogs);
+      // Filter out future-dated blogs so scheduled posts aren't shown publicly
+      this.blogs.set(data.blogs.filter(b => b.date <= today));
       this.videos.set(data.videos);
       this.milestones.set(data.milestones);
       this.platforms.set(data.platforms);
