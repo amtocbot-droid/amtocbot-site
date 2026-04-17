@@ -6,7 +6,7 @@ export const HTML_BEGINNER: Lesson[] = [
   {
     slug: 'what-is-html',
     title: 'What Is HTML?',
-    concept: 'HTML as a set of instructions to the browser',
+    concept: 'HTML is a set of instructions to the browser',
     storyTitle: "The Builder's Blueprint",
     storyHtml: `
       <p>In a bustling town called <strong>Webville</strong>, nothing could be built without a blueprint. The town architect, <em>Ada</em>, discovered this the hard way when she tried to describe a house out loud — the builders kept getting confused. "Just tell me what it should look like on paper," said the lead builder.</p>

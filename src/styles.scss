@@ -65,6 +65,13 @@ body.theme-warm-glow {
   --text-accent: #fb923c;
   --header-bg: rgba(10,10,10,0.96);
   --card-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  /* Learn component variables */
+  --color-text: #e2e8f0;
+  --color-muted: #9ca3af;
+  --color-surface: rgba(255,255,255,0.04);
+  --color-border: rgba(255,255,255,0.08);
+  --color-primary: #fb923c;
+  --color-accent: #f43f5e;
 }
 
 body.theme-dark-tech {
@@ -81,6 +88,13 @@ body.theme-dark-tech {
   --text-accent: #a78bfa;
   --header-bg: rgba(15,15,35,0.96);
   --card-shadow: 0 2px 16px rgba(0,0,0,0.5);
+  /* Learn component variables */
+  --color-text: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-surface: rgba(255,255,255,0.05);
+  --color-border: rgba(255,255,255,0.1);
+  --color-primary: #a78bfa;
+  --color-accent: #4f46e5;
 }
 
 body.theme-light {
@@ -97,6 +111,13 @@ body.theme-light {
   --text-accent: #6366f1;
   --header-bg: rgba(255,255,255,0.96);
   --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  /* Learn component variables */
+  --color-text: #111827;
+  --color-muted: #6b7280;
+  --color-surface: #f9fafb;
+  --color-border: #e5e7eb;
+  --color-primary: #6366f1;
+  --color-accent: #8b5cf6;
 }
 
 /* Apply bg-primary to the page regardless of Material's surface var */
