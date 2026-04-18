@@ -18,6 +18,9 @@ export const routes: Routes = [
       { path: 'learn', loadComponent: () => import('./features/learn/learn-catalog.component').then(m => m.LearnCatalogComponent) },
       { path: 'learn/:language', loadComponent: () => import('./features/learn/learn-track.component').then(m => m.LearnTrackComponent) },
       { path: 'learn/:language/:level/:slug', loadComponent: () => import('./features/learn/learn-lesson.component').then(m => m.LearnLessonComponent) },
+      { path: 'tutorial', loadComponent: () => import('./features/tutorial/tutorial.component').then(m => m.TutorialComponent) },
+      { path: 'feedback', loadComponent: () => import('./features/feedback/feedback.component').then(m => m.FeedbackComponent) },
+      { path: 'report-issue', loadComponent: () => import('./features/report-issue/report-issue.component').then(m => m.ReportIssueComponent) },
       {
         path: 'planner',
         loadComponent: () => import('./features/planner/planner.component').then(m => m.PlannerComponent),

@@ -33,14 +33,20 @@ import { AuthService } from '../../shared/services/auth.service';
               <a routerLink="/about" routerLinkActive="dropdown-active" class="dropdown-item">About</a>
               <a routerLink="/resources" routerLinkActive="dropdown-active" class="dropdown-item">Resources</a>
               <a routerLink="/metrics" routerLinkActive="dropdown-active" class="dropdown-item">Metrics</a>
+              <div class="dropdown-divider"></div>
+              <a routerLink="/tutorial" routerLinkActive="dropdown-active" class="dropdown-item">📖 Help & Tutorials</a>
+              <a routerLink="/feedback" routerLinkActive="dropdown-active" class="dropdown-item">💡 Give Feedback</a>
             </div>
           </div>
         </nav>
 
         <div class="header-right">
+          <a routerLink="/report-issue" routerLinkActive="nav-active" class="dashboard-link report-link" title="Report an Issue">
+            🐛 Report Issue
+          </a>
           @if (auth.hasRole('admin', 'tester', 'superadmin')) {
-            <a routerLink="/report" routerLinkActive="nav-active" class="dashboard-link report-link" title="Report an Issue">
-              🐛 Report
+            <a routerLink="/report" routerLinkActive="nav-active" class="dashboard-link" title="Internal Issue Tracker">
+              Issues
             </a>
           }
           @if (auth.authenticated()) {
@@ -81,7 +87,12 @@ import { AuthService } from '../../shared/services/auth.service';
             <a routerLink="/about" (click)="mobileOpen.set(false)" class="mobile-link">About</a>
             <a routerLink="/resources" (click)="mobileOpen.set(false)" class="mobile-link">Resources</a>
             <a routerLink="/metrics" (click)="mobileOpen.set(false)" class="mobile-link">Metrics</a>
+            <a routerLink="/tutorial" (click)="mobileOpen.set(false)" class="mobile-link">📖 Help & Tutorials</a>
+            <a routerLink="/feedback" (click)="mobileOpen.set(false)" class="mobile-link">💡 Give Feedback</a>
           </details>
+          <a routerLink="/report-issue" (click)="mobileOpen.set(false)" class="mobile-link mobile-report">
+            🐛 Report an Issue
+          </a>
           @if (auth.authenticated()) {
             <a routerLink="/dashboard" routerLinkActive="mobile-active" class="mobile-link"
                (click)="mobileOpen.set(false)">Dashboard</a>
@@ -92,7 +103,7 @@ import { AuthService } from '../../shared/services/auth.service';
           }
           @if (auth.hasRole('admin', 'tester', 'superadmin')) {
             <a routerLink="/report" routerLinkActive="mobile-active" class="mobile-link"
-               (click)="mobileOpen.set(false)">🐛 Report Issue</a>
+               (click)="mobileOpen.set(false)">Issues (internal)</a>
           }
           @if (auth.hasRole('admin', 'superadmin')) {
             <a routerLink="/admin" routerLinkActive="mobile-active" class="mobile-link"
@@ -227,6 +238,11 @@ import { AuthService } from '../../shared/services/auth.service';
       color: var(--text-accent, #fb923c);
       background: var(--bg-surface, rgba(255,255,255,0.04));
     }
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border-color, rgba(255,255,255,0.08));
+      margin: 0.3rem 0.5rem;
+    }
 
     /* ── Header right ── */
     .header-right {
@@ -249,6 +265,8 @@ import { AuthService } from '../../shared/services/auth.service';
       color: var(--text-accent, #fb923c);
       background: var(--bg-surface, rgba(255,255,255,0.04));
     }
+    .report-link { color: #ef4444 !important; }
+    .report-link:hover { color: #f87171 !important; background: rgba(239,68,68,0.08); }
     .courses-btn {
       background: var(--accent-gradient, linear-gradient(90deg, #fb923c, #f43f5e));
       color: #fff !important;
@@ -330,6 +348,8 @@ import { AuthService } from '../../shared/services/auth.service';
       font-size: 0.9rem;
     }
     .mobile-link:hover { color: var(--text-accent); }
+    .mobile-report { color: #ef4444; font-weight: 500; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 0.25rem; }
+    .mobile-report:hover { color: #f87171; }
     .mobile-courses { display: inline-block; margin-top: 1rem; }
     .mobile-theme {
       display: flex;

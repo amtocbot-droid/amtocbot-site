@@ -230,3 +230,52 @@ CREATE TABLE IF NOT EXISTS issue_comments (
   created_at TEXT DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_comments_issue ON issue_comments(issue_id, created_at);
+
+-- ── Public Feedback + Issue Reports ───────────────────────────
+INSERT OR IGNORE INTO schema_version (version, description)
+VALUES (10, 'Public feedback + issue reports: /feedback and /report-issue pages');
+
+-- Suggestions and general comments from any visitor (no login required)
+CREATE TABLE IF NOT EXISTS public_feedback (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  category    TEXT NOT NULL DEFAULT 'general',    -- general | suggestion | improvement | ux | content | other
+  subject     TEXT NOT NULL,
+  message     TEXT NOT NULL,
+  name        TEXT,
+  email       TEXT,
+  user_id     INTEGER REFERENCES users(id),
+  username    TEXT,
+  status      TEXT NOT NULL DEFAULT 'new',        -- new | reviewed | actioned | dismissed
+  ip_address  TEXT,
+  created_at  TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_pfeedback_status   ON public_feedback(status);
+CREATE INDEX IF NOT EXISTS idx_pfeedback_created  ON public_feedback(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_pfeedback_category ON public_feedback(category);
+
+-- Bug / image / video issue reports from any visitor or tester
+CREATE TABLE IF NOT EXISTS public_reports (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  report_type  TEXT NOT NULL DEFAULT 'bug',       -- bug | image_issue | video_issue | content_error | performance | other
+  title        TEXT NOT NULL,
+  description  TEXT NOT NULL,
+  page_url     TEXT,
+  content_type TEXT,                              -- video | image | blog | general
+  content_ref  TEXT,
+  severity     TEXT NOT NULL DEFAULT 'medium',    -- low | medium | high | critical
+  name         TEXT,
+  email        TEXT,
+  user_id      INTEGER REFERENCES users(id),
+  username     TEXT,
+  status       TEXT NOT NULL DEFAULT 'new',       -- new | acknowledged | in_progress | resolved | dismissed
+  ip_address   TEXT,
+  assigned_to  INTEGER REFERENCES users(id),
+  resolved_at  TEXT,
+  resolution   TEXT,
+  created_at   TEXT DEFAULT (datetime('now')),
+  updated_at   TEXT DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_preports_status   ON public_reports(status);
+CREATE INDEX IF NOT EXISTS idx_preports_type     ON public_reports(report_type);
+CREATE INDEX IF NOT EXISTS idx_preports_created  ON public_reports(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_preports_assigned ON public_reports(assigned_to);
