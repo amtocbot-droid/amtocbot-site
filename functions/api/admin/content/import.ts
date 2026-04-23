@@ -44,8 +44,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   // Import videos/shorts/podcasts
   const videoStmt = db.prepare(`
-    INSERT OR REPLACE INTO content (id, type, title, date, level, status, tags, youtube_url, youtube_id, spotify_url, duration, description, views, likes, comments, last_scraped, updated_at)
-    VALUES (?, ?, ?, ?, ?, 'Published', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+    INSERT OR REPLACE INTO content (id, type, title, date, level, status, tags, youtube_url, youtube_id, linkedin_url, twitter_url, spotify_url, duration, description, views, likes, comments, last_scraped, updated_at)
+    VALUES (?, ?, ?, ?, ?, 'Published', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
   `);
   for (const v of videos) {
     let ytId = (v.youtubeId as string) || '';
@@ -57,7 +57,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     await videoStmt.bind(
       v.id, v.type || 'video', v.title, v.date, v.level || null,
       v.tags ? JSON.stringify(v.tags) : (v.topics ? JSON.stringify(v.topics) : null),
-      v.youtubeUrl || null, ytId || null, v.spotifyUrl || null,
+      v.youtubeUrl || null, ytId || null,
+      (v.linkedinUrl as string) || null, (v.twitterUrl as string) || null,
+      v.spotifyUrl || null,
       v.duration || null, v.description || null,
       v.views || 0, v.likes || 0, v.comments || 0, v.lastScraped || null,
     ).run();

@@ -134,6 +134,8 @@ export function toVideoJson(row: ContentRow) {
     likes: row.likes,
     comments: row.comments,
     lastScraped: row.last_scraped || '',
+    linkedinUrl: row.linkedin_url || '',
+    twitterUrl: row.twitter_url || '',
   };
   if (row.tags) {
     try { obj.tags = JSON.parse(row.tags); } catch { obj.tags = []; }
