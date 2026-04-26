@@ -109,12 +109,16 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     await db.batch(statements.slice(i, i + STATEMENTS_PER_BATCH));
   }
 
-  // Audit log — system actor uses a synthetic SessionUser (user_id 0) and forwards the
-  // original request so logAudit can extract the caller IP.
-  const systemActor = { user_id: 0, username: 'system', role: 'superadmin' } as const;
-  await logAudit(db, systemActor, 'qa.ingest', JSON.stringify({
-    run_id: runId, total_checks: totalChecks, total_fail: totalFail,
-  }), request);
+  // Audit log — non-fatal: ingest must succeed even if audit_logs INSERT fails
+  // (e.g. the system actor has no corresponding users row in a fresh local DB).
+  try {
+    const systemActor = { user_id: 0, username: 'system', role: 'superadmin' } as const;
+    await logAudit(db, systemActor, 'qa.ingest', JSON.stringify({
+      run_id: runId, total_checks: totalChecks, total_fail: totalFail,
+    }), request);
+  } catch (e) {
+    console.error('[qa/ingest] logAudit failed (non-fatal):', e);
+  }
 
   return jsonResponse({ run_id: runId, total_checks: totalChecks, total_fail: totalFail }, 201);
 };
