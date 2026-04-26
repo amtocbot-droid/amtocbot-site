@@ -9,7 +9,7 @@
  * Response (healthy):  200 { healthy: true, last_run_id, last_run_at, total_fail, message }
  * Response (unhealthy): 503 { healthy: false, message }
  */
-import { Env, jsonResponse, optionsHandler } from '../_shared/auth';
+import { Env, jsonResponse, optionsHandler } from './_shared';
 
 export const onRequestOptions = optionsHandler;
 

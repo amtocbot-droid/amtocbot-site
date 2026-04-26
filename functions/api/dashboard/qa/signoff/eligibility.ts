@@ -28,7 +28,7 @@
  */
 import {
   Env, jsonResponse, optionsHandler, getSessionUser, requirePermission,
-} from '../../_shared/auth';
+} from '../_shared';
 
 export const onRequestOptions = optionsHandler;
 
