@@ -23,7 +23,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const errors = validateIngestPayload(payload);
   if (errors.length > 0) {
-    return jsonResponse({ error: 'validation failed', details: errors }, 422);
+    return jsonResponse({ error: 'validation failed', details: errors }, 400);
   }
 
   const db = env.ENGAGE_DB;

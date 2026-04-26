@@ -119,16 +119,15 @@ export async function requireIngestToken(request: Request, env: Env): Promise<Re
   if (!expected) {
     return jsonResponse({ error: 'server misconfigured: QA_INGEST_TOKEN unset' }, 500);
   }
-  // Constant-time compare
-  if (match[1].length !== expected.length) {
-    return jsonResponse({ error: 'invalid token' }, 403);
-  }
-  let diff = 0;
+  // True constant-time compare: loop over expected.length chars every time,
+  // seeding diff with length mismatch so a short prefix never passes.
+  const given = match[1];
+  let diff = given.length ^ expected.length;
   for (let i = 0; i < expected.length; i++) {
-    diff |= match[1].charCodeAt(i) ^ expected.charCodeAt(i);
+    diff |= (given.charCodeAt(i) || 0) ^ expected.charCodeAt(i);
   }
   if (diff !== 0) {
-    return jsonResponse({ error: 'invalid token' }, 403);
+    return jsonResponse({ error: 'invalid token' }, 401);
   }
   return null;
 }
