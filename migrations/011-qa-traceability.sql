@@ -1,11 +1,12 @@
 -- Migration 011: QA Traceability Matrix
 -- Adds: qa_runs, qa_check_results, qa_acknowledgements, qa_weekly_signoffs
 -- Modifies: issues (adds qa_content_code, qa_check_type)
+-- Apply: npx wrangler d1 execute engage-db --remote --file=migrations/011-qa-traceability.sql
 
 -- ─────────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS qa_runs (
   id              INTEGER PRIMARY KEY AUTOINCREMENT,
-  client_run_id   TEXT UNIQUE,
+  client_run_id   TEXT UNIQUE,    -- nullable: internal runs have no client ID; SQLite UNIQUE allows multiple NULLs
   started_at      TEXT NOT NULL DEFAULT (datetime('now')),
   finished_at     TEXT,
   source          TEXT NOT NULL,
@@ -52,6 +53,8 @@ CREATE INDEX IF NOT EXISTS idx_qa_ack_active
   WHERE cleared_at IS NULL;
 
 -- ─────────────────────────────────────────────────────────────
+-- NOTE: ALTER TABLE is not idempotent. Running this migration twice will
+-- error on duplicate column. Run via wrangler once; do not replay manually.
 ALTER TABLE issues ADD COLUMN qa_content_code TEXT;
 ALTER TABLE issues ADD COLUMN qa_check_type   TEXT;
 CREATE INDEX IF NOT EXISTS idx_issues_qa_link
