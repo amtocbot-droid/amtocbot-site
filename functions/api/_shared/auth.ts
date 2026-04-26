@@ -23,14 +23,18 @@ export type Permission =
   | 'users.manage_admins'
   | 'content.delete'
   | 'audit.view'
-  | 'sessions.view';
+  | 'sessions.view'
+  | 'qa.view' | 'qa.acknowledge' | 'qa.signoff' | 'qa.refresh';
 
 const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   superadmin: [], // superadmin bypasses the map — gets all permissions
   admin:    [],   // admin bypasses the map — gets all permissions except superadmin-only
-  tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update'],
-  approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject'],
-  reviewer: ['dashboard.view', 'issues.comment'],
+  tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update',
+             'qa.view', 'qa.acknowledge', 'qa.signoff', 'qa.refresh'],
+  approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject',
+             'qa.view'],
+  reviewer: ['dashboard.view', 'issues.comment',
+             'qa.view'],
 };
 
 export function hasPermission(user: SessionUser, perm: Permission): boolean {
