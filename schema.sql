@@ -279,3 +279,76 @@ CREATE INDEX IF NOT EXISTS idx_preports_status   ON public_reports(status);
 CREATE INDEX IF NOT EXISTS idx_preports_type     ON public_reports(report_type);
 CREATE INDEX IF NOT EXISTS idx_preports_created  ON public_reports(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_preports_assigned ON public_reports(assigned_to);
+
+-- ── QA Traceability Matrix ────────────────────────────────────
+-- ─────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS qa_runs (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  client_run_id   TEXT UNIQUE,    -- nullable: internal runs have no client ID; SQLite UNIQUE allows multiple NULLs
+  started_at      TEXT NOT NULL DEFAULT (datetime('now')),
+  finished_at     TEXT,
+  source          TEXT NOT NULL,
+  triggered_by    INTEGER REFERENCES users(id),
+  total_checks    INTEGER DEFAULT 0,
+  total_pass      INTEGER DEFAULT 0,
+  total_fail      INTEGER DEFAULT 0,
+  total_na        INTEGER DEFAULT 0,
+  notes           TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_qa_runs_started ON qa_runs(started_at DESC);
+
+-- ─────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS qa_check_results (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  run_id          INTEGER NOT NULL REFERENCES qa_runs(id),
+  content_code    TEXT NOT NULL,
+  content_kind    TEXT NOT NULL,
+  content_title   TEXT,
+  check_type      TEXT NOT NULL,
+  status          TEXT NOT NULL,
+  error_detail    TEXT,
+  checked_at      TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_qa_results_latest
+  ON qa_check_results(content_code, check_type, checked_at DESC);
+CREATE INDEX IF NOT EXISTS idx_qa_results_run    ON qa_check_results(run_id);
+CREATE INDEX IF NOT EXISTS idx_qa_results_status ON qa_check_results(status, checked_at DESC);
+
+-- ─────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS qa_acknowledgements (
+  id                INTEGER PRIMARY KEY AUTOINCREMENT,
+  content_code      TEXT NOT NULL,
+  check_type        TEXT NOT NULL,
+  acknowledged_by   INTEGER NOT NULL REFERENCES users(id),
+  acknowledged_at   TEXT NOT NULL DEFAULT (datetime('now')),
+  reason            TEXT NOT NULL,
+  expires_at        TEXT NOT NULL,
+  cleared_at        TEXT,
+  cleared_reason    TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_qa_ack_active
+  ON qa_acknowledgements(content_code, check_type, expires_at)
+  WHERE cleared_at IS NULL;
+
+-- ─────────────────────────────────────────────────────────────
+-- NOTE: ALTER TABLE is not idempotent. Running this migration twice will
+-- error on duplicate column. Run via wrangler once; do not replay manually.
+ALTER TABLE issues ADD COLUMN qa_content_code TEXT;
+ALTER TABLE issues ADD COLUMN qa_check_type   TEXT;
+CREATE INDEX IF NOT EXISTS idx_issues_qa_link
+  ON issues(qa_content_code, qa_check_type, status);
+
+-- ─────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS qa_weekly_signoffs (
+  id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+  week_start_date     TEXT NOT NULL UNIQUE,
+  signed_by           INTEGER NOT NULL REFERENCES users(id),
+  signed_at           TEXT NOT NULL DEFAULT (datetime('now')),
+  based_on_run_id     INTEGER NOT NULL REFERENCES qa_runs(id),
+  count_regressions   INTEGER NOT NULL DEFAULT 0,
+  count_persistent    INTEGER NOT NULL DEFAULT 0,
+  count_new_green     INTEGER NOT NULL DEFAULT 0,
+  count_steady_green  INTEGER NOT NULL DEFAULT 0,
+  notes               TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_qa_signoffs_week ON qa_weekly_signoffs(week_start_date DESC);
