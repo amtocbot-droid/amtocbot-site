@@ -173,7 +173,7 @@ export class QaTabComponent implements OnInit {
   selectedRunId = signal<number | null>(null);
   kindFilter = signal('');
 
-  latestRun = computed(() => this.runs()[0] ?? null);
+  latestRun = computed(() => [...this.runs()].sort((a, b) => b.id - a.id)[0] ?? null);
 
   ngOnInit(): void {
     this.http.get<{ runs: QaRun[] }>('/api/dashboard/qa/runs?limit=20')
