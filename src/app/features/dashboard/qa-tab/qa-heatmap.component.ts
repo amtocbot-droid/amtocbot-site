@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
@@ -13,7 +13,7 @@ interface HeatCell {
 @Component({
   selector: 'app-qa-heatmap',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective],
+  imports: [NgxEchartsDirective],
   template: `
     <div class="qa-heatmap-chart">
       <h3 class="chart-title">Failure Heatmap — Check Type × Week</h3>
@@ -36,6 +36,7 @@ interface HeatCell {
 })
 export class QaHeatmapComponent implements OnInit {
   private http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
 
   loading = true;
   error: string | null = null;
@@ -43,7 +44,9 @@ export class QaHeatmapComponent implements OnInit {
   chartHeight = '320px';
 
   ngOnInit(): void {
-    this.http.get<{ heatmap: HeatCell[]; check_types: string[] }>('/api/dashboard/qa/history/heatmap?weeks=8').subscribe({
+    this.http.get<{ heatmap: HeatCell[]; check_types: string[] }>('/api/dashboard/qa/history/heatmap?weeks=8')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: ({ heatmap, check_types }) => {
         this.loading = false;
         if (!heatmap.length) { this.error = 'No heatmap data yet.'; return; }

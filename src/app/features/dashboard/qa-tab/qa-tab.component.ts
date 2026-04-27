@@ -1,5 +1,6 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, OnInit, DestroyRef } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -22,7 +23,7 @@ interface QaRun {
   selector: 'app-qa-tab',
   standalone: true,
   imports: [
-    CommonModule,
+    DatePipe,
     MatCardModule, MatProgressBarModule, MatChipsModule,
     QaTrendComponent, QaHeatmapComponent,
   ],
@@ -85,12 +86,15 @@ interface QaRun {
 })
 export class QaTabComponent implements OnInit {
   private http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
 
   loading = signal(true);
   latestRun = signal<QaRun | null>(null);
 
   ngOnInit(): void {
-    this.http.get<{ runs: QaRun[] }>('/api/dashboard/qa/runs?limit=1').subscribe({
+    this.http.get<{ runs: QaRun[] }>('/api/dashboard/qa/runs?limit=1')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: ({ runs }) => {
         this.loading.set(false);
         this.latestRun.set(runs[0] ?? null);

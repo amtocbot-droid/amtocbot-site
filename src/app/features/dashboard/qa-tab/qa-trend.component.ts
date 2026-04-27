@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
@@ -15,7 +15,7 @@ interface TrendRun {
 @Component({
   selector: 'app-qa-trend',
   standalone: true,
-  imports: [CommonModule, NgxEchartsDirective],
+  imports: [NgxEchartsDirective],
   template: `
     <div class="qa-trend-chart">
       <h3 class="chart-title">QA Run Trend (last 30 runs)</h3>
@@ -38,13 +38,16 @@ interface TrendRun {
 })
 export class QaTrendComponent implements OnInit {
   private http = inject(HttpClient);
+  private readonly destroyRef = inject(DestroyRef);
 
   loading = true;
   error: string | null = null;
   chartOptions: any = {};
 
   ngOnInit(): void {
-    this.http.get<{ runs: TrendRun[] }>('/api/dashboard/qa/history/trend?limit=30').subscribe({
+    this.http.get<{ runs: TrendRun[] }>('/api/dashboard/qa/history/trend?limit=30')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: ({ runs }) => {
         this.loading = false;
         if (!runs.length) { this.error = 'No run history yet.'; return; }
