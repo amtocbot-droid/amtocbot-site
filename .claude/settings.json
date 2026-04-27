@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Updating knowledge graph...",
+            "command": "cd /Users/amtoc/amtocbot-site && /Users/amtoc/.local/bin/graphify update . --exclude node_modules --exclude dist --quiet 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

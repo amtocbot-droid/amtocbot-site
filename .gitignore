@@ -49,3 +49,8 @@ Thumbs.db
 # Secrets
 .env
 .dev.vars
+
+# Graphify — keep report, ignore binary/html artifacts
+graphify-out/graph.json
+graphify-out/graph.html
+graphify-out/cache

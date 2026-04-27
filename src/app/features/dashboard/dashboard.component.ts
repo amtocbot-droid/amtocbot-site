@@ -21,6 +21,7 @@ import { AdminTabComponent } from './admin-tab/admin-tab.component';
 import { AuditLogTabComponent } from './audit-log-tab/audit-log-tab.component';
 import { TutorialComponent } from './tutorial/tutorial.component';
 import { TutorialService } from './tutorial/tutorial.service';
+import { QaTabComponent } from './qa-tab/qa-tab.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +35,7 @@ import { TutorialService } from './tutorial/tutorial.service';
     AdminTabComponent,
     AuditLogTabComponent,
     TutorialComponent,
+    QaTabComponent,
   ],
   template: `
     <div class="dashboard-container">
@@ -714,6 +716,15 @@ import { TutorialService } from './tutorial/tutorial.service';
           <mat-tab label="Audit Log">
             <div class="tab-content">
               <app-audit-log-tab />
+            </div>
+          </mat-tab>
+        }
+
+        <!-- QA Traceability Tab — qa.view permission -->
+        @if (auth.hasPermission('qa.view')) {
+          <mat-tab label="QA">
+            <div class="tab-content">
+              <app-qa-tab></app-qa-tab>
             </div>
           </mat-tab>
         }
