@@ -6,6 +6,8 @@ export type Permission =
   | 'dashboard.view'
   | 'issues.create' | 'issues.update_status' | 'issues.assign' | 'issues.close' | 'issues.comment'
   | 'content.qa.update' | 'content.qa.approve' | 'content.qa.reject'
+  | 'qa.acknowledge'
+  | 'qa.signoff'
   | 'users.manage'
   | 'users.manage_admins'
   | 'content.delete'
@@ -16,7 +18,7 @@ const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
   superadmin: [],
   admin:    [],
   tester:   ['dashboard.view', 'issues.create', 'issues.update_status', 'issues.comment', 'content.qa.update'],
-  approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject'],
+  approver: ['dashboard.view', 'issues.close', 'issues.comment', 'content.qa.approve', 'content.qa.reject', 'qa.acknowledge', 'qa.signoff'],
   reviewer: ['dashboard.view', 'issues.comment'],
 };
 
