@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,7 +26,7 @@ interface EligibilityResponse {
 @Component({
   selector: 'app-qa-signoff',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatChipsModule],
+  imports: [CommonModule, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatChipsModule],
   template: `
     <div class="signoff-container">
       <h3 class="section-title">Weekly Sign-Off</h3>

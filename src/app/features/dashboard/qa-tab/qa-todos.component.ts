@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -25,7 +25,7 @@ interface Todo {
 @Component({
   selector: 'app-qa-todos',
   standalone: true,
-  imports: [CommonModule, DatePipe, MatCardModule, MatChipsModule, MatDividerModule, MatTooltipModule],
+  imports: [CommonModule, MatCardModule, MatChipsModule, MatDividerModule, MatTooltipModule],
   template: `
     <div class="todos-container">
       <h3 class="section-title">Priority Fixes</h3>
